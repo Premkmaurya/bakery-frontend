@@ -11,6 +11,7 @@ import Login from "../pages/Login"
 import Register from "../pages/Register"
 import Products from '../pages/Products'
 import SingleProduct from '../pages/SingleProduct'
+import Checkout from '../pages/CheckOut'
 import Cart from '../pages/Cart'
 import Profile from '../pages/Profile'
 
@@ -36,6 +37,7 @@ const AppRoutes = () => {
         <Route path="/contacts" element={<Contact />} />
         <Route path="/products" element={<Products />} />
         <Route path="/products/:id" element={<SingleProduct />} />
+        <Route path="/products/:id/checkout" element={<Checkout />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/profile" element={<Profile />} />
       </Route>

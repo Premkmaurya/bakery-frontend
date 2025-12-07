@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import './SingleProductHero.scss';
 import { ShoppingBag, Star, Truck, ShieldCheck } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const SingleProductHero = () => {
+  const navigate = useNavigate();
   // === 1. MOCK DATA ===
   const product = {
     id: 1,
@@ -56,7 +58,7 @@ const SingleProductHero = () => {
               </div>
 
               {/* Order Button */}
-              <button className="order-btn">
+              <button onClick={()=>navigate(`/products/${product.id}/checkout`)} className="order-btn">
                 <span>ORDER ONLINE</span>
                 <ShoppingBag size={18} />
               </button>

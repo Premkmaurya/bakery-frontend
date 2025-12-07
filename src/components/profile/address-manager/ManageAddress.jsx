@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, MapPin, Edit2, Trash2, CheckCircle } from 'lucide-react';
+import { Plus, Edit2, Trash2 } from 'lucide-react';
 import './ManageAddress.scss';
 
 const ManageAddress = () => {
@@ -31,10 +31,11 @@ const ManageAddress = () => {
     }
   ]);
 
-  const [isAdding, setIsAdding] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingId, setEditingId] = useState(null); // Track which ID we are editing
   
   // Form State
-  const [formData, setFormData] = useState({
+  const initialFormState = {
     type: 'Home',
     name: '',
     phone: '',
@@ -43,22 +44,55 @@ const ManageAddress = () => {
     state: '',
     zip: '',
     country: ''
-  });
+  };
+  
+  const [formData, setFormData] = useState(initialFormState);
 
   // Handle Input Change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Save New Address
+  // Open Form for Adding
+  const handleAddNew = () => {
+    setFormData(initialFormState);
+    setEditingId(null);
+    setIsFormOpen(true);
+  };
+
+  // Open Form for Editing
+  const handleEdit = (address) => {
+    setFormData(address); // Fill form with existing data
+    setEditingId(address.id); // Set mode to Edit
+    setIsFormOpen(true); // Open form
+  };
+
+  // Close Form
+  const handleCancel = () => {
+    setIsFormOpen(false);
+    setEditingId(null);
+    setFormData(initialFormState);
+  };
+
+  // Save (Add or Update)
   const handleSave = (e) => {
     e.preventDefault();
-    const newId = addresses.length + 1;
-    const newAddress = { id: newId, isDefault: false, ...formData };
-    setAddresses([...addresses, newAddress]);
-    setIsAdding(false); // Close form
-    // Reset form
-    setFormData({ type: 'Home', name: '', phone: '', street: '', city: '', state: '', zip: '', country: '' });
+    
+    if (editingId) {
+      // === UPDATE EXISTING ADDRESS ===
+      setAddresses(prev => prev.map(addr => 
+        addr.id === editingId 
+          ? { ...formData, id: editingId, isDefault: addr.isDefault } // Keep original ID and Default status
+          : addr
+      ));
+    } else {
+      // === ADD NEW ADDRESS ===
+      const newId = addresses.length > 0 ? Math.max(...addresses.map(a => a.id)) + 1 : 1;
+      const newAddress = { id: newId, isDefault: false, ...formData };
+      setAddresses([...addresses, newAddress]);
+    }
+
+    handleCancel(); // Close and reset
   };
 
   // Delete Address
@@ -70,11 +104,13 @@ const ManageAddress = () => {
 
   return (
     <div className="manage-address-wrapper">
-      {!isAdding ? (
+      <h2 className="section-title">Manage Addresses</h2>
+
+      {!isFormOpen ? (
         <div className="address-grid">
           
           {/* === 1. ADD NEW BUTTON CARD === */}
-          <div className="add-new-card" onClick={() => setIsAdding(true)}>
+          <div className="add-new-card" onClick={handleAddNew}>
             <div className="icon-wrapper">
               <Plus size={32} />
             </div>
@@ -101,7 +137,11 @@ const ManageAddress = () => {
               </div>
 
               <div className="card-actions">
-                <button className="action-btn edit" title="Edit">
+                <button 
+                  className="action-btn edit" 
+                  title="Edit"
+                  onClick={() => handleEdit(addr)}
+                >
                   <Edit2 size={16} /> Edit
                 </button>
                 <button 
@@ -118,9 +158,11 @@ const ManageAddress = () => {
 
         </div>
       ) : (
-        // === 3. ADD NEW ADDRESS FORM ===
+        // === 3. ADDRESS FORM (ADD OR EDIT) ===
         <form className="address-form" onSubmit={handleSave}>
-          <h3 className="form-title">Add New Delivery Address</h3>
+          <h3 className="form-title">
+            {editingId ? "Edit Address" : "Add New Delivery Address"}
+          </h3>
           
           <div className="form-row">
             <div className="form-group">
@@ -175,8 +217,10 @@ const ManageAddress = () => {
           </div>
 
           <div className="form-actions">
-            <button type="button" className="cancel-btn" onClick={() => setIsAdding(false)}>Cancel</button>
-            <button type="submit" className="save-btn">Save Address</button>
+            <button type="button" className="cancel-btn" onClick={handleCancel}>Cancel</button>
+            <button type="submit" className="save-btn">
+              {editingId ? "Update Address" : "Save Address"}
+            </button>
           </div>
         </form>
       )}
