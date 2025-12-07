@@ -1,0 +1,13 @@
+.contact-info-container {
+  max-width: 100vw; // Slightly narrower container for a focused look
+  padding: 0 2rem;
+  display: flex;
+}
+.section-title {
+  font-family: var(--font-serif);
+  font-size: 3rem;
+  color: var(--color-text-main);
+  margin-bottom: 1rem;
+  text-align: center;
+  margin: 2rem 0;
+}

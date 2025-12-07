@@ -1,0 +1,137 @@
+.personal-info-wrapper {
+  .section-title {
+    font-family: var(--font-serif);
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    color: var(--color-text-main);
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1rem;
+  }
+
+  // === AVATAR STYLES ===
+  .avatar-section {
+    display: flex;
+    margin-bottom: 2.5rem;
+
+    .avatar-wrapper {
+      position: relative;
+      width: 100px;
+      height: 100px;
+
+      .profile-img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #fff; // White border to separate from background
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      }
+
+      .edit-badge {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background-color: var(--color-accent); // Your Brand Pink/Red
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        cursor: pointer;
+        border: 2px solid white;
+        transition: transform 0.2s;
+
+        &:hover {
+          transform: scale(1.1);
+          background-color: #b91c46;
+        }
+      }
+    }
+  }
+
+  // === FORM STYLES ===
+  .info-form {
+    max-width: 700px; // Limits width so lines aren't too long
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+
+      @media (max-width: 600px) {
+        grid-template-columns: 1fr; // Stack on mobile
+        gap: 0;
+      }
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+
+      label {
+        display: block;
+        font-family: var(--font-sans);
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: var(--color-text-main);
+        margin-bottom: 0.5rem;
+      }
+
+      input, select {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px; // Rounded corners like the image
+        font-family: var(--font-sans);
+        font-size: 1rem;
+        color: var(--color-text-sub);
+        background-color: white;
+        outline: none;
+        transition: all 0.3s;
+
+        &:focus {
+          border-color: var(--color-accent);
+          box-shadow: 0 0 0 4px rgba(185, 28, 70, 0.05);
+        }
+      }
+
+      // Custom wrapper for the dropdown arrow
+      .select-wrapper {
+        position: relative;
+        
+        select {
+          appearance: none; // Hides default browser arrow
+          cursor: pointer;
+        }
+
+        .select-icon {
+          position: absolute;
+          right: 1rem;
+          top: 50%;
+          transform: translateY(-50%);
+          color: #999;
+          pointer-events: none; // Clicks pass through to the select box
+        }
+      }
+    }
+
+    .update-btn {
+      margin-top: 1rem;
+      padding: 1rem 2rem;
+      background-color: var(--color-accent); // Brand Pink/Red
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+
+      &:hover {
+        background-color: #b91c46;
+      }
+    }
+  }
+}

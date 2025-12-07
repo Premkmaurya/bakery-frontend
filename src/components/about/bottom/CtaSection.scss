@@ -1,0 +1,99 @@
+// :root variables presumed available
+
+.cta-section {
+  position: relative;
+  // Using gray-light makes this section distinct from the white sections above it
+  background-color: var(--color-gray-light); 
+  padding: 6rem 2rem;
+  overflow: hidden; // Prevents the scooter from causing scrollbars
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    z-index: 2; // Keeps text above the image
+  }
+
+  .cta-content {
+    text-align: center;
+    max-width: 600px; // Narrow width keeps the text readable
+
+    .cta-title {
+      font-family: var(--font-serif);
+      font-size: 3rem;
+      color: var(--color-accent); // Your brand Pink/Red
+      margin-bottom: 0.5rem;
+    }
+
+    .separator {
+      color: #b0e0e6; // Soft blue/cyan diamonds (or use var(--color-accent))
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .cta-text {
+      font-family: var(--font-sans);
+      font-size: 1.1rem;
+      color: var(--color-text-main);
+      line-height: 1.6;
+      margin-bottom: 3rem;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      font-family: var(--font-sans);
+      font-weight: 700;
+      text-transform: uppercase;
+      text-decoration: none;
+      letter-spacing: 1px;
+      padding: 1rem 3rem;
+      border-radius: 50px; // Pill shape
+      
+      // THEME: Outline Style
+      background-color: transparent;
+      border: 2px solid var(--color-accent); // Red border
+      color: var(--color-accent); // Red text
+      
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: var(--color-accent); // Fills with Red
+        color: var(--color-bg); // Text turns white
+        transform: translateY(-3px); // Little pop up effect
+        box-shadow: 0 10px 20px rgba(185, 28, 70, 0.2); // Soft shadow in your brand color
+      }
+    }
+  }
+
+  // === Illustration Styles ===
+  .decoration-wrapper {
+    position: absolute;
+    bottom: -10px; // Anchor to bottom
+    left: 5%;
+    z-index: 1;
+    width: 250px; // Adjust size of the scooter
+
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+      opacity: 0.8; // Slightly subtle
+    }
+
+    // Hide illustration on mobile so it doesn't overlap text
+    @media (max-width: 900px) {
+      width: 150px;
+      left: -20px;
+      opacity: 0.5;
+    }
+
+    @media (max-width: 600px) {
+      display: none; // Completely remove on small phones to save space
+    }
+  }
+}

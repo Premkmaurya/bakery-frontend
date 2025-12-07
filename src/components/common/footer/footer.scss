@@ -1,0 +1,128 @@
+// Importing variables (or ensure they are available globally)
+// :root variables assumed present as per previous context
+
+.site-footer {
+  background-color: var(--color-bg);
+  padding: 5rem 2rem 3rem; // Top padding handles the space above Delivery terms
+  color: var(--color-text-main);
+  overflow: hidden;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  // === PART 1: DELIVERY SECTION STYLES ===
+  
+
+  // === PART 2: FOOTER LINKS STYLES ===
+  .footer-links {
+    display: grid;
+    // 3 Columns: 1fr for Brand, 2fr for Menu (wider), 1fr for Contacts
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 2rem;
+    padding-top: 3rem;
+    border-top: 1px solid transparent; // Optional spacer
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr; // Stack everything on mobile
+      gap: 3rem;
+      text-align: center;
+    }
+
+    .footer-heading {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin-bottom: 2rem;
+      color: var(--color-text-main);
+    }
+
+    // Brand & Socials
+    .brand-col {
+      .social-icons {
+        display: flex;
+        gap: 1rem;
+        // Center icons on mobile if text-align is center
+        @media (max-width: 768px) { justify-content: center; }
+
+        .social-btn {
+          width: 40px;
+          height: 40px;
+          border: 1px solid #e0e0e0;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: var(--color-text-main);
+          transition: all 0.3s ease;
+
+          &:hover {
+            border-color: var(--color-text-main);
+            background-color: var(--color-text-main);
+            color: white;
+          }
+        }
+      }
+    }
+
+    // Menu Columns
+    .menu-col {
+      .menu-lists-wrapper {
+        display: flex;
+        gap: 4rem; // Space between the columns of links
+
+        @media (max-width: 768px) {
+          justify-content: center;
+          gap: 2rem;
+          flex-wrap: wrap;
+        }
+
+        .link-list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+
+          li {
+            margin-bottom: 1rem;
+
+            a {
+              font-family: var(--font-sans);
+              font-size: 0.95rem;
+              color: var(--color-text-sub);
+              text-decoration: none;
+              transition: color 0.2s;
+
+              &:hover {
+                color: var(--color-accent); // Uses your pink/red accent color
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Contact Column
+    .contact-col {
+      .contact-list {
+        list-style: none;
+        padding: 0;
+
+        li {
+          margin-bottom: 1rem;
+          font-family: var(--font-sans);
+
+          a {
+            color: var(--color-text-sub);
+            text-decoration: none;
+            font-size: 0.95rem;
+
+            &:hover {
+              color: var(--color-accent);
+            }
+          }
+        }
+      }
+    }
+  }
+}

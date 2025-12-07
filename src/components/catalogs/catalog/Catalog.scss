@@ -1,0 +1,242 @@
+.catalog-section {
+  padding: 4rem 2rem;
+  background-color: #f9f9f9; // Slight off-white background to make cards pop
+  min-height: 80vh;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .page-title {
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    color: var(--color-text-main);
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  // === FILTER BAR STYLES ===
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    margin-bottom: 3rem;
+
+    // Search Styling
+    .search-wrapper {
+      position: relative;
+      flex: 1;
+      min-width: 250px;
+
+      .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #888;
+      }
+
+      input {
+        width: 100%;
+        padding: 0.8rem 1rem 0.8rem 3rem; // Left padding for icon
+        border: 1px solid #eee;
+        border-radius: 50px;
+        font-family: var(--font-sans);
+        outline: none;
+        transition: border 0.3s;
+
+        &:focus {
+          border-color: var(--color-accent);
+        }
+      }
+    }
+
+    // Category Buttons
+    .category-tabs {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto; // Allow scroll on mobile
+
+      .cat-btn {
+        background: transparent;
+        border: 1px solid #eee;
+        padding: 0.5rem 1.2rem;
+        border-radius: 20px;
+        cursor: pointer;
+        font-family: var(--font-sans);
+        font-size: 0.9rem;
+        transition: all 0.3s;
+        white-space: nowrap;
+
+        &:hover {
+          border-color: var(--color-accent);
+          color: var(--color-accent);
+        }
+
+        &.active {
+          background-color: var(--color-accent);
+          color: white;
+          border-color: var(--color-accent);
+        }
+      }
+    }
+
+    // Price Slider
+    .price-filter {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      min-width: 200px;
+
+      .price-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: var(--font-sans);
+        font-size: 0.9rem;
+        color: var(--color-text-main);
+        font-weight: 700;
+      }
+
+      .price-slider {
+        width: 100%;
+        accent-color: var(--color-accent); // Standard CSS for slider color
+        cursor: pointer;
+      }
+    }
+  }
+
+  // === PRODUCT GRID STYLES ===
+  .product-grid {
+    display: grid;
+    // Auto-fill creates responsive columns automatically
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+
+    .product-card {
+      background-color: white;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+
+      &:hover {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        border-color: #f0f0f0;
+
+        .add-to-cart-btn {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .image-wrapper {
+        height: 250px;
+        width: 100%;
+        position: relative;
+        background-color: #f4f4f4;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain; // Ensures whole product is visible like reference
+          padding: 1rem; // Give it some breathing room
+          mix-blend-mode: multiply; // Helps remove white backgrounds visually
+        }
+
+        // Floating Add to Cart Button
+        .add-to-cart-btn {
+          position: absolute;
+          bottom: 1.5rem;
+          right: 3rem;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          color: white;
+          border: none;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+
+          img {
+            width: 9vw;
+            height: 9vh;
+            object-fit: cover;
+          }
+        }
+      }
+
+      .card-info {
+        padding: 1.5rem;
+        text-align: center;
+
+        .product-name {
+          font-family: var(--font-serif);
+          font-size: 1.2rem;
+          margin-bottom: 0.2rem;
+          color: var(--color-text-main);
+        }
+
+        .product-category {
+          font-family: var(--font-sans);
+          font-size: 0.8rem;
+          color: #999;
+          text-transform: uppercase;
+          margin-bottom: 0.5rem;
+          letter-spacing: 1px;
+        }
+
+        .price {
+          font-family: var(--font-sans);
+          font-size: 1.1rem;
+          font-weight: 700;
+          color: #d4a373; // Gold/Brown color from your reference image for price
+        }
+      }
+    }
+  }
+
+  .no-results {
+    grid-column: 1 / -1; // Span full width
+    text-align: center;
+    padding: 4rem;
+    color: #888;
+
+    h3 {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  // === MOBILE ADJUSTMENTS ===
+  @media (max-width: 768px) {
+    .filter-bar {
+      flex-direction: column;
+      align-items: stretch;
+
+      .category-tabs {
+        padding-bottom: 0.5rem; // Space for scrollbar
+      }
+    }
+
+    .product-grid {
+      grid-template-columns: repeat(2, 1fr); // 2 columns on tablet
+      gap: 1rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .product-grid {
+      grid-template-columns: 1fr; // 1 column on phone
+    }
+  }
+}

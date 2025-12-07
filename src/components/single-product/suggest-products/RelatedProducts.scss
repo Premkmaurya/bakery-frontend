@@ -1,0 +1,208 @@
+// :root variables presumed available
+// $primary-color: #b91c46;
+
+.related-products-section {
+  padding: 4rem 2rem;
+  background-color: #fff;
+  overflow: hidden;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  // === HEADER STYLES ===
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end; // Aligns controls with the bottom of the subtitle
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+    gap: 2rem;
+
+    .text-content {
+      text-align: left; // Or center if you prefer, usually left works better with controls on right
+
+      .title {
+        font-family: var(--font-serif); // Playfair Display
+        font-size: 2.5rem;
+        color: var(--color-accent); // Your Pink/Red
+        margin-bottom: 0.5rem;
+      }
+
+      .subtitle {
+        font-family: var(--font-sans);
+        color: #777;
+        font-size: 1rem;
+      }
+    }
+
+    // Navigation Controls
+    .slider-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      .counter {
+        font-family: var(--font-sans);
+        font-weight: 700;
+        color: var(--color-text-main);
+        min-width: 40px;
+        text-align: center;
+      }
+
+      .nav-btn {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        border: 1px solid #ddd;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: var(--color-text-main);
+
+        &:hover {
+          border-color: var(--color-accent);
+          color: var(--color-accent);
+          background-color: #fff5f7;
+        }
+
+        // === NEW CODE: Disabled State ===
+        &:disabled {
+          opacity: 0.3; // Make it faded
+          cursor: not-allowed; // Show the "stop" cursor
+          border-color: #eee; // Reset border
+          background-color: #f9f9f9; // Reset background
+          color: #ccc; // Reset text color
+
+          &:hover {
+            // Prevent hover effects when disabled
+            border-color: #eee;
+            background-color: #f9f9f9;
+            color: #ccc;
+          }
+        }
+      }
+    }
+  }
+
+  // === SLIDER STYLES ===
+  .slider-window {
+    width: 100%;
+    overflow: hidden; // Hides the cards that are off-screen
+  }
+
+  .slider-track {
+    display: flex;
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1); // Smooth slide
+    width: 100%;
+  }
+
+  .product-card-wrapper {
+    // This wrapper handles the width of each slide
+    // For 3 items: 100% / 3 = 33.33%
+    flex: 0 0 33.33%;
+    padding: 0 1rem; // This creates the gap between cards
+    box-sizing: border-box;
+
+    // Mobile Responsiveness
+    @media (max-width: 900px) {
+      flex: 0 0 50%; // 2 items on tablet
+    }
+    @media (max-width: 600px) {
+      flex: 0 0 100%; // 1 item on phone
+    }
+  }
+
+  // === CARD DESIGN ===
+  .product-card {
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .card-image {
+      position: relative;
+      height: 250px;
+      background-color: #f9f9f9;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain; // Keeps cake proportions correct
+        padding: 1rem;
+      }
+
+      .wishlist-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background: white;
+        border: none;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #ccc;
+        transition: color 0.2s;
+
+        &:hover {
+          color: red; // Heart turns red on hover
+        }
+      }
+    }
+
+    .card-content {
+      padding: 1.5rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .product-name {
+        font-family: var(--font-serif);
+        font-size: 1.2rem;
+        color: var(--color-text-main);
+        margin-bottom: 0.5rem;
+      }
+
+      .product-price {
+        font-family: var(--font-sans);
+        font-weight: 700;
+        color: var(--color-accent); // Price in Pink/Red
+        font-size: 1.1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .add-cart-btn {
+        padding: 0.8rem 2rem;
+        border-radius: 50px; // Pill shape
+        background: transparent;
+        border: 1px solid var(--color-accent); // Brand border
+        color: var(--color-accent);
+        font-family: var(--font-sans);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+
+        &:hover {
+          background-color: var(--color-accent);
+          color: white;
+        }
+      }
+    }
+  }
+}

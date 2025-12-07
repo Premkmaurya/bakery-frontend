@@ -1,0 +1,93 @@
+.our-promise-section {
+  padding: 5rem 2rem;
+  background-color: var(--color-bg);
+  text-align: center;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  // === Header Styles ===
+  .promise-header {
+    margin-bottom: 4rem;
+
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: 3rem;
+      color: var(--color-text-main); // Keep title dark/neutral for elegance
+      margin-bottom: 0.5rem;
+      // Optional: If you want the main title to be accent color, uncomment next line:
+      // color: var(--color-accent); 
+    }
+
+    .separator {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      color: #b0e0e6; // Using a soft blue/cyan for the diamonds (like reference)
+      // Or change to var(--color-accent) if you want them red
+      font-size: 1.2rem;
+    }
+  }
+
+  // === Grid Layout ===
+  .promise-grid {
+    display: grid;
+    // Desktop: 4 equal columns
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 2rem;
+
+    // Tablet: 2 columns (2x2 grid)
+    @media (max-width: 1024px) {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 3rem;
+    }
+
+    // Mobile: 1 column stack
+    @media (max-width: 600px) {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+
+    // === Individual Item Styles ===
+    .promise-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: translateY(-5px); // Gentle float up on hover
+      }
+
+      .icon-wrapper {
+        color: var(--color-accent); // Icons get the brand color
+        margin-bottom: 1.5rem;
+        
+        // Optional: Add a subtle circle background behind icon?
+        // padding: 1rem;
+        // background: var(--color-gray-light);
+        // border-radius: 50%;
+      }
+
+      .item-title {
+        font-family: var(--font-serif); // Using Serif for the headers matches the reference
+        font-size: 1.1rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--color-accent); // Using YOUR brand color (Red/Pink) instead of Gold
+        margin-bottom: 1rem;
+      }
+
+      .item-text {
+        font-family: var(--font-sans);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: var(--color-text-main);
+        max-width: 250px; // Keeps the text from getting too wide and hard to read
+      }
+    }
+  }
+}

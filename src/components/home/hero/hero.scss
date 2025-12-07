@@ -1,0 +1,171 @@
+// 2. Mixins for responsiveness
+@mixin mobile {
+  @media (max-width: 768px) { @content; }
+}
+
+// 3. Main Styles
+.hero-container {
+  background-color: var(--color-bg);
+  min-height: 100vh;
+  padding: 0 4rem; // Give the whole site some breathing room
+  font-family: var(--font-sans);
+  color: var(--color-text-main);
+  overflow-x: hidden;
+
+  @include mobile {
+    padding: 0 1.5rem;
+  }
+}
+
+// Navbar Styling
+
+// Hero Content Layout
+.hero-content {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr; // Text takes 1 part, Image takes 1.2 parts
+  align-items: center;
+  gap: 2rem;
+  height: calc(100vh - 150px); // Fill remaining screen height
+
+  @include mobile {
+    grid-template-columns: 1fr; // Stack on mobile
+    height: auto;
+    text-align: center;
+  }
+
+  // Left Side
+  .text-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    @include mobile {
+      align-items: center;
+      margin-bottom: 3rem;
+    }
+
+    h1 {
+      font-family: var(--font-serif);
+      font-size: 4.5rem;
+      font-weight: 400;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      color: #111;
+
+      span {
+        font-style: italic; // "bakery shop" looks slightly different in some designs
+      }
+
+      @include mobile {
+        font-size: 3rem;
+      }
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--color-text-sub);
+      margin-bottom: 2.5rem;
+    }
+
+    .cta-button {
+      background-color: var(--color-accent);
+      color: white;
+      border: none;
+      padding: 1rem 2.5rem;
+      border-radius: 50px; // Pill shape
+      font-size: 1rem;
+      cursor: pointer;
+      width: fit-content;
+      box-shadow: 0 10px 20px rgba(var(--color-accent), 0.3); // Soft glow shadow
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 25px rgba(var(--color-accent), 0.4);
+      }
+    }
+
+    .social-icons {
+      margin-top: 5rem;
+      display: flex;
+      gap: 1.5rem;
+
+      @include mobile {
+        margin-top: 3rem;
+        justify-content: center;
+      }
+
+      .icon-circle {
+        width: 40px;
+        height: 40px;
+        border: 1px solid #ddd;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #555;
+        cursor: pointer;
+        transition: all 0.3s;
+
+        &:hover {
+          border-color: var(--color-accent);
+          color: var(--color-accent);
+        }
+      }
+    }
+  }
+
+  // Right Side
+  .image-section {
+    position: relative;
+    height: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    .hero-image {
+      width: 90%;
+      height: 85%;
+      object-fit: cover;
+      // In the design, the image has no border-radius, but distinct boundaries
+    }
+
+    .carousel-dots {
+      position: absolute;
+      bottom: 10%;
+      left: 15%; // Adjust based on alignment
+      display: flex;
+      gap: 15px;
+
+      @include mobile {
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: -20px;
+      }
+
+      .dot {
+        width: 8px;
+        height: 8px;
+        background-color: #ddd;
+        border-radius: 50%;
+        cursor: pointer;
+
+        &.active {
+          border: 1px solid var(--color-accent); // Ring effect
+          background-color: transparent;
+          position: relative;
+
+          &::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 4px; height: 4px;
+            background-color: var(--color-accent);
+            border-radius: 50%;
+          }
+        }
+      }
+    }
+  }
+}

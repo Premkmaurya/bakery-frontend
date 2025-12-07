@@ -1,0 +1,111 @@
+.product-hero-section {
+  position: relative;
+  background-color: var(--color-accent); 
+  color: white;
+  
+  height: 350px; 
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; 
+  @media (max-width: 768px) {
+    height: 250px;
+  }
+
+  // === The Centered Text Content ===
+  .hero-content {
+    position: relative;
+    z-index: 2; 
+    text-align: center;
+    left: 30%;
+
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 3rem;
+      margin-top: 0;
+
+      @media (max-width: 768px) {
+        font-size: 2.5rem;
+      }
+    }
+
+    // Breadcrumbs Styling
+    .breadcrumbs-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-sans);
+      font-size: 1rem;
+
+      .breadcrumb-item {
+        a {
+          // Links are white
+          color: white;
+          text-decoration: none;
+          opacity: 0.8; // Slightly dimmed for non-active link
+          transition: opacity 0.2s;
+
+          &:hover {
+            opacity: 1;
+          }
+        }
+
+        &.active {
+          // The current page gets full opacity
+          opacity: 1;
+          font-weight: 600;
+        }
+      }
+
+      .breadcrumb-separator {
+        margin: 0 0.5rem;
+        display: flex;
+        align-items: center;
+        opacity: 0.8;
+      }
+    }
+  }
+
+  // === Illustration Positioning ===
+  .illustration-container {
+    position: absolute;
+    bottom: 0;
+    z-index: 1;
+    height: 85%; 
+    display: flex;
+    align-items: flex-end;
+    pointer-events: none; 
+    img {
+      max-height: 100%;
+      width: auto;
+      // Optional: make placeholders slightly transparent so they don't clash
+      opacity: 0.9; 
+    }
+
+    &.left {
+      left: 5%; // Offset slightly from the left edge
+    }
+
+    &.right {
+      right: 5%; // Offset slightly from the right edge
+    }
+
+    // Mobile adjustments
+    @media (max-width: 900px) {
+        height: 50%; // Shrink them down significantly
+        opacity: 0.4; // Fade them out so text is clearer
+
+        &.left { left: -20px; }
+        &.right { right: -20px; }
+    }
+    
+    // Hide entirely on small phones for a cleaner look
+    @media (max-width: 480px) {
+       display: none;
+    }
+  }
+}

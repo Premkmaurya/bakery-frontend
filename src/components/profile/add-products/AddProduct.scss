@@ -1,0 +1,273 @@
+.add-product-wrapper {
+  .section-title {
+    font-family: var(--font-serif);
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    color: var(--color-text-main);
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1rem;
+  }
+
+  .product-form {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr; // Image area smaller, details wider
+    gap: 3rem;
+
+    @media (max-width: 900px) {
+      grid-template-columns: 1fr; // Stack on mobile
+      gap: 2rem;
+    }
+
+    .section-label {
+      display: block;
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.8rem;
+      color: var(--color-text-main);
+    }
+
+    // === IMAGE UPLOAD AREA ===
+    .image-dropzone {
+      border: 2px dashed #e0e0e0;
+      border-radius: 12px;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #fafafa;
+      transition: all 0.3s ease;
+      overflow: hidden;
+      position: relative;
+
+      &.has-image {
+        border-style: solid;
+        border-color: transparent;
+        padding: 0;
+      }
+
+      .upload-label {
+        text-align: center;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #777;
+
+        .icon-bg {
+          width: 60px;
+          height: 60px;
+          background-color: #eee;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 1rem;
+          color: #555;
+          transition: all 0.3s;
+        }
+
+        span {
+          font-weight: 700;
+          font-size: 1rem;
+          color: var(--color-text-main);
+        }
+
+        p {
+          font-size: 0.8rem;
+          margin-top: 0.5rem;
+          color: #999;
+        }
+
+        &:hover .icon-bg {
+          background-color: var(--color-accent);
+          color: white;
+        }
+      }
+
+      .preview-container {
+        width: 100%;
+        height: 100%;
+        position: relative;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .remove-btn {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          background: rgba(0, 0, 0, 0.5);
+          color: white;
+          border: none;
+          border-radius: 50%;
+          width: 32px;
+          height: 32px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: background 0.3s;
+
+          &:hover {
+            background: var(--color-accent);
+          }
+        }
+      }
+    }
+
+    // === FORM FIELDS ===
+    .details-section {
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+
+        @media (max-width: 600px) {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+
+        label {
+          display: block;
+          font-family: var(--font-sans);
+          font-weight: 700;
+          font-size: 0.9rem;
+          margin-bottom: 0.5rem;
+          color: var(--color-text-main);
+        }
+
+        // Wrapper for icons inside inputs
+        .name-input,
+        .input-with-icon,
+        .select-wrapper,
+        .textarea-wrapper {
+          position: relative;
+
+          .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            pointer-events: none;
+
+            &.area-icon {
+              top: 1.2rem; // Adjust for textarea
+              transform: none;
+            }
+          }
+
+          input,
+          select,
+          textarea {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.8rem; // Left padding for icon
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+            background: white;
+
+            &:focus {
+              border-color: var(--color-accent);
+              box-shadow: 0 0 0 4px rgba(185, 28, 70, 0.05);
+            }
+          }
+
+          textarea {
+            resize: vertical;
+          }
+        }
+      }
+
+      // Checkbox Styling
+      .checkbox-group {
+        .checkbox-container {
+          display: flex;
+          align-items: center;
+          position: relative;
+          padding-left: 30px;
+          cursor: pointer;
+          font-size: 0.95rem;
+          user-select: none;
+
+          input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+
+            &:checked ~ .checkmark {
+              background-color: var(--color-accent);
+              border-color: var(--color-accent);
+              &::after {
+                display: block;
+              }
+            }
+          }
+
+          .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 20px;
+            width: 20px;
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            transition: all 0.2s;
+
+            &::after {
+              content: "";
+              position: absolute;
+              display: none;
+              left: 6px;
+              top: 2px;
+              width: 5px;
+              height: 10px;
+              border: solid white;
+              border-width: 0 2px 2px 0;
+              transform: rotate(45deg);
+            }
+          }
+        }
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 1rem;
+        background-color: var(--color-accent);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-family: var(--font-sans);
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        transition: background 0.3s;
+
+        &:hover {
+          background-color: #b91c46;
+        }
+      }
+    }
+  }
+}

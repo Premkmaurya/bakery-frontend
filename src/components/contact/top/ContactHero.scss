@@ -1,0 +1,81 @@
+.contact-hero-section {
+  position: relative;
+  // Using your brand accent color for the banner background
+  background-color: var(--color-accent);
+  // Using white text for maximum contrast
+  color: var(--color-bg);
+
+  height: 350px; // Standard hero banner height
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; // Important: cuts off the bottom of illustrations cleanly
+
+  // Adjust height for smaller screens
+  @media (max-width: 768px) {
+    height: 250px;
+  }
+
+  // === The Centered Text Content ===
+  .hero-content {
+    position: relative;
+    z-index: 2; // Ensures text sits ON TOP of the illustrations
+    text-align: center;
+
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      margin-top: 0;
+
+      @media (max-width: 768px) {
+        font-size: 2.5rem;
+      }
+    }
+  }
+
+  // === Illustration Positioning ===
+  .illustration-container {
+    position: absolute;
+    bottom: 0; // Anchored to the bottom edge
+    z-index: 1; // Sits behind the text
+    height: 85%; // Illustrations take up most of the banner height
+    display: flex;
+    align-items: flex-end;
+    pointer-events: none; // Prevents user from trying to click or drag illustrations
+
+    img {
+      max-height: 100%;
+      width: auto;
+      // Optional: make placeholders slightly transparent so they don't clash
+      opacity: 0.9;
+    }
+
+    &.left {
+      left: 5%; // Offset slightly from the left edge
+    }
+
+    &.right {
+      right: 5%; // Offset slightly from the right edge
+    }
+
+    // Mobile adjustments
+    @media (max-width: 900px) {
+      height: 50%; // Shrink them down significantly
+      opacity: 0.4; // Fade them out so text is clearer
+
+      &.left {
+        left: -20px;
+      }
+      &.right {
+        right: -20px;
+      }
+    }
+
+    // Hide entirely on small phones for a cleaner look
+    @media (max-width: 480px) {
+      display: none;
+    }
+  }
+}

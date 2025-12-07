@@ -1,0 +1,117 @@
+.contact-form-section {
+  padding: 5rem 2rem;
+  background-color: var(--color-bg); // White background
+  
+  .container {
+    max-width: 50vw; // Limits the width so the form looks elegant
+    margin: 0 auto;
+  }
+
+  // === Header ===
+  .form-header {
+    text-align: center;
+    margin-bottom: 3rem;
+
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      color: var(--color-text-main);
+      margin-bottom: 1rem;
+    }
+
+    .section-subtitle {
+      font-family: var(--font-sans);
+      font-size: 1.1rem;
+      color: var(--color-text-sub);
+      line-height: 1.6;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  }
+
+  // === Form Styling ===
+  .contact-form {
+    background-color: white;
+    // Optional: Add a subtle shadow or border if you want it to look like a card
+    // box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+    // padding: 2rem; 
+    // border-radius: 12px;
+
+    .form-group {
+      margin-bottom: 1.5rem;
+
+      label {
+        display: block;
+        font-family: var(--font-sans);
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: var(--color-text-main);
+        margin-bottom: 0.5rem;
+      }
+
+      input, textarea {
+        width: 100%;
+        padding: 1rem 1.2rem;
+        font-family: var(--font-sans);
+        font-size: 1rem;
+        color: var(--color-text-main);
+        background-color: #fcfcfc; // Very slight off-white for inputs
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        outline: none;
+
+        &::placeholder {
+          color: #bbb; // Lighter text for placeholders
+        }
+
+        // The Focus Effect
+        &:focus {
+          border-color: var(--color-accent); // Pink/Red border on click
+          background-color: white;
+          box-shadow: 0 0 0 4px rgba(185, 28, 70, 0.05); // Subtle glow
+        }
+      }
+
+      textarea {
+        resize: vertical; // Allows user to resize height only
+      }
+    }
+
+    // === Button Styling ===
+    .submit-btn {
+      width: 100%;
+      padding: 1.2rem;
+      margin-top: 1rem;
+      border: none;
+      border-radius: 50px; // Pill shape button
+      background-color: var(--color-accent); // Your Brand Pink/Red
+      color: white;
+      
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem; // Space between text and icon
+      
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 20px rgba(185, 28, 70, 0.2); // Colored shadow
+
+      &:hover {
+        background-color: #a0153a; // Slightly darker red on hover
+        transform: translateY(-2px); // Lift effect
+        box-shadow: 0 15px 25px rgba(185, 28, 70, 0.3);
+      }
+
+      &:active {
+        transform: translateY(0); // Pressed down effect
+      }
+    }
+  }
+}

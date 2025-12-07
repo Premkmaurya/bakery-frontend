@@ -1,0 +1,265 @@
+// :root variables presumed available
+// $primary-color: #b91c46; 
+
+.manage-address-wrapper {
+  .section-title {
+    font-family: var(--font-serif);
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    color: var(--color-text-main);
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1rem;
+  }
+
+  // === GRID LAYOUT ===
+  .address-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); // Responsive columns
+    gap: 1.5rem;
+
+    // === ADD NEW CARD ===
+    .add-new-card {
+      min-height: 250px;
+      border: 2px dashed #ddd; // Dashed border indicates "Empty/Add"
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background-color: #fafafa;
+      transition: all 0.3s ease;
+      color: #999;
+
+      &:hover {
+        border-color: var(--color-accent);
+        background-color: #fff5f7; // Very light pink
+        color: var(--color-accent);
+
+        .icon-wrapper {
+          background-color: var(--color-accent);
+          color: white;
+        }
+      }
+
+      .icon-wrapper {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: #eee;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      h3 {
+        font-family: var(--font-sans);
+        font-size: 1.1rem;
+        font-weight: 700;
+      }
+    }
+
+    // === ADDRESS CARD ===
+    .address-card {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.3s ease;
+      position: relative;
+      min-height: 250px;
+
+      // Highlight Default Address
+      &.default {
+        border-color: var(--color-accent);
+        box-shadow: 0 5px 15px rgba(185, 28, 70, 0.08);
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+
+        .address-type {
+          background-color: #f4f4f4;
+          padding: 0.3rem 0.8rem;
+          border-radius: 4px;
+          font-size: 0.85rem;
+          font-weight: 700;
+          color: #555;
+          text-transform: uppercase;
+        }
+
+        .default-badge {
+          color: var(--color-accent);
+          font-size: 0.85rem;
+          font-weight: 700;
+        }
+      }
+
+      .card-body {
+        margin-bottom: 1.5rem;
+
+        .user-name {
+          font-family: var(--font-serif);
+          font-size: 1.2rem;
+          margin-bottom: 0.3rem;
+          color: var(--color-text-main);
+        }
+
+        .phone {
+          font-size: 0.9rem;
+          color: #777;
+          margin-bottom: 1rem;
+        }
+
+        .address-text {
+          font-family: var(--font-sans);
+          font-size: 0.95rem;
+          line-height: 1.6;
+          color: var(--color-text-sub);
+        }
+      }
+
+      .card-actions {
+        display: flex;
+        gap: 1rem;
+        border-top: 1px solid #f9f9f9;
+        padding-top: 1rem;
+
+        .action-btn {
+          flex: 1;
+          background: none;
+          border: none;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          font-family: var(--font-sans);
+          font-size: 0.9rem;
+          cursor: pointer;
+          padding: 0.5rem;
+          border-radius: 4px;
+          transition: background 0.2s;
+
+          &.edit {
+            color: var(--color-text-main);
+            &:hover { background-color: #f0f0f0; }
+          }
+
+          &.delete {
+            color: #d32f2f;
+            &:hover { background-color: #fff5f5; }
+          }
+        }
+      }
+    }
+  }
+
+  // === FORM STYLES ===
+  .address-form {
+    background-color: #fafafa;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid #eee;
+
+    .form-title {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      margin-bottom: 1.5rem;
+      color: var(--color-text-main);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+
+      @media (max-width: 600px) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+
+      label {
+        display: block;
+        font-family: var(--font-sans);
+        font-weight: 700;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+        color: var(--color-text-main);
+      }
+
+      input {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        font-family: var(--font-sans);
+        outline: none;
+        transition: border 0.3s;
+        background: white;
+
+        &:focus {
+          border-color: var(--color-accent);
+        }
+      }
+
+      .radio-group {
+        display: flex;
+        gap: 1.5rem;
+        
+        .radio-label {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          cursor: pointer;
+          font-size: 0.95rem;
+
+          input[type="radio"] {
+            width: auto;
+            accent-color: var(--color-accent);
+          }
+        }
+      }
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 2rem;
+
+      button {
+        padding: 0.8rem 2rem;
+        border-radius: 50px;
+        font-family: var(--font-sans);
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .cancel-btn {
+        background: white;
+        border: 1px solid #ddd;
+        color: #555;
+        &:hover { background-color: #f4f4f4; }
+      }
+
+      .save-btn {
+        background: var(--color-accent);
+        border: none;
+        color: white;
+        &:hover { background-color: #b91c46; }
+      }
+    }
+  }
+}

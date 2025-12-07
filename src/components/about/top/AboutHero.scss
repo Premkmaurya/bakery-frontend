@@ -1,0 +1,269 @@
+.about-hero-section {
+  position: relative;
+  // Use your brand's accent color for the bold banner background
+  background-color: var(--color-accent);
+  // Use white text for contrast against the dark accent color
+  color: var(--color-bg);
+
+  height: 350px; // Fixed height for the banner look
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; // Prevents illustrations from spilling out
+
+  // Adjust height for smaller screens
+  @media (max-width: 768px) {
+    height: 250px;
+  }
+
+  // The Centered Text Content
+  .hero-content {
+    position: relative;
+    z-index: 2; // Ensures text is above the illustrations
+    text-align: center;
+
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+
+      @media (max-width: 768px) {
+        font-size: 2.5rem;
+      }
+    }
+
+    // Breadcrumbs Styling
+    .breadcrumbs-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-sans);
+      font-size: 1rem;
+
+      .breadcrumb-item {
+        a {
+          // Links are white to match the text
+          color: var(--color-bg);
+          text-decoration: none;
+          opacity: 0.8;
+          transition: opacity 0.2s;
+
+          &:hover {
+            opacity: 1;
+          }
+        }
+
+        &.active {
+          // The current page gets full opacity
+          opacity: 1;
+          font-weight: 600;
+        }
+      }
+
+      .breadcrumb-separator {
+        margin: 0 0.5rem;
+        display: flex;
+        align-items: center;
+        opacity: 0.8;
+      }
+    }
+  }
+
+  // Illustration Positioning
+  .illustration-container {
+    position: absolute;
+    bottom: 0;
+    z-index: 1; // Sits behind text
+    height: 80%; // Illustrations take up 80% of banner height
+    display: flex;
+    align-items: flex-end;
+
+    img {
+      max-height: 100%;
+      width: auto;
+      // Optional: make placeholders slightly transparent so they don't clash too much
+      opacity: 0.9;
+    }
+
+    &.left {
+      left: 5%; // Offset slightly from the edge
+    }
+
+    &.right {
+      right: 5%;
+    }
+
+    // Mobile adjustments for illustrations
+    @media (max-width: 900px) {
+      height: 50%; // Shrink them down
+      opacity: 0.5; // Fade them out so text is clearer
+
+      &.left {
+        left: -20px;
+      }
+      &.right {
+        right: -20px;
+      }
+    }
+    // Hide entirely on very small phones if needed for clarity
+    @media (max-width: 480px) {
+      display: none;
+    }
+  }
+}
+.who-we-are-section {
+  padding: 5rem 2rem 2rem; // Extra top padding for breathing room
+  background-color: var(--color-bg);
+  overflow: hidden; // Keeps the watermark from causing scrollbars
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  // === Text Styles ===
+  .text-content {
+    max-width: 900px; // Limits width so lines aren't too long to read
+    margin: 0 auto 4rem; // Center it and push the images down
+
+    .section-title {
+      font-family: var(--font-serif); // Playfair Display
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--color-text-main);
+      margin-bottom: 2rem;
+    }
+
+    .description {
+      font-family: var(--font-sans); // Lato
+      font-size: 1.1rem;
+      line-height: 1.8; // Makes the block of text easier to read
+      color: var(--color-text-sub);
+    }
+  }
+
+  // === Visual Composition Styles ===
+  .visual-composition {
+    position: relative; // Needed so we can position the watermark absolutely inside this
+    display: flex;
+    justify-content: center;
+    padding-top: 2rem;
+
+    // The "Hollow" Background Text
+    .watermark-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%); // Perfectly center it
+
+      font-family: var(--font-sans);
+      font-weight: 900;
+      font-size: 12rem; // HUGE text
+      line-height: 1;
+      white-space: nowrap; // Don't let it wrap to two lines
+      z-index: 0; // Send to back
+
+      // The Outline Magic
+      color: transparent; // No fill color
+      -webkit-text-stroke: 2px #f0f0f0; // Subtle gray outline
+      text-transform: uppercase;
+      letter-spacing: 10px;
+      user-select: none; // User can't highlight this text
+    }
+
+    // The Cakes Container
+    .cakes-container {
+      position: relative;
+      z-index: 1; // Bring to front (over the watermark)
+      display: flex;
+      align-items: flex-end; // Align bottoms of cakes
+      justify-content: center;
+      gap: 2rem; // Space between cakes
+
+      .cake-item {
+        // Make sure overflowing scaled images are clipped
+        overflow: hidden;
+
+        img {
+          width: 100%;
+          border-radius: 50%;
+          height: auto;
+          display: block;
+          object-fit: cover;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); // Soft shadow for depth
+          transition: transform 0.45s cubic-bezier(.2,.9,.2,1);
+          transform-origin: center center;
+        }
+
+        // Hover scale to match catalog zoom behavior
+        &:hover img {
+          transform: scale(1.02);
+        }
+
+        &.side-cake {
+          width: 200px;
+          height: 200px; // Make them circles
+          margin-bottom: 20px; // Lift them slightly higher than the big one? Or keep aligned.
+
+          img {
+            height: 100%;
+          }
+        }
+
+        &.center-cake {
+          width: 300px; // Center one is bigger
+          height: 380px; // Taller for tiered cake
+
+          img {
+            height: 100%;
+            border-radius: 150px 150px 20px 20px; // Dome shape if desired, or just use transparent PNG
+          }
+        }
+      }
+    }
+  }
+
+  // === Mobile Responsiveness ===
+  @media (max-width: 768px) {
+    .text-content {
+      .section-title {
+        font-size: 2.2rem;
+      }
+      .description {
+        font-size: 1rem;
+        padding: 0 1rem;
+      }
+    }
+
+    .visual-composition {
+      .watermark-text {
+        font-size: 5rem; // Shrink watermark significantly
+        top: 20%; // Move it up a bit
+      }
+
+      .cakes-container {
+        flex-direction: column; // Stack cakes vertically
+        align-items: center;
+        gap: 1rem;
+        margin-top: 2rem;
+
+        .cake-item.side-cake {
+          width: 150px;
+          height: 150px;
+          margin-bottom: 0;
+        }
+
+        .cake-item.center-cake {
+          width: 220px;
+          height: 280px;
+          order: -1; // Put the big cake on top
+        }
+      }
+    }
+  }
+}

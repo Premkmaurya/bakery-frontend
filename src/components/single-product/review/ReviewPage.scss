@@ -1,0 +1,244 @@
+// :root variables presumed available
+// $primary-color: #b91c46;
+
+.reviews-page-section {
+  padding: 4rem 2rem;
+  background-color: #fcfcfc; // Slightly off-white background
+  min-height: 100vh;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .page-title {
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    color: var(--color-text-main);
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .section-header {
+    font-family: var(--font-serif);
+    font-size: 1.8rem;
+    color: var(--color-text-main);
+    margin-bottom: 1.5rem;
+  }
+
+  // === TOP STATS CONTAINER ===
+  .stats-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.03);
+    margin-bottom: 3rem;
+    border: 1px solid #f0f0f0;
+
+    // Left Column (Bars)
+    .breakdown-col {
+      flex: 2; // Takes more space
+      min-width: 300px;
+
+      .rating-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.8rem;
+        gap: 1rem;
+
+        .label {
+          font-family: var(--font-sans);
+          font-weight: 700;
+          font-size: 0.9rem;
+          width: 60px;
+        }
+
+        .progress-bg {
+          flex: 1;
+          height: 8px;
+          background-color: #eee;
+          border-radius: 10px;
+          overflow: hidden;
+
+          .progress-fill {
+            height: 100%;
+            // Using BRAND COLOR for bars instead of yellow for better branding
+            background-color: var(--color-accent);
+            border-radius: 10px;
+          }
+        }
+
+        .count {
+          width: 40px;
+          text-align: right;
+          font-size: 0.9rem;
+          color: #777;
+        }
+      }
+    }
+
+    // Right Column (Score)
+    .score-col {
+      flex: 1;
+      min-width: 250px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: #fffcf5; // Very light yellow tint bg for score
+      border-radius: 12px;
+      padding: 1.5rem;
+
+      .big-score {
+        font-family: var(--font-serif);
+        font-size: 4rem;
+        font-weight: 700;
+        color: #ffc107; // Gold color for number
+        line-height: 1;
+        margin-bottom: 0.5rem;
+      }
+
+      .total-ratings {
+        margin-top: 0.5rem;
+        font-family: var(--font-sans);
+        color: #777;
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  // === CONTENT GRID (LIST + FORM) ===
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr; // Left side is wider
+    gap: 3rem;
+
+    @media (max-width: 900px) {
+      grid-template-columns: 1fr; // Stack on mobile
+    }
+
+    // === FEEDBACK LIST ===
+    .feedbacks-col {
+      .review-card {
+        background: white;
+        border: 1px solid #f0f0f0;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        transition: transform 0.3s;
+
+        &:hover {
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+          transform: translateY(-2px);
+        }
+
+        .review-head {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          margin-bottom: 1rem;
+
+          .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+          }
+
+          .user-info {
+            flex: 1;
+            .user-name {
+              font-family: var(--font-serif);
+              font-size: 1.1rem;
+              margin-bottom: 0.2rem;
+              color: var(--color-text-main);
+            }
+          }
+
+          .review-date {
+            font-size: 0.85rem;
+            color: #999;
+          }
+        }
+
+        .review-text {
+          font-family: var(--font-sans);
+          color: var(--color-text-sub);
+          line-height: 1.6;
+        }
+      }
+    }
+
+    // === FORM COLUMN ===
+    .form-col {
+      .review-form {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        border: 1px solid #e0e0e0;
+
+        .form-group {
+          margin-bottom: 1.5rem;
+
+          label {
+            display: block;
+            font-family: var(--font-sans);
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            color: var(--color-text-main);
+          }
+
+          .star-input {
+            display: flex;
+            gap: 0.5rem;
+
+            .star-btn {
+              cursor: pointer;
+              transition: transform 0.2s;
+              &:hover {
+                transform: scale(1.2);
+              }
+            }
+          }
+
+          input,
+          textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: var(--font-sans);
+            outline: none;
+            transition: all 0.3s;
+
+            &:focus {
+              border-color: var(--color-accent);
+              background-color: #fffbfb;
+            }
+          }
+        }
+
+        .submit-btn {
+          width: 100%;
+          padding: 1rem;
+          background-color: var(--color-accent); // Brand Pink/Red
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-weight: 700;
+          font-size: 1rem;
+          cursor: pointer;
+          transition: background 0.3s;
+
+          &:hover {
+            background-color: #b91c46;
+          }
+        }
+      }
+    }
+  }
+}
