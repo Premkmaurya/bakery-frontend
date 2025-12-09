@@ -1,7 +1,61 @@
 import React from "react";
-import './terms.scss';
+import "./terms.scss";
+
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { SplitText } from "gsap/all";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const Terms = () => {
+  gsap.registerPlugin(useGSAP);
+  gsap.registerPlugin(SplitText);
+  gsap.registerPlugin(ScrollTrigger);
+
+  useGSAP(() => {
+    // Wait for fonts to load before running animations
+    document.fonts.ready.then(() => {
+      const split = new SplitText(".section-title", { type: "words,lines" });
+      const split1 = new SplitText(".delivery-list li", {
+        type: "words,lines",
+      });
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".delivery-section",
+          start: "top 80%",
+          end: "top 30%",
+        },
+      });
+      tl.from(split.lines, {
+        duration: 0.8,
+        yPercent: 100,
+        opacity: 0,
+        stagger: 0.1,
+        ease: "expo.out",
+      })
+        .from(
+          split1.lines,
+          {
+            duration: 0.8,
+            yPercent: 100,
+            opacity: 0,
+            stagger: 0.1,
+            ease: "expo.out",
+          },
+          "-=0.6"
+        )
+        .from(
+          ".delivery-image img",
+          {
+            duration: 1,
+            scale: 1.2,
+            opacity: 0,
+            ease: "expo.out",
+          },
+          "-=1"
+        );
+    });
+  }, []);
+
   return (
     <div>
       {" "}

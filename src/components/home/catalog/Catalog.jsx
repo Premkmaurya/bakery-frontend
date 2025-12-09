@@ -17,7 +17,6 @@ const Catalog = () => {
       scrollTrigger: {
         trigger: ".catalog-container",
         start: "top 80%",
-        markers: true,
       }
     });
     tl.from(split.lines, {

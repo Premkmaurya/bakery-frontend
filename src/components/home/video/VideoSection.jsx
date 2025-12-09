@@ -19,7 +19,6 @@ const VideoSection = () => {
         trigger: ".video-section-container",
         start: "top 80%",
         end: "top 30%",
-        markers: true,
       }
     });
     tl.from(split.lines, {

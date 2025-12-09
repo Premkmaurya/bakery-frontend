@@ -2,6 +2,11 @@ import React, { useState } from "react";
 import "./review.scss"; // We will write this next
 import { ArrowLeft, ArrowRight } from "lucide-react"; // Or use simple SVG icons
 
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { SplitText } from "gsap/all";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
 const reviewsData = [
   {
     id: 1,
@@ -34,6 +39,62 @@ const reviewsData = [
 
 const ReviewsSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  gsap.registerPlugin(useGSAP);
+  gsap.registerPlugin(SplitText);
+  gsap.registerPlugin(ScrollTrigger);
+
+  useGSAP(() => {
+    document.fonts.ready.then(() => {
+      const split = new SplitText(".section-title", { type: "words,lines" });
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".reviews-section",
+          start: "top 80%",
+          end: "top 30%",
+        },
+      });
+      tl.from(split.lines, {
+        duration: 0.8,
+        yPercent: 100,
+        opacity: 0,
+        stagger: 0.1,
+        ease: "expo.out",
+      });
+    });
+  }, []);
+
+  // Animate slide content on mount and when currentIndex changes
+  useGSAP(() => {
+    const allCards = document.querySelectorAll(".review-card");
+    const currentCard = allCards[currentIndex];
+
+    if (!currentCard) return;
+
+    const image = currentCard.querySelector(".card-image-wrapper");
+    const content = currentCard.querySelector(".card-content");
+
+    const tl = gsap.timeline();
+    tl.from(
+      image,
+      {
+        duration: 0.8,
+        xPercent: -100,
+        opacity: 0,
+        ease: "expo.out",
+      },
+      0
+    ).from(
+      content,
+      {
+        duration: 0.8,
+        xPercent: 100,
+        opacity: 0,
+        ease: "expo.out",
+      },
+      0
+    );
+  }, [currentIndex]);
 
   // Logic to go to the next slide
   const handleNext = () => {
