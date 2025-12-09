@@ -3,8 +3,67 @@ import { useForm } from "react-hook-form"; // Import the hook
 import { Link } from "react-router-dom";
 import "./RegisterForm.scss";
 
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { SplitText } from "gsap/all";
+
 const ResiterForm = () => {
   // Destructure the magic tools from the hook
+  gsap.registerPlugin(useGSAP);
+  gsap.registerPlugin(SplitText);
+
+  useGSAP(() => {
+    document.fonts.ready.then(() => {
+      const split = new SplitText(".login-title", { type: "words,lines" });
+
+      const tl = gsap.timeline({
+        defaults: {
+          duration: 0.7,
+          ease: "expo.out",
+        },
+      });
+      tl.from(split.lines, {
+        duration: 0.8,
+        yPercent: 60,
+        opacity: 0,
+        stagger: 0.1,
+      })
+        .from(
+          ".form-group",
+          {
+            y: 30,
+            opacity: 0,
+            stagger: 0.2,
+          },
+          "-=0.4"
+        )
+        .from(
+          ".social-login",
+          {
+            y: 30,
+            opacity: 0,
+          },
+          "-=0.6"
+        )
+        .from(
+          ".submit-btn",
+          {
+            y: 30,
+            opacity: 0,
+          },
+          "-=0.6"
+        )
+        .from(
+          ".register-link",
+          {
+            y: 30,
+            opacity: 0,
+          },
+          "-=0.6"
+        );
+    });
+  }, []);
+
   const {
     register,
     handleSubmit,
@@ -94,7 +153,9 @@ const ResiterForm = () => {
                 className={errors.confirmPassword ? "input-error" : ""}
               />
               {errors.confirmPassword && (
-                <span className="error-msg">{errors.confirmPassword.message}</span>
+                <span className="error-msg">
+                  {errors.confirmPassword.message}
+                </span>
               )}
             </div>
 

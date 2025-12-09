@@ -28,7 +28,7 @@ const ContactForm = () => {
       <div className="container">
         
         <div className="form-header">
-          <h2 className="section-title">Submit Your Inquiry</h2>
+          <h2 className="form-title">Submit Your Inquiry</h2>
           <p className="section-subtitle">
             Have a question about our cakes or need a custom order? 
             Fill out the form below and our team will get back to you within 24 hours.

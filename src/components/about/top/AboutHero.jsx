@@ -1,8 +1,52 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./AboutHero.scss";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { SplitText } from "gsap/all";
 
 const AboutHero = () => {
+  gsap.registerPlugin(useGSAP);
+  gsap.registerPlugin(SplitText);
+
+  useGSAP(() => {
+    document.fonts.ready.then(() => {
+      const split = new SplitText(".hero-title", { type: "words,lines" });
+      const split1 = new SplitText(".section-title", { type: "words,lines" });
+      const split2 = new SplitText(".description", { type: "words,lines" });
+      const tl = gsap.timeline();
+      tl.from(split.lines, {
+        duration: 0.8,
+        xPercent: -100,
+        opacity: 0,
+        stagger: 0.1,
+        ease: "expo.out",
+      })
+        .from(
+          split1.lines,
+          {
+            duration: 0.8,
+            yPercent: 100,
+            opacity: 0,
+            stagger: 0.1,
+            ease: "expo.out",
+          },
+          "-=0.5"
+        )
+        .from(
+          split2.lines,
+          {
+            duration: 0.8,
+            yPercent: 100,
+            opacity: 0,
+            stagger: 0.05,
+            ease: "expo.out",
+          },
+          "-=0.6"
+        )
+    });
+  }, []);
+
   // PLACEHOLDER IMAGES - Replace these with your actual brand illustrations (SVGs preferred)
   const leftIllustration =
     "https://cdn-icons-png.flaticon.com/512/4568/4568869.png"; // Example: baker/party
