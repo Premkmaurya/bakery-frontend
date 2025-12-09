@@ -5,9 +5,47 @@ import "notyf/notyf.min.css";
 import { useNavigate } from "react-router-dom";
 import { Search, SlidersHorizontal, ShoppingCart } from "lucide-react";
 
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { SplitText } from "gsap/all";
+
 const Catalog = () => {
   const notyf = new Notyf();
   const navigate = useNavigate();
+
+  gsap.registerPlugin(useGSAP);
+  gsap.registerPlugin(SplitText);
+
+  useGSAP(() => {
+    document.fonts.ready.then(() => {
+      const split = new SplitText(".page-title", { type: "words,lines" });
+  
+      const tl = gsap.timeline();
+      tl.from(split.lines, {
+        duration: 0.8,
+        yPercent: 40,
+        opacity: 0,
+        stagger: 0.1,
+        ease: "expo.out",
+      })
+      .from(".filter-bar", {
+        duration: 0.6,
+        y: 20,
+        opacity: 0,
+        ease: "expo.out",
+      }, "-=0.4"
+      )
+      .from(".category-tabs", {
+        duration: 0.6,
+        y: 20,
+        opacity: 0,
+        stagger: 0.1,
+        ease: "expo.out",
+      }, "-=0.4");
+    });
+  }, []);
+
+
   // === 1. MOCK DATA ===
   // In a real app, this would come from an API
   const products = [

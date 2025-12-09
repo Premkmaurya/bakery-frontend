@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./RelatedProducts.scss";
+import { FaHeart } from "react-icons/fa";
 import { Heart, ChevronLeft, ChevronRight, ShoppingCart } from "lucide-react";
 
 const RelatedProducts = () => {
@@ -41,6 +42,15 @@ const RelatedProducts = () => {
         "https://images.unsplash.com/photo-1535141192574-5d4897c12636?q=80&w=1000&auto=format&fit=crop",
     },
   ];
+  const [wishedProducts, setWishedProducts] = useState({});
+
+  // Toggle wishlist for a specific product
+  const toggleWishlist = (productId) => {
+    setWishedProducts((prev) => ({
+      ...prev,
+      [productId]: !prev[productId],
+    }));
+  };
 
   // === SLIDER LOGIC ===
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -119,10 +129,15 @@ const RelatedProducts = () => {
                   <div className="card-image">
                     <img src={product.image} alt={product.name} />
                     <button
+                      onClick={() => toggleWishlist(product.id)}
                       className="wishlist-btn"
                       aria-label="Add to wishlist"
                     >
-                      <Heart size={18} />
+                      {wishedProducts[product.id] ? (
+                        <FaHeart color="red" size={18} />
+                      ) : (
+                        <Heart size={18} />
+                      )}
                     </button>
                   </div>
 
