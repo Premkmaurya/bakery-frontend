@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
+    "gsap": "^3.14.1",
     "lucide-react": "^0.555.0",
     "notyf": "^3.10.0",
     "react": "^19.2.0",

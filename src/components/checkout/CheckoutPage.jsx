@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   MapPin,
   Plus,
@@ -11,6 +12,7 @@ import {
 import "./CheckoutPage.scss";
 
 const CheckoutPage = () => {
+  const navigate = useNavigate();
   // === 1. MOCK DATA ===
   const [addresses, setAddresses] = useState([
     {
@@ -380,7 +382,7 @@ const CheckoutPage = () => {
                 <p>Safe and Secure Payments. 100% Authentic products.</p>
               </div>
 
-              <button className="place-order-btn">Place Order</button>
+              <button onClick={()=> navigate("/products/2/payment-method")} className="place-order-btn">Place Order</button>
             </div>
           </div>
         </div>

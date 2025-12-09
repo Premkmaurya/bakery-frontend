@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Trash2, Info } from 'lucide-react'; // Using lucide-react for icons
 import './CartPage.scss';
+import { useNavigate } from 'react-router-dom';
 
 // Mock data for the cart items based on your image
 const initialCartItems = [
@@ -31,6 +32,7 @@ const initialCartItems = [
 ];
 
 const CartPage = () => {
+  const navigate = useNavigate();
   const [cartItems, setCartItems] = useState(initialCartItems);
   const [voucherCode, setVoucherCode] = useState('');
 
@@ -121,7 +123,7 @@ const CartPage = () => {
               </span>
             </p>
 
-            <button className="checkout-btn">Checkout Now</button>
+            <button onClick={()=>navigate("/products/1/payment-method")} className="checkout-btn">Checkout Now</button>
           </div>
 
         </div>
