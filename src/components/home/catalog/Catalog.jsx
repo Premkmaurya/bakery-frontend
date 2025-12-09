@@ -1,7 +1,52 @@
 import React, { useState } from 'react';
 import './catalog.scss';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+import { SplitText } from 'gsap/all';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const Catalog = () => {
+
+  gsap.registerPlugin(useGSAP);
+  gsap.registerPlugin(SplitText);
+  gsap.registerPlugin(ScrollTrigger);
+
+  useGSAP(()=>{
+    const split = new SplitText(".catalog-title", { type: "words,lines" });
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".catalog-container",
+        start: "top 80%",
+        markers: true,
+      }
+    });
+    tl.from(split.lines, {
+      duration: 0.8,
+      yPercent: 100,
+      opacity: 0,
+      stagger: 0.1,
+      ease: "expo.out",
+    })
+    .from(".catalog-tabs li", {
+      duration: 0.7,
+      yPercent: 100,
+      opacity: 0,
+      stagger: 0.1,
+      ease: "expo.out",
+    }, "-=0.5")
+    .from(".cake-card", {
+      duration: 0.8,
+      yPercent: 50,
+      opacity: 0,
+      stagger: {
+        amount: 0.4,
+      },
+      ease: "expo.out",
+    }, "-=0.6")
+  },[])
+
+
+
   const [activeCategory, setActiveCategory] = useState('Popular cakes');
 
   const categories = [

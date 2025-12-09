@@ -1,7 +1,45 @@
 import React from 'react';
 import "./advantage.scss"
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+import { SplitText } from 'gsap/all';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const Advantages = () => {
+
+  
+  gsap.registerPlugin(useGSAP);
+  gsap.registerPlugin(SplitText);
+  gsap.registerPlugin(ScrollTrigger);
+
+  useGSAP(()=>{
+    const split = new SplitText(".section-title", { type: "words,lines" });
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".advantages-container",
+        start: "top 80%",
+        markers: false,
+      }
+    });
+    tl.from(split.lines, {
+      duration: 0.8,
+      yPercent: 100,
+      opacity: 0,
+      stagger: 0.1,
+      ease: "expo.out",
+    })
+    .from(".advantage-card", {
+      duration: 0.8,
+      yPercent: 50,
+      opacity: 0,
+      stagger: {
+        amount: 0.4,
+      },
+      ease: "expo.out",
+    }, "-=0.6")
+  },[])
+
+
   const advantagesData = [
     {
       id: 1,

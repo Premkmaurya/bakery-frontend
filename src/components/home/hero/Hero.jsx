@@ -1,16 +1,73 @@
-import React from 'react'
-import "./hero.scss"
-import { FaFacebookF, FaVk, FaInstagram, FaSearch } from 'react-icons/fa';
+import React from "react";
+import "./hero.scss";
+import { FaFacebookF, FaVk, FaInstagram, FaSearch } from "react-icons/fa";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { SplitText } from "gsap/all";
 
 const Hero = () => {
+  gsap.registerPlugin(useGSAP);
+  gsap.registerPlugin(SplitText);
+
+  useGSAP(() => {
+    const tl = gsap.timeline();
+    const split = new SplitText(".text-section h1", { type: "words,lines" });
+
+    tl.from(split.lines, {
+      duration: 0.8,
+      yPercent: 100,
+      opacity: 0,
+      delay: 0.6,
+      stagger: 0.1,
+      ease: "expo.out",
+    })
+      .from(".subtitle", {
+        duration: 0.7,
+        yPercent: 100,
+        opacity: 0,
+        delay: -0.5,
+        stagger: 0.1,
+        ease: "expo.out",
+      })
+      .from(".cta-button", {
+        duration: 0.8,
+        opacity: 0,
+        stagger: 0.1,
+        ease: "expo.out",
+      })
+      .from(
+        ".social-icons",
+        {
+          duration: 0.8,
+          opacity: 0,
+          stagger: {
+            amount: 0.3,
+          },
+          ease: "expo.out",
+        },
+        "-=0.6"
+      )
+      .fromTo(
+        ".hero-image",
+        {
+          scale: 1.2,
+          opacity: 0,
+        },
+        {
+          duration: 1.2,
+          scale: 1,
+          opacity: 1,
+          ease: "expo.out",
+        },"-=1.8"
+      );
+  }, []);
+
   return (
     <div className="hero-container">
       {/* Navigation Bar */}
 
-
       {/* Main Hero Content */}
       <main className="hero-content">
-
         {/* Left Side: Text Content */}
         <div className="text-section">
           <h1>
@@ -23,9 +80,15 @@ const Hero = () => {
           <button className="cta-button">Shop now</button>
 
           <div className="social-icons">
-            <div className="icon-circle"><FaFacebookF /></div>
-            <div className="icon-circle"><FaVk /></div>
-            <div className="icon-circle"><FaInstagram /></div>
+            <div className="icon-circle">
+              <FaFacebookF />
+            </div>
+            <div className="icon-circle">
+              <FaVk />
+            </div>
+            <div className="icon-circle">
+              <FaInstagram />
+            </div>
           </div>
         </div>
 
@@ -46,10 +109,9 @@ const Hero = () => {
             <span className="dot"></span>
           </div>
         </div>
-
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default Hero
+export default Hero;

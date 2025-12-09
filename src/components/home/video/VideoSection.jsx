@@ -1,7 +1,47 @@
 import React, { useRef, useEffect, useState } from 'react';
 import './video.scss';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+import { SplitText } from 'gsap/all';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const VideoSection = () => {
+
+  
+  gsap.registerPlugin(useGSAP);
+  gsap.registerPlugin(SplitText);
+  gsap.registerPlugin(ScrollTrigger);
+
+  useGSAP(()=>{
+    const split = new SplitText(".video-title", { type: "words,lines" });
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".video-section-container",
+        start: "top 80%",
+        end: "top 30%",
+        markers: true,
+      }
+    });
+    tl.from(split.lines, {
+      duration: 0.8,
+      yPercent: 100,
+      opacity: 0,
+      stagger: 0.1,
+      ease: "expo.out",
+    })
+    .fromTo(".video-wrapper", {
+      scale:1.2,
+      opacity: 0,
+    },{
+      duration: 0.8,
+      scale:1,
+      opacity: 1,
+      ease: "expo.out",
+    }, "-=0.6"
+    )
+  },[])
+
+
   const videoRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
