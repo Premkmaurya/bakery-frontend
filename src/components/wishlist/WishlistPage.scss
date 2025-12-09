@@ -1,0 +1,193 @@
+// :root variables presumed available
+// $primary-color: #b91c46;
+
+.wishlist-page-wrapper {
+  padding: 4rem 2rem;
+  background-color: #f9f9f9;
+  min-height: 80vh;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .page-title {
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    color: var(--color-text-main);
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  // === GRID LAYOUT ===
+  .wishlist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 2rem;
+
+    .wishlist-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #e0e0e0;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+
+      &:hover {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      }
+
+      // Image Area
+      .image-container {
+        position: relative;
+        height: 250px;
+        background-color: #f4f4f4;
+        overflow: hidden;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.5s ease;
+        }
+
+        &:hover img {
+          transform: scale(1.05);
+        }
+
+        .remove-btn {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          width: 35px;
+          height: 35px;
+          border-radius: 50%;
+          background: white;
+          border: none;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          color: #999;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+          transition: all 0.2s;
+
+          &:hover {
+            color: #d32f2f; // Red for trash
+            background-color: #fff5f5;
+          }
+        }
+
+        .out-of-stock-badge {
+          position: absolute;
+          bottom: 10px;
+          left: 10px;
+          background-color: rgba(0, 0, 0, 0.7);
+          color: white;
+          font-size: 0.75rem;
+          padding: 4px 8px;
+          border-radius: 4px;
+          font-weight: 700;
+        }
+      }
+
+      // Content Area
+      .card-content {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+
+        .category {
+          font-size: 0.8rem;
+          color: #999;
+          text-transform: uppercase;
+          margin-bottom: 0.3rem;
+          font-weight: 700;
+        }
+
+        .product-name {
+          font-family: var(--font-serif);
+          font-size: 1.2rem;
+          color: var(--color-text-main);
+          margin-bottom: 0.5rem;
+        }
+
+        .price {
+          font-family: var(--font-sans);
+          font-size: 1.1rem;
+          font-weight: 700;
+          color: var(--color-accent);
+          margin-bottom: 1.2rem;
+        }
+
+        .add-cart-btn {
+          margin-top: auto; // Pushes button to bottom
+          width: 100%;
+          padding: 0.8rem;
+          background-color: transparent;
+          border: 1px solid var(--color-accent);
+          color: var(--color-accent);
+          border-radius: 50px;
+          font-weight: 700;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          transition: all 0.3s;
+
+          &:hover:not(:disabled) {
+            background-color: var(--color-accent);
+            color: white;
+          }
+
+          &:disabled {
+            border-color: #ccc;
+            color: #ccc;
+            cursor: not-allowed;
+          }
+        }
+      }
+    }
+  }
+
+  // === EMPTY STATE ===
+  .empty-wishlist {
+    text-align: center;
+    padding: 4rem 0;
+    color: #888;
+
+    .empty-icon {
+      margin-bottom: 1rem;
+      color: #ddd;
+    }
+
+    h2 {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: var(--color-text-main);
+    }
+
+    p {
+      margin-bottom: 2rem;
+    }
+
+    .browse-btn {
+      display: inline-block;
+      padding: 1rem 2.5rem;
+      background-color: var(--color-text-main);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 700;
+      transition: background 0.3s;
+
+      &:hover {
+        background-color: var(--color-accent);
+      }
+    }
+  }
+}

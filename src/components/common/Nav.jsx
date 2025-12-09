@@ -1,7 +1,13 @@
 import "./nav.scss";
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { FaFacebookF, FaVk, FaInstagram, FaSearch } from "react-icons/fa";
+import {
+  FaFacebookF,
+  FaVk,
+  FaInstagram,
+  FaSearch,
+  FaShoppingCart,
+} from "react-icons/fa";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
@@ -45,36 +51,48 @@ const Nav = () => {
         duration: 0.9,
         ease: "power1.out",
       }
-    ); 
-    tl.fromTo(
-      ".nav-links .links ",
-      {
-        y: -100,
-        opacity: 0,
-      },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 0.9,
-        delay: -0.5,
-        ease: "power1.out",
-        stagger:{
-          amount: 0.3,
+    )
+      .fromTo(
+        ".nav-links .links ",
+        {
+          y: -100,
+          opacity: 0,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.9,
+          delay: -0.5,
+          ease: "power1.out",
+          stagger: {
+            amount: 0.3,
+          },
         }
-      }
-    );
-    tl.fromTo(
-      ".login-btn",
-      {
-        opacity: 0,
-      },
-      {
-        opacity: 1,
-        duration: 0.9,
-        delay: -0.5,
-        ease: "power1.out",
-      }
-    );
+      )
+      .fromTo(
+        ".login-btn",
+        {
+          opacity: 0,
+        },
+        {
+          opacity: 1,
+          duration: 0.9,
+          delay: -0.5,
+          ease: "power1.out",
+        }
+      )
+      .fromTo(
+        ".nav-icons",
+        {
+          opacity: 0,
+        },
+        {
+          opacity: 1,
+          duration: 0.9,
+          delay: -0.5,
+          ease: "power1.out",
+        }
+      );
   }, []);
 
   return (
@@ -100,9 +118,14 @@ const Nav = () => {
         ))}
       </ul>
 
-      <button onClick={() => navigate("/login")} className="login-btn">
-        Log In
-      </button>
+      <div className="nav-actions">
+        <button onClick={() => navigate("/login")} className="login-btn">
+          Log In
+        </button>
+        <div onClick={() => navigate("/wishlist")} className="nav-icons">
+          <FaShoppingCart color="" size={20} />
+        </div>
+      </div>
     </nav>
   );
 };

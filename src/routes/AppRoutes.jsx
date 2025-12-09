@@ -15,6 +15,7 @@ import Checkout from '../pages/CheckOut'
 import Cart from '../pages/Cart'
 import PaymentMethod from '../pages/PaymentMethod'
 import Profile from '../pages/Profile'
+import WishList from '../pages/WishList'
 
 const MainLayout = () => {
   return (
@@ -42,6 +43,7 @@ const AppRoutes = () => {
         <Route path="/cart" element={<Cart />} />
         <Route path="/products/:id/payment-method" element={<PaymentMethod />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/wishlist" element={<WishList />} />
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
