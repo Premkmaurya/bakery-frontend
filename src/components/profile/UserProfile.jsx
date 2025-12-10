@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { LogOut, User, Package, MapPin, Lock, Plus } from 'lucide-react';
 import './UserProfile.scss';
-
+import { useAuth } from '../../context/NavContext';
 
 import PasswordManager from './password-manager/PasswordManager';
 import PersonalInformation from './Information/PersonalInformation';
@@ -11,7 +11,19 @@ import MyOrders from './my-orders/MyOrders';
 import AddProduct from './add-products/AddProduct';
 
 const UserProfile = () => {
-  const [activeTab, setActiveTab] = useState('password'); // Default to Password Manager as per image
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+  const [activeTab, setActiveTab] = useState('personal'); // Default to Password Manager as per image
+
+  const logoutHandler = async () => {
+    const result = await logout();
+    if (result.success) {
+      navigate('/');
+    } else {
+      console.error("Logout failed:", result.error);
+    }
+  }
+
 
   // Function to render the content based on the active tab
   const renderContent = () => {
@@ -27,7 +39,7 @@ const UserProfile = () => {
       case 'password':
         return <PasswordManager />;
       default:
-        return <PasswordManager />;
+        return <PersonalInformation />;
     }
   };
 
@@ -68,7 +80,7 @@ const UserProfile = () => {
                 </button>
               ))}
               
-              <button className="nav-item logout">
+              <button onClick={logoutHandler} className="nav-item logout">
                 <span className="label">Logout</span>
                 <LogOut size={18} className="logout-icon"/>
               </button>

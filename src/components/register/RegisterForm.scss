@@ -46,10 +46,10 @@
       text-align: center;
       margin-bottom: 2rem;
     }
-
-    .form-group {
-      margin-bottom: 1.5rem;
-
+    .name-group {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.1rem;
       label {
         display: block;
         font-family: var(--font-sans);
@@ -58,13 +58,12 @@
         margin-bottom: 0.5rem;
         font-weight: 700;
       }
-
       input {
         width: 100%;
         padding: 1rem;
-      font-family: var(--font-sans);
+        font-family: var(--font-sans);
         font-size: 1rem;
-      border: 2px solid var(--primary-color);
+        border: 2px solid var(--primary-color);
         border-radius: 10px;
         outline: none;
         transition: all 0.3s ease;
@@ -81,7 +80,7 @@
         &.input-error {
           border-color: var(--error-color);
           &:focus {
-             box-shadow: 0 0 0 4px rgba(var(--error-color-rgb), 0.1);
+            box-shadow: 0 0 0 4px rgba(var(--error-color-rgb), 0.1);
           }
         }
       }
@@ -93,6 +92,102 @@
         color: var(--error-color);
         font-size: 0.8rem;
         font-family: var(--font-sans);
+      }
+    }
+
+    .form-group {
+      margin-bottom: 1.1rem;
+
+      label {
+        display: block;
+        font-family: var(--font-sans);
+        font-size: 0.9rem;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+      }
+
+      input {
+        width: 100%;
+        padding: 1rem;
+        font-family: var(--font-sans);
+        font-size: 1rem;
+        border: 2px solid var(--primary-color);
+        border-radius: 10px;
+        outline: none;
+        transition: all 0.3s ease;
+
+        &::placeholder {
+          color: #ccc;
+        }
+
+        &:focus {
+          box-shadow: 0 0 0 4px rgba(var(--primary-color-rgb), 0.1);
+        }
+
+        // Error State
+        &.input-error {
+          border-color: var(--error-color);
+          &:focus {
+            box-shadow: 0 0 0 4px rgba(var(--error-color-rgb), 0.1);
+          }
+        }
+      }
+
+      // Error Message Text
+      .error-msg {
+        display: block;
+        margin-top: 0.5rem;
+        color: var(--error-color);
+        font-size: 0.8rem;
+        font-family: var(--font-sans);
+      }
+
+      // Password Strength Bar
+      .password-strength {
+        margin-top: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+
+        .strength-bar-bg {
+          flex: 1;
+          height: 6px;
+          background-color: #e0e0e0;
+          border-radius: 3px;
+          overflow: hidden;
+          position: relative;
+
+          .strength-bar-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 3px;
+            transition: width 0.3s ease, background-color 0.3s ease;
+          }
+        }
+
+        .strength-label {
+          font-size: 0.75rem;
+          font-weight: 600;
+          font-family: var(--font-sans);
+          white-space: nowrap;
+          min-width: 50px;
+          text-align: right;
+        }
+      }
+
+      // Password Match Indicator
+      .password-match-indicator {
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        font-family: var(--font-sans);
+
+        span {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
       }
     }
 
@@ -117,7 +212,7 @@
         font-weight: 700;
         cursor: pointer;
         transition: all 0.3s ease;
-        
+
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -128,23 +223,23 @@
         }
       }
     }
-    
+
     // Submit Button Styling
     .submit-btn {
-        width: 100%;
-        padding: 1rem;
-        background-color: var(--primary-color);
-        color: white;
-        border: none;
-        border-radius: 10px;
-        font-size: 1rem;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background 0.3s;
-        
-        &:hover {
-          background-color: var(--primary-dark);
-        }
+      width: 100%;
+      padding: 1rem;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+
+      &:hover {
+        background-color: var(--primary-dark);
+      }
     }
 
     .register-link {
@@ -173,12 +268,12 @@
     width: 65vw;
 
     @media (max-width: 768px) {
-        position: absolute;
-        top: 0;
-        flex: none;
-        z-index: 1;
-        height: 320px;
-        width: 100%;
+      position: absolute;
+      top: 0;
+      flex: none;
+      z-index: 1;
+      height: 320px;
+      width: 100%;
     }
 
     img {

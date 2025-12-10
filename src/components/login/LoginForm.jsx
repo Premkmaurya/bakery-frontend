@@ -1,13 +1,15 @@
 import React from "react";
 import { useForm } from "react-hook-form"; // Import the hook
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./LoginForm.scss";
+import axios from "axios";
 
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/all";
 
 const Form = () => {
+  const navigate = useNavigate();
   // Destructure the magic tools from the hook
 
   gsap.registerPlugin(useGSAP);
@@ -21,7 +23,7 @@ const Form = () => {
         defaults: {
           duration: 0.7,
           ease: "expo.out",
-        }
+        },
       });
       tl.from(split.lines, {
         duration: 0.8,
@@ -54,10 +56,14 @@ const Form = () => {
           },
           "-=0.6"
         )
-        .from(".register-link", {
-          y: 30,
-          opacity: 0,
-        },"-=0.6");
+        .from(
+          ".register-link",
+          {
+            y: 30,
+            opacity: 0,
+          },
+          "-=0.6"
+        );
     });
   }, []);
 
@@ -68,10 +74,24 @@ const Form = () => {
   } = useForm();
 
   // This function only runs if validation passes
-  const onSubmit = (data) => {
-    console.log("Login Data Submitted:", data);
-    // Add your API login call here, e.g.:
-    // loginUser(data.email, data.password);
+  const onSubmit = async (data) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/auth/login",
+        data,
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("Login successful:", response.data);
+    } catch (error) {
+      console.error("Login error:", error);
+    }
+    navigate("/");
+  };
+
+  const googleLogin = () => {
+    window.location.href = "http://localhost:3000/auth/google";
   };
 
   const loginImage =
@@ -135,6 +155,7 @@ const Form = () => {
             <div className="social-login">
               <p>login with:</p>
               <button
+                onClick={googleLogin}
                 type="button"
                 className="google-btn"
                 aria-label="Login with Google"

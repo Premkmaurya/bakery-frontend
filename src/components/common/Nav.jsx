@@ -1,5 +1,5 @@
 import "./nav.scss";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   FaFacebookF,
@@ -7,11 +7,15 @@ import {
   FaInstagram,
   FaSearch,
   FaShoppingCart,
+  FaRegUser,
 } from "react-icons/fa";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
+import { useAuth } from "../../context/NavContext";
+
 const Nav = () => {
+  const { isLoggedIn, user } = useAuth();
   const [activeLink, setActiveLink] = useState("Home");
   const navigate = useNavigate();
   const location = useLocation();
@@ -119,11 +123,15 @@ const Nav = () => {
       </ul>
 
       <div className="nav-actions">
-        <button onClick={() => navigate("/login")} className="login-btn">
-          Log In
-        </button>
+        {!isLoggedIn ? (
+          <button onClick={() => navigate("/login")} className="login-btn">
+            Log In
+          </button>
+        ) : (
+          <FaRegUser onClick={() => navigate("/profile")} className="nav-icons" size={20} />
+        )}
         <div onClick={() => navigate("/wishlist")} className="nav-icons">
-          <FaShoppingCart color="" size={20} />
+          <FaShoppingCart size={20} />
         </div>
       </div>
     </nav>
