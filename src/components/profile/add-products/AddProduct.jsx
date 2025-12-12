@@ -10,10 +10,13 @@ import {
   Image as ImageIcon,
 } from "lucide-react";
 import "./AddProduct.scss";
+import axios from "axios";
+
 
 const AddProduct = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [imageFile, setImageFile] = useState(null);
+  const [isLoading, setIsLoading] = useState(false)
 
   const {
     register,
@@ -53,13 +56,20 @@ const AddProduct = () => {
     setImageFile(null);
   };
 
-  const onSubmit = (formData) => {
+  const onSubmit = async (formData) => {
+    setIsLoading(true);
     const submitData = {
       ...formData,
       image: imageFile
     };
-    console.log("Product Data Submitted:", submitData);
-    alert("Product added successfully!");
+    const formPayload = new FormData();
+    for (const key in submitData) {
+      formPayload.append(key, submitData[key]);
+    }
+    const response = await axios.post("http://localhost:3000/products/create", formPayload, {
+      withCredentials: true,
+    });
+    setIsLoading(false);
     reset();
     removeImage();
   };
@@ -186,7 +196,7 @@ const AddProduct = () => {
           </div>
 
           <button type="submit" className="submit-btn">
-            <Plus size={20} /> Add Product
+            {isLoading ? <span className="loading-spinner"></span> : <Plus size={20} />} Add Product
           </button>
         </div>
       </form>

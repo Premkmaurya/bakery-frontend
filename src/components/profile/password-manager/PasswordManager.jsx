@@ -17,7 +17,7 @@ const PasswordManager = () => {
     formState: { errors }
   } = useForm({
     defaultValues: {
-      currentPassword: '',
+      oldPassword: '',
       newPassword: '',
       confirmPassword: ''
     }
@@ -25,9 +25,15 @@ const PasswordManager = () => {
 
   const newPassword = watch('newPassword');
 
-  const onSubmit = (data) => {
-    console.log("Password update data:", data);
-    alert("Password updated successfully!");
+  const onSubmit = async (data) => {
+    const response = await axios.patch(
+      "http://localhost:3000/user/update-password",
+      data,
+      {
+        withCredentials: true,
+      }
+    );
+
     reset();
   };
 
@@ -42,7 +48,7 @@ const PasswordManager = () => {
             <input 
               type={showCurrent ? "text" : "password"} 
               placeholder="Enter Password"
-              {...register('currentPassword', { required: 'Current password is required' })}
+              {...register('oldPassword', { required: 'Current password is required' })}
             />
             <button 
               type="button" 
@@ -52,7 +58,7 @@ const PasswordManager = () => {
               {showCurrent ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
-          {errors.currentPassword && <span className="error">{errors.currentPassword.message}</span>}
+          {errors.oldPassword && <span className="error">{errors.oldPassword.message}</span>}
           <div className="forgot-link-wrapper">
             <a href="#" className="forgot-link">Forgot Password?</a>
           </div>

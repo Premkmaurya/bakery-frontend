@@ -14,7 +14,7 @@ const ManageAddress = () => {
   useEffect(()=>{
     const fetchAddresses =async () => {
       try {
-        const response = await axios.post("http://localhost:3000/user/get-addresses", {
+        const response = await axios.get("http://localhost:3000/user/get-addresses", {
           withCredentials: true,
         });
         setAddresses(response.data.addresses);
@@ -85,28 +85,62 @@ const ManageAddress = () => {
   };
 
   // Save (Add or Update)
-  const onSubmit = (formData) => {
-    if (editingId) {
-      // === UPDATE EXISTING ADDRESS ===
-      setAddresses(prev => prev.map(addr => 
-        addr.id === editingId 
-          ? { ...formData, id: editingId }
-          : addr
-      ));
-    } else {
-      // === ADD NEW ADDRESS ===
-      const newId = addresses.length > 0 ? Math.max(...addresses.map(a => a.id)) + 1 : 1;
-      const newAddress = { id: newId, isDefault: false, ...formData };
-      setAddresses([...addresses, newAddress]);
-    }
+  const onSubmit = async (formData) => {
+    try {
+      if (editingId) {
+        // === UPDATE EXISTING ADDRESS ===
+        const response = await axios.patch(
+          `http://localhost:3000/user/update-address/${editingId}`,
+          formData,
+          {
+            withCredentials: true,
+          }
+        );
+        
+        // Update local state with updated address
+        setAddresses(prev => prev.map(addr => 
+          addr._id === editingId 
+            ? { ...formData, _id: editingId }
+            : addr
+        ));
+        console.log("Address updated successfully:", response.data);
+      } else {
+        // === ADD NEW ADDRESS ===
+        const response = await axios.post(
+          "http://localhost:3000/user/add-address",
+          formData,
+          {
+            withCredentials: true,
+          }
+        );
+        
+        // Add new address to local state
+        const newAddress = { _id: response.data._id || response.data.id, ...formData };
+        setAddresses([...addresses, newAddress]);
+        console.log("Address added successfully:", response.data);
+      }
 
-    handleCancel();
+      handleCancel();
+    } catch (error) {
+      console.error("Error saving address:", error);
+      alert("Failed to save address. Please try again.");
+    }
   };
 
   // Delete Address
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this address?")) {
-      setAddresses(addresses.filter(addr => addr.id !== id));
+      try {
+        await axios.delete(`http://localhost:3000/user/delete-address/${id}`, {
+          withCredentials: true,
+        });
+        
+        setAddresses(addresses.filter(addr => addr._id !== id));
+        console.log("Address deleted successfully");
+      } catch (error) {
+        console.error("Error deleting address:", error);
+        alert("Failed to delete address. Please try again.");
+      }
     }
   };
 
@@ -127,7 +161,7 @@ const ManageAddress = () => {
 
           {/* === 2. EXISTING ADDRESS CARDS === */}
           {addresses.map((addr) => (
-            <div key={addr.id} className={`address-card ${addr.isDefault ? 'default' : ''}`}>
+            <div key={addr._id} className={`address-card `}>
 
               <div className="card-body">
                 <h4 className="user-name">{addr.name}</h4>
@@ -150,7 +184,7 @@ const ManageAddress = () => {
                 <button 
                   className="action-btn delete" 
                   title="Delete"
-                  onClick={() => handleDelete(addr.id)}
+                  onClick={() => handleDelete(addr._id)}
                 >
                   <Trash2 size={16} /> Delete
                 </button>

@@ -1,68 +1,92 @@
-import React, { useState } from 'react';
-import { Package, ChevronRight, Clock, CheckCircle, XCircle, Truck } from 'lucide-react';
-import './MyOrders.scss';
+import React, { useEffect, useState } from "react";
+import {
+  Package,
+  ChevronRight,
+  Clock,
+  CheckCircle,
+  XCircle,
+  Truck,
+  Trash2,
+} from "lucide-react";
+import "./MyOrders.scss";
+import axios from "axios";
 
 const MyOrders = () => {
   // === MOCK DATA ===
-  const [orders] = useState([
+  const [orders, setOrders] = useState([
     {
-      id: '#ORD-7782',
-      date: 'Dec 12, 2025',
-      status: 'Processing', // Processing, Delivered, Cancelled
-      total: 125.50,
+      id: "#ORD-7782",
+      date: "Dec 12, 2025",
+      status: "Processing", // Processing, Delivered, Cancelled
+      total: 125.5,
       items: [
-        { name: 'Red Velvet Cake', img: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=150&auto=format&fit=crop' },
-        { name: 'Macarons (Box of 6)', img: 'https://images.unsplash.com/photo-1569864358642-9d1684040f43?q=80&w=150&auto=format&fit=crop' }
-      ]
+        {
+          name: "Red Velvet Cake",
+          img: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=150&auto=format&fit=crop",
+        },
+        {
+          name: "Macarons (Box of 6)",
+          img: "https://images.unsplash.com/photo-1569864358642-9d1684040f43?q=80&w=150&auto=format&fit=crop",
+        },
+      ],
     },
     {
-      id: '#ORD-7750',
-      date: 'Nov 28, 2025',
-      status: 'Delivered',
-      total: 45.00,
+      id: "#ORD-7750",
+      date: "Nov 28, 2025",
+      status: "Delivered",
+      total: 45.0,
       items: [
-        { name: 'French Baguette', img: 'https://images.unsplash.com/photo-1589367920969-ab8e050bbb04?q=80&w=150&auto=format&fit=crop' }
-      ]
+        {
+          name: "French Baguette",
+          img: "https://images.unsplash.com/photo-1589367920969-ab8e050bbb04?q=80&w=150&auto=format&fit=crop",
+        },
+      ],
     },
-    {
-      id: '#ORD-7012',
-      date: 'Oct 15, 2025',
-      status: 'Cancelled',
-      total: 210.00,
-      items: [
-        { name: '3-Tier Wedding Cake', img: 'https://images.unsplash.com/photo-1626803775151-61d756612fcd?q=80&w=150&auto=format&fit=crop' },
-        { name: 'Party Poppers', img: 'https://images.unsplash.com/photo-1514525253440-b39345208668?q=80&w=150&auto=format&fit=crop' },
-        { name: 'Candles', img: 'https://images.unsplash.com/photo-1570823635306-250afb86e09a?q=80&w=150&auto=format&fit=crop' }
-      ]
-    }
   ]);
 
-  
+  useEffect(() => {
+    // Fetch orders from backend API when component mounts
+    const fetchOrders = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/orders/get-orders",
+          {
+            withCredentials: true,
+          }
+        );
+        // Make sure orders is an array, fallback to empty array if undefined
+        setOrders(response.data.orders || []);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+        // Keep the default mock data on error, or set to empty array
+        setOrders([]);
+      }
+    };
+    fetchOrders();
+  }, []);
 
   // Helper to get status color and icon
   const getStatusConfig = (status) => {
     switch (status) {
-      case 'Delivered':
-        return { color: 'green', icon: <CheckCircle size={14} /> };
-      case 'Processing':
-        return { color: 'blue', icon: <Clock size={14} /> };
-      case 'Cancelled':
-        return { color: 'red', icon: <XCircle size={14} /> };
+      case "Delivered":
+        return { color: "green", icon: <CheckCircle size={14} /> };
+      case "Processing":
+        return { color: "blue", icon: <Clock size={14} /> };
+      case "Cancelled":
+        return { color: "red", icon: <XCircle size={14} /> };
       default:
-        return { color: 'gray', icon: <Package size={14} /> };
+        return { color: "gray", icon: <Package size={14} /> };
     }
   };
 
   return (
     <div className="my-orders-wrapper">
-
       <div className="orders-list">
-        {orders.map((order) => {
+        {orders?.map((order) => {
           const statusConfig = getStatusConfig(order.status);
 
           return (
             <div key={order.id} className="order-card">
-              
               {/* === CARD HEADER (ID & STATUS) === */}
               <div className="card-header">
                 <div className="order-meta">
@@ -86,7 +110,11 @@ const MyOrders = () => {
                   {/* Optional: Logic to show "+2 more" if too many items */}
                 </div>
                 <div className="items-text">
-                  <p>{order.items[0].name} {order.items.length > 1 && `+ ${order.items.length - 1} more`}</p>
+                  <p>
+                    {order.items[0].name}{" "}
+                    {order.items.length > 1 &&
+                      `+ ${order.items.length - 1} more`}
+                  </p>
                 </div>
               </div>
 
@@ -96,19 +124,18 @@ const MyOrders = () => {
                   <span className="label">Total Amount</span>
                   <span className="amount">${order.total.toFixed(2)}</span>
                 </div>
-                
+
                 <div className="actions">
-                  {order.status === 'Processing' && (
+                  {order.status === "Processing" && (
                     <button className="btn-track">
                       <Truck size={16} /> Track
                     </button>
                   )}
                   <button className="btn-details">
-                    View Details <ChevronRight size={16} />
+                    Delete Order <Trash2 size={16} />
                   </button>
                 </div>
               </div>
-
             </div>
           );
         })}
