@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { Camera, ChevronDown } from 'lucide-react';
 import './PersonalInformation.scss';
 import { useAuth } from '../../../context/NavContext';
@@ -9,55 +10,67 @@ const PersonalInformation = () => {
   const {user,updateUser} = useAuth();
   const [isLoading, setIsLoading] = useState(false)
   const [imagePreview, setImagePreview] = useState('')
-  // Mock initial data
-  const [formData, setFormData] = useState({
-    firstName: user?.firstName || 'Leslie',
-    lastName: user?.lastName || 'Cooper',
-    email: user?.email || 'example@gmail.com',
-    phone: user?.phone || '',
-    gender: user?.gender || 'Male',
-    avatar: user?.avatar || null,
-  });
-
-  // Sync formData with user whenever user data changes (when returning to tab)
-  useEffect(() => {
-    setFormData({
+  const [avatarFile, setAvatarFile] = useState(null);
+  
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+    watch
+  } = useForm({
+    defaultValues: {
       firstName: user?.firstName || 'Leslie',
       lastName: user?.lastName || 'Cooper',
+      email: user?.email || '',
       phone: user?.phone || '',
       gender: user?.gender || 'Male',
-      avatar: user?.avatar || null,
-    });
-  }, [user]);
+    }
+  });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
+  // Sync form with user data whenever user changes
+  useEffect(() => {
+    reset({
+      firstName: user?.firstName || 'Leslie',
+      lastName: user?.lastName || 'Cooper',
+      email: user?.email || '',
+      phone: user?.phone || '',
+      gender: user?.gender || 'Male',
+    });
+    setImagePreview('');
+    setAvatarFile(null);
+  }, [user, reset]);
 
   // Handle Image Upload Preview
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setImagePreview(URL.createObjectURL(file));
-      setFormData(prev => ({ ...prev, avatar: file }));
+      setAvatarFile(file);
     }
   };
 
-  const handleSubmit = async () => {
+  const onSubmit = async (formData) => {
     setIsLoading(true);
     const form = new FormData();
     form.append('firstName', formData.firstName);
     form.append('lastName', formData.lastName);
     form.append('phone', formData.phone);
     form.append('gender', formData.gender);
-    form.append('avatar', formData.avatar);
-    const response = await axios.post('http://localhost:3000/auth/update-profile', form, {
-      withCredentials: true,
-    });
-    console.log('Profile updated:', response.data);
-    setFormData(prev => ({ ...prev, ...response.data.user }));
-    updateUser(response.data.user);
+    if (avatarFile) {
+      form.append('avatar', avatarFile);
+    }
+    
+    try {
+      const response = await axios.post('http://localhost:3000/user/update-profile', form, {
+        withCredentials: true,
+      });
+      updateUser(response.data.user);
+      setAvatarFile(null);
+      setImagePreview('');
+    } catch (error) {
+      console.error('Update failed:', error);
+    }
     setIsLoading(false);
   }
 
@@ -68,8 +81,6 @@ const PersonalInformation = () => {
         <div className="avatar-wrapper">
           {imagePreview ? (
             <img src={imagePreview} alt="Profile" className="profile-img" />
-          ) : formData.avatar ? (
-            <img src={formData.avatar} alt="Profile" className="profile-img" />
           ) : user?.avatar ? (
             <img src={user.avatar} alt="Profile" className="profile-img" />
           ) : (
@@ -90,7 +101,7 @@ const PersonalInformation = () => {
       </div>
 
       {/* === FORM SECTION === */}
-      <form className="info-form" onSubmit={(e) => e.preventDefault()}>
+      <form className="info-form" onSubmit={handleSubmit(onSubmit)}>
         
         {/* Row 1: Names */}
         <div className="form-row">
@@ -98,19 +109,17 @@ const PersonalInformation = () => {
             <label>First Name *</label>
             <input 
               type="text" 
-              name="firstName" 
-              value={formData.firstName} 
-              onChange={handleChange} 
+              {...register('firstName', { required: 'First name is required' })}
             />
+            {errors.firstName && <span className="error">{errors.firstName.message}</span>}
           </div>
           <div className="form-group">
             <label>Last Name *</label>
             <input 
               type="text" 
-              name="lastName" 
-              value={formData.lastName} 
-              onChange={handleChange} 
+              {...register('lastName', { required: 'Last name is required' })}
             />
+            {errors.lastName && <span className="error">{errors.lastName.message}</span>}
           </div>
         </div>
 
@@ -119,10 +128,8 @@ const PersonalInformation = () => {
           <label>Email *</label>
           <input 
             type="email" 
-            name="email" 
             disabled
-            value={formData.email} 
-            onChange={handleChange} 
+            {...register('email')}
           />
         </div>
 
@@ -132,12 +139,17 @@ const PersonalInformation = () => {
           <span className='phone-prefix'>+91</span>
           <input 
             type="tel" 
-            name="phone" 
             className='phone-input'
             maxLength={10}
-            value={formData.phone} 
-            onChange={handleChange} 
+            {...register('phone', {
+              required: 'Phone is required',
+              pattern: {
+                value: /^\d{10}$/,
+                message: 'Phone must be 10 digits'
+              }
+            })}
           />
+          {errors.phone && <span className="error">{errors.phone.message}</span>}
         </div>
 
         {/* Row 4: Gender (Custom Select Look) */}
@@ -145,9 +157,7 @@ const PersonalInformation = () => {
           <label>Gender *</label>
           <div className="select-wrapper">
             <select 
-              name="gender" 
-              value={formData.gender} 
-              onChange={handleChange}
+              {...register('gender', { required: 'Gender is required' })}
             >
               <option value="Male">Male</option>
               <option value="Female">Female</option>
@@ -155,10 +165,11 @@ const PersonalInformation = () => {
             </select>
             <ChevronDown className="select-icon" size={20} />
           </div>
+          {errors.gender && <span className="error">{errors.gender.message}</span>}
         </div>
 
         {/* Submit Button */}
-        <button onClick={handleSubmit} className="update-btn">
+        <button type="submit" className="update-btn">
           {isLoading ? "Updating..." : "Update Changes"}
         </button>
 

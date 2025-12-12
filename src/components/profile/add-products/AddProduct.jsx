@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import {
   Upload,
   X,
@@ -12,13 +13,21 @@ import "./AddProduct.scss";
 
 const AddProduct = () => {
   const [imagePreview, setImagePreview] = useState(null);
-  const [formData, setFormData] = useState({
-    name: "",
-    price: "",
-    category: "",
-    description: "",
-    isFeatured: false,
-    image: null,
+  const [imageFile, setImageFile] = useState(null);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useForm({
+    defaultValues: {
+      name: "",
+      price: "",
+      category: "",
+      description: "",
+      isFeatured: false,
+    }
   });
 
   const categories = [
@@ -31,37 +40,33 @@ const AddProduct = () => {
     "Muffins",
   ];
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
-
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData((prev) => ({ ...prev, image: file }));
+      setImageFile(file);
       setImagePreview(URL.createObjectURL(file));
     }
   };
 
   const removeImage = () => {
     setImagePreview(null);
-    setFormData((prev) => ({ ...prev, image: null }));
+    setImageFile(null);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Product Data Submitted:", formData);
+  const onSubmit = (formData) => {
+    const submitData = {
+      ...formData,
+      image: imageFile
+    };
+    console.log("Product Data Submitted:", submitData);
     alert("Product added successfully!");
-    // Reset form logic here
+    reset();
+    removeImage();
   };
 
   return (
     <div className="add-product-wrapper">
-      <form className="product-form" onSubmit={handleSubmit}>
+      <form className="product-form" onSubmit={handleSubmit(onSubmit)}>
         {/* === LEFT COL: IMAGE UPLOAD === */}
         <div className="form-section image-upload-section">
           <label className="section-label">Product Image</label>
@@ -105,13 +110,11 @@ const AddProduct = () => {
             <div className="name-input">
               <input
                 type="text"
-                name="name"
                 placeholder="e.g. Red Velvet Truffle"
-                value={formData.name}
-                onChange={handleChange}
-                required
+                {...register('name', { required: 'Product name is required' })}
               />
             </div>
+            {errors.name && <span className="error">{errors.name.message}</span>}
           </div>
 
           <div className="form-row">
@@ -122,13 +125,18 @@ const AddProduct = () => {
                 <DollarSign size={18} className="input-icon" />
                 <input
                   type="number"
-                  name="price"
                   placeholder="0.00"
-                  value={formData.price}
-                  onChange={handleChange}
-                  required
+                  step="0.01"
+                  {...register('price', {
+                    required: 'Price is required',
+                    min: {
+                      value: 0,
+                      message: 'Price must be greater than 0'
+                    }
+                  })}
                 />
               </div>
+              {errors.price && <span className="error">{errors.price.message}</span>}
             </div>
 
             {/* Category */}
@@ -137,14 +145,9 @@ const AddProduct = () => {
               <div className="select-wrapper">
                 <Tag size={18} className="input-icon" />
                 <select
-                  name="category"
-                  value={formData.category}
-                  onChange={handleChange}
-                  required
+                  {...register('category', { required: 'Category is required' })}
                 >
-                  <option value="" disabled>
-                    Select Category
-                  </option>
+                  <option value="">Select Category</option>
                   {categories.map((cat, index) => (
                     <option key={index} value={cat}>
                       {cat}
@@ -152,6 +155,7 @@ const AddProduct = () => {
                   ))}
                 </select>
               </div>
+              {errors.category && <span className="error">{errors.category.message}</span>}
             </div>
           </div>
 
@@ -161,13 +165,12 @@ const AddProduct = () => {
             <div className="textarea-wrapper">
               <FileText size={18} className="input-icon area-icon" />
               <textarea
-                name="description"
                 rows="4"
                 placeholder="Product details, ingredients, etc..."
-                value={formData.description}
-                onChange={handleChange}
+                {...register('description')}
               ></textarea>
             </div>
+            {errors.description && <span className="error">{errors.description.message}</span>}
           </div>
 
           {/* Featured Checkbox */}
@@ -175,9 +178,7 @@ const AddProduct = () => {
             <label className="checkbox-container">
               <input
                 type="checkbox"
-                name="isFeatured"
-                checked={formData.isFeatured}
-                onChange={handleChange}
+                {...register('isFeatured')}
               />
               <span className="checkmark"></span>
               Mark as Featured Product

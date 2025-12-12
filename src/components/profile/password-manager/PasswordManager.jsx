@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Eye, EyeOff, LogOut, User, Package, MapPin, CreditCard, Lock } from 'lucide-react';
+import { useForm } from "react-hook-form";
+import { Eye, EyeOff } from 'lucide-react';
 import './PasswordManager.scss';
 
 const PasswordManager = () => {
@@ -8,9 +9,31 @@ const PasswordManager = () => {
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { errors }
+  } = useForm({
+    defaultValues: {
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: ''
+    }
+  });
+
+  const newPassword = watch('newPassword');
+
+  const onSubmit = (data) => {
+    console.log("Password update data:", data);
+    alert("Password updated successfully!");
+    reset();
+  };
+
   return (
     <div className="password-manager-wrapper">
-      <form className="password-form" onSubmit={(e) => e.preventDefault()}>
+      <form className="password-form" onSubmit={handleSubmit(onSubmit)}>
         
         {/* Current Password */}
         <div className="form-group">
@@ -19,6 +42,7 @@ const PasswordManager = () => {
             <input 
               type={showCurrent ? "text" : "password"} 
               placeholder="Enter Password"
+              {...register('currentPassword', { required: 'Current password is required' })}
             />
             <button 
               type="button" 
@@ -28,6 +52,7 @@ const PasswordManager = () => {
               {showCurrent ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
+          {errors.currentPassword && <span className="error">{errors.currentPassword.message}</span>}
           <div className="forgot-link-wrapper">
             <a href="#" className="forgot-link">Forgot Password?</a>
           </div>
@@ -40,6 +65,17 @@ const PasswordManager = () => {
             <input 
               type={showNew ? "text" : "password"} 
               placeholder="Enter Password"
+              {...register('newPassword', {
+                required: 'New password is required',
+                minLength: {
+                  value: 8,
+                  message: 'Password must be at least 8 characters'
+                },
+                pattern: {
+                  value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+                  message: 'Password must contain uppercase, lowercase, and number'
+                }
+              })}
             />
             <button 
               type="button" 
@@ -49,6 +85,7 @@ const PasswordManager = () => {
               {showNew ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
+          {errors.newPassword && <span className="error">{errors.newPassword.message}</span>}
         </div>
 
         {/* Confirm New Password */}
@@ -58,6 +95,10 @@ const PasswordManager = () => {
             <input 
               type={showConfirm ? "text" : "password"} 
               placeholder="Enter Password"
+              {...register('confirmPassword', {
+                required: 'Please confirm your password',
+                validate: value => value === newPassword || 'Passwords do not match'
+              })}
             />
             <button 
               type="button" 
@@ -67,9 +108,10 @@ const PasswordManager = () => {
               {showConfirm ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
+          {errors.confirmPassword && <span className="error">{errors.confirmPassword.message}</span>}
         </div>
 
-        <button className="save-btn">
+        <button type="submit" className="save-btn">
           Update Password
         </button>
 

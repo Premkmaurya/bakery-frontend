@@ -1,26 +1,28 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useForm } from 'react-hook-form';
 import './ContactForm.scss';
 import { Send } from 'lucide-react';
 
 const ContactForm = () => {
-  // Simple state to handle form data (optional, but good practice)
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useForm({
+    defaultValues: {
+      name: '',
+      email: '',
+      subject: '',
+      message: ''
+    }
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault(); // Prevents page reload
-    console.log("Form Submitted:", formData);
+  const onSubmit = (data) => {
+    console.log("Form Submitted:", data);
     alert("Thanks for your message! We will get back to you shortly.");
-    // Here you would normally send 'formData' to your backend API
+    reset();
+    // Here you would normally send 'data' to your backend API
   };
 
   return (
@@ -35,7 +37,7 @@ const ContactForm = () => {
           </p>
         </div>
 
-        <form className="contact-form" onSubmit={handleSubmit}>
+        <form className="contact-form" onSubmit={handleSubmit(onSubmit)}>
           
           {/* Name Field */}
           <div className="form-group">
@@ -43,12 +45,10 @@ const ContactForm = () => {
             <input 
               type="text" 
               id="name" 
-              name="name" 
               placeholder="Your Name..." 
-              value={formData.name}
-              onChange={handleChange}
-              required 
+              {...register('name', { required: 'Name is required' })}
             />
+            {errors.name && <span className="error">{errors.name.message}</span>}
           </div>
 
           {/* Email Field */}
@@ -57,12 +57,16 @@ const ContactForm = () => {
             <input 
               type="email" 
               id="email" 
-              name="email" 
               placeholder="example@yourmail.com" 
-              value={formData.email}
-              onChange={handleChange}
-              required 
+              {...register('email', { 
+                required: 'Email is required',
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: 'Please enter a valid email address'
+                }
+              })}
             />
+            {errors.email && <span className="error">{errors.email.message}</span>}
           </div>
 
           {/* Subject Field */}
@@ -71,12 +75,10 @@ const ContactForm = () => {
             <input 
               type="text" 
               id="subject" 
-              name="subject" 
               placeholder="Order Inquiry..." 
-              value={formData.subject}
-              onChange={handleChange}
-              required 
+              {...register('subject', { required: 'Subject is required' })}
             />
+            {errors.subject && <span className="error">{errors.subject.message}</span>}
           </div>
 
           {/* Message Field */}
@@ -84,13 +86,11 @@ const ContactForm = () => {
             <label htmlFor="message">Message</label>
             <textarea 
               id="message" 
-              name="message" 
               rows="6" 
               placeholder="Type your message here..." 
-              value={formData.message}
-              onChange={handleChange}
-              required
+              {...register('message', { required: 'Message is required' })}
             ></textarea>
+            {errors.message && <span className="error">{errors.message.message}</span>}
           </div>
 
           {/* Submit Button */}
@@ -98,9 +98,7 @@ const ContactForm = () => {
             <span>Send Now</span>
             <Send size={18} />
           </button>
-
         </form>
-
       </div>
     </section>
   );

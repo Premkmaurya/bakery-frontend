@@ -1,88 +1,96 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { Plus, Edit2, Trash2 } from 'lucide-react';
 import './ManageAddress.scss';
+import axios from 'axios';
 
 const ManageAddress = () => {
   // === MOCK DATA ===
-  const [addresses, setAddresses] = useState([
-    {
-      id: 1,
-      type: 'Home',
-      isDefault: true,
-      name: 'Leslie Cooper',
-      phone: '+1 234 567 890',
-      street: '2443 Oak Ridge',
-      city: 'Omaha',
-      state: 'NE',
-      zip: '45065',
-      country: 'United States'
-    },
-    {
-      id: 2,
-      type: 'Office',
-      isDefault: false,
-      name: 'Leslie Cooper',
-      phone: '+1 987 654 321',
-      street: '4521 Elm Street, Suite 400',
-      city: 'Chicago',
-      state: 'IL',
-      zip: '60614',
-      country: 'United States'
-    }
-  ]);
+  const [addresses, setAddresses] = useState([]);
 
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [editingId, setEditingId] = useState(null); // Track which ID we are editing
-  
-  // Form State
-  const initialFormState = {
-    type: 'Home',
-    name: '',
-    phone: '',
-    street: '',
-    city: '',
-    state: '',
-    zip: '',
-    country: ''
-  };
-  
-  const [formData, setFormData] = useState(initialFormState);
+  const [editingId, setEditingId] = useState(null);
 
-  // Handle Input Change
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  useEffect(()=>{
+    const fetchAddresses =async () => {
+      try {
+        const response = await axios.post("http://localhost:3000/user/get-addresses", {
+          withCredentials: true,
+        });
+        setAddresses(response.data.addresses);
+      } catch (error) {
+        console.error("Error fetching addresses:", error);
+      }
+    }
+    fetchAddresses(); 
+  },[])
+  
+  // Initialize react-hook-form
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+    watch
+  } = useForm({
+    defaultValues: {
+      type: 'Home',
+      name: '',
+      phone: '',
+      street: '',
+      city: '',
+      state: '',
+      zip: '',
+      country: ''
+    }
+  });
 
   // Open Form for Adding
   const handleAddNew = () => {
-    setFormData(initialFormState);
+    reset({
+      type: 'Home',
+      name: '',
+      phone: '',
+      street: '',
+      city: '',
+      state: '',
+      zip: '',
+      country: ''
+    });
     setEditingId(null);
     setIsFormOpen(true);
   };
 
   // Open Form for Editing
   const handleEdit = (address) => {
-    setFormData(address); // Fill form with existing data
-    setEditingId(address.id); // Set mode to Edit
-    setIsFormOpen(true); // Open form
+    reset({
+      type: address.type,
+      name: address.name,
+      phone: address.phone,
+      street: address.street,
+      city: address.city,
+      state: address.state,
+      zip: address.zip,
+      country: address.country
+    });
+    setEditingId(address.id);
+    setIsFormOpen(true);
   };
 
   // Close Form
   const handleCancel = () => {
     setIsFormOpen(false);
     setEditingId(null);
-    setFormData(initialFormState);
+    reset();
   };
 
   // Save (Add or Update)
-  const handleSave = (e) => {
-    e.preventDefault();
-    
+  const onSubmit = (formData) => {
     if (editingId) {
       // === UPDATE EXISTING ADDRESS ===
       setAddresses(prev => prev.map(addr => 
         addr.id === editingId 
-          ? { ...formData, id: editingId, isDefault: addr.isDefault } // Keep original ID and Default status
+          ? { ...formData, id: editingId }
           : addr
       ));
     } else {
@@ -92,7 +100,7 @@ const ManageAddress = () => {
       setAddresses([...addresses, newAddress]);
     }
 
-    handleCancel(); // Close and reset
+    handleCancel();
   };
 
   // Delete Address
@@ -120,11 +128,6 @@ const ManageAddress = () => {
           {/* === 2. EXISTING ADDRESS CARDS === */}
           {addresses.map((addr) => (
             <div key={addr.id} className={`address-card ${addr.isDefault ? 'default' : ''}`}>
-              
-              <div className="card-header">
-                <span className="address-type">{addr.type}</span>
-                {addr.isDefault && <span className="default-badge">Default</span>}
-              </div>
 
               <div className="card-body">
                 <h4 className="user-name">{addr.name}</h4>
@@ -159,7 +162,7 @@ const ManageAddress = () => {
         </div>
       ) : (
         // === 3. ADDRESS FORM (ADD OR EDIT) ===
-        <form className="address-form" onSubmit={handleSave}>
+        <form className="address-form" onSubmit={handleSubmit(onSubmit)}>
           <h3 className="form-title">
             {editingId ? "Edit Address" : "Add New Delivery Address"}
           </h3>
@@ -167,38 +170,72 @@ const ManageAddress = () => {
           <div className="form-row">
             <div className="form-group">
               <label>Full Name *</label>
-              <input type="text" name="name" value={formData.name} onChange={handleChange} required />
+              <input 
+                type="text" 
+                {...register('name', { required: 'Name is required' })}
+              />
+              {errors.name && <span className="error">{errors.name.message}</span>}
             </div>
             <div className="form-group">
               <label>Phone Number *</label>
-              <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required />
+              <input 
+                type="tel" 
+                {...register('phone', { 
+                  required: 'Phone is required',
+                  pattern: {
+                    value: /^[\d\s\-\+\(\)]+$/,
+                    message: 'Please enter a valid phone number'
+                  }
+                })}
+              />
+              {errors.phone && <span className="error">{errors.phone.message}</span>}
             </div>
           </div>
 
           <div className="form-group">
             <label>Street Address *</label>
-            <input type="text" name="street" value={formData.street} onChange={handleChange} required />
+            <input 
+              type="text" 
+              {...register('street', { required: 'Street address is required' })}
+            />
+            {errors.street && <span className="error">{errors.street.message}</span>}
           </div>
 
           <div className="form-row">
             <div className="form-group">
               <label>City *</label>
-              <input type="text" name="city" value={formData.city} onChange={handleChange} required />
+              <input 
+                type="text" 
+                {...register('city', { required: 'City is required' })}
+              />
+              {errors.city && <span className="error">{errors.city.message}</span>}
             </div>
             <div className="form-group">
               <label>State / Province *</label>
-              <input type="text" name="state" value={formData.state} onChange={handleChange} required />
+              <input 
+                type="text" 
+                {...register('state', { required: 'State is required' })}
+              />
+              {errors.state && <span className="error">{errors.state.message}</span>}
             </div>
           </div>
 
           <div className="form-row">
             <div className="form-group">
               <label>Zip Code *</label>
-              <input type="text" name="zip" value={formData.zip} onChange={handleChange} required />
+              <input 
+                type="text" 
+                {...register('zip', { required: 'Zip code is required' })}
+              />
+              {errors.zip && <span className="error">{errors.zip.message}</span>}
             </div>
             <div className="form-group">
               <label>Country *</label>
-              <input type="text" name="country" value={formData.country} onChange={handleChange} required />
+              <input 
+                type="text" 
+                {...register('country', { required: 'Country is required' })}
+              />
+              {errors.country && <span className="error">{errors.country.message}</span>}
             </div>
           </div>
           
@@ -206,11 +243,11 @@ const ManageAddress = () => {
             <label>Address Type</label>
             <div className="radio-group">
                <label className="radio-label">
-                 <input type="radio" name="type" value="Home" checked={formData.type === 'Home'} onChange={handleChange} />
+                 <input type="radio" value="Home" {...register('type')} />
                  Home
                </label>
                <label className="radio-label">
-                 <input type="radio" name="type" value="Office" checked={formData.type === 'Office'} onChange={handleChange} />
+                 <input type="radio" value="Office" {...register('type')} />
                  Office
                </label>
             </div>
