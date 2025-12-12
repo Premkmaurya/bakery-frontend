@@ -23,6 +23,7 @@
         height: 100%;
         border-radius: 50%;
         object-fit: cover;
+        color: var(--color-text-sub);
         border: 4px solid #fff; // White border to separate from background
         box-shadow: 0 5px 15px rgba(0,0,0,0.1);
       }
@@ -76,6 +77,17 @@
         font-size: 0.95rem;
         color: var(--color-text-main);
         margin-bottom: 0.5rem;
+      }
+      .phone-prefix {
+        position: absolute;
+        margin-left: 1rem;
+        margin-top: 0.9rem;
+        font-family: var(--font-sans);
+        font-size: 1rem;
+        color: var(--color-text-sub);
+      }
+      .phone-input {
+        padding-left: 3rem; // Space for the +91 prefix
       }
 
       input, select {

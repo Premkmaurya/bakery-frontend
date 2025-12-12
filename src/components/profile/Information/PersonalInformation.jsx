@@ -1,17 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Camera, ChevronDown } from 'lucide-react';
 import './PersonalInformation.scss';
+import { useAuth } from '../../../context/NavContext';
+import { FaUser } from "react-icons/fa6";
+import axios from 'axios';
 
 const PersonalInformation = () => {
+  const {user,updateUser} = useAuth();
+  const [isLoading, setIsLoading] = useState(false)
+  const [imagePreview, setImagePreview] = useState('')
   // Mock initial data
   const [formData, setFormData] = useState({
-    firstName: 'Leslie',
-    lastName: 'Cooper',
-    email: 'example@gmail.com',
-    phone: '+0123-456-789',
-    gender: 'Female',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop'
+    firstName: user?.firstName || 'Leslie',
+    lastName: user?.lastName || 'Cooper',
+    email: user?.email || 'example@gmail.com',
+    phone: user?.phone || '',
+    gender: user?.gender || 'Male',
+    avatar: user?.avatar || null,
   });
+
+  // Sync formData with user whenever user data changes (when returning to tab)
+  useEffect(() => {
+    setFormData({
+      firstName: user?.firstName || 'Leslie',
+      lastName: user?.lastName || 'Cooper',
+      phone: user?.phone || '',
+      gender: user?.gender || 'Male',
+      avatar: user?.avatar || null,
+    });
+  }, [user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,18 +39,42 @@ const PersonalInformation = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setFormData(prev => ({ ...prev, avatar: imageUrl }));
+      setImagePreview(URL.createObjectURL(file));
+      setFormData(prev => ({ ...prev, avatar: file }));
     }
   };
+
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    const form = new FormData();
+    form.append('firstName', formData.firstName);
+    form.append('lastName', formData.lastName);
+    form.append('phone', formData.phone);
+    form.append('gender', formData.gender);
+    form.append('avatar', formData.avatar);
+    const response = await axios.post('http://localhost:3000/auth/update-profile', form, {
+      withCredentials: true,
+    });
+    console.log('Profile updated:', response.data);
+    setFormData(prev => ({ ...prev, ...response.data.user }));
+    updateUser(response.data.user);
+    setIsLoading(false);
+  }
 
   return (
     <div className="personal-info-wrapper">
       {/* === AVATAR UPLOAD SECTION === */}
       <div className="avatar-section">
         <div className="avatar-wrapper">
-          <img src={formData.avatar} alt="Profile" className="profile-img" />
-          
+          {imagePreview ? (
+            <img src={imagePreview} alt="Profile" className="profile-img" />
+          ) : formData.avatar ? (
+            <img src={formData.avatar} alt="Profile" className="profile-img" />
+          ) : user?.avatar ? (
+            <img src={user.avatar} alt="Profile" className="profile-img" />
+          ) : (
+            <FaUser size={100} className="profile-img" />
+          )}
           {/* The Edit Button is actually a label for the hidden file input */}
           <label htmlFor="avatar-upload" className="edit-badge">
             <Camera size={18} />
@@ -79,6 +120,7 @@ const PersonalInformation = () => {
           <input 
             type="email" 
             name="email" 
+            disabled
             value={formData.email} 
             onChange={handleChange} 
           />
@@ -87,9 +129,12 @@ const PersonalInformation = () => {
         {/* Row 3: Phone */}
         <div className="form-group">
           <label>Phone *</label>
+          <span className='phone-prefix'>+91</span>
           <input 
             type="tel" 
             name="phone" 
+            className='phone-input'
+            maxLength={10}
             value={formData.phone} 
             onChange={handleChange} 
           />
@@ -113,8 +158,8 @@ const PersonalInformation = () => {
         </div>
 
         {/* Submit Button */}
-        <button className="update-btn">
-          Update Changes
+        <button onClick={handleSubmit} className="update-btn">
+          {isLoading ? "Updating..." : "Update Changes"}
         </button>
 
       </form>

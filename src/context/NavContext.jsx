@@ -9,6 +9,7 @@ export const NavProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [orders, setOrders] = useState([]);
 
   // Check if user has valid token on mount
   useEffect(() => {
@@ -43,11 +44,20 @@ export const NavProvider = ({ children }) => {
     }
   };
 
+  const updateUser = (updatedUser) => {
+    setUser(updatedUser);
+  };
+
+  const updateOrders = (newOrders) => {
+    setOrders(newOrders);
+  }
+
   const value = {
     isLoggedIn,
     user,
     loading,
     logout,
+    updateUser,
   };
 
   return (
