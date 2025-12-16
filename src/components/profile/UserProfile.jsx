@@ -9,6 +9,7 @@ import PersonalInformation from "./Information/PersonalInformation";
 import ManageAddress from "./address-manager/ManageAddress";
 import MyOrders from "./my-orders/MyOrders";
 import AddProduct from "./add-products/AddProduct";
+import WishlistPage from "../wishlist/WishlistPage";
 
 const UserProfile = () => {
   const navigate = useNavigate();
@@ -31,12 +32,12 @@ const UserProfile = () => {
         return <PersonalInformation />;
       case "orders":
         return <MyOrders />;
+      case "wishlist":
+        return <WishlistPage />;
       case "add products":
         return <AddProduct />;
       case "address":
         return <ManageAddress />;
-      case "password":
-        return <PasswordManager />;
       default:
         return <PersonalInformation />;
     }
@@ -54,8 +55,8 @@ const UserProfile = () => {
           },
         ]
       : []),
+    { id: "wishlist", label: "My Wishlist", icon: <Package size={20} /> },
     { id: "address", label: "Manage Address", icon: <MapPin size={20} /> },
-    { id: "password", label: "Password Manager", icon: <Lock size={20} /> },
   ];
 
   return (

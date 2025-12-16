@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
 import {
   Upload,
   X,
@@ -12,17 +14,17 @@ import {
 import "./AddProduct.scss";
 import axios from "axios";
 
-
 const AddProduct = () => {
+  const notyf = new Notyf();
   const [imagePreview, setImagePreview] = useState(null);
   const [imageFile, setImageFile] = useState(null);
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors }
+    formState: { errors },
   } = useForm({
     defaultValues: {
       name: "",
@@ -30,7 +32,7 @@ const AddProduct = () => {
       category: "",
       description: "",
       isFeatured: false,
-    }
+    },
   });
 
   const categories = [
@@ -67,12 +69,22 @@ const AddProduct = () => {
     for (const key in submitData) {
       formPayload.append(key, submitData[key]);
     }
-    const response = await axios.post("http://localhost:3000/products/create", formPayload, {
-      withCredentials: true,
-    });
+    const response = await axios.post(
+      "http://localhost:3000/products/create",
+      formPayload,
+      {
+        withCredentials: true,
+      }
+    );
     setIsLoading(false);
     reset();
     removeImage();
+    notyf.success({
+      message: `${product.name} added successfully!`,
+      duration: 2000,
+      background: "#17701fff",
+      position: { x: "left", y: "bottom" },
+    });
   };
 
   return (
@@ -122,10 +134,12 @@ const AddProduct = () => {
               <input
                 type="text"
                 placeholder="e.g. Red Velvet Truffle"
-                {...register('name', { required: 'Product name is required' })}
+                {...register("name", { required: "Product name is required" })}
               />
             </div>
-            {errors.name && <span className="error">{errors.name.message}</span>}
+            {errors.name && (
+              <span className="error">{errors.name.message}</span>
+            )}
           </div>
 
           <div className="form-row">
@@ -138,16 +152,18 @@ const AddProduct = () => {
                   type="number"
                   placeholder="0.00"
                   step="0.01"
-                  {...register('price', {
-                    required: 'Price is required',
+                  {...register("price", {
+                    required: "Price is required",
                     min: {
                       value: 0,
-                      message: 'Price must be greater than 0'
-                    }
+                      message: "Price must be greater than 0",
+                    },
                   })}
                 />
               </div>
-              {errors.price && <span className="error">{errors.price.message}</span>}
+              {errors.price && (
+                <span className="error">{errors.price.message}</span>
+              )}
             </div>
 
             {/* Category */}
@@ -156,7 +172,9 @@ const AddProduct = () => {
               <div className="select-wrapper">
                 <Tag size={18} className="input-icon" />
                 <select
-                  {...register('category', { required: 'Category is required' })}
+                  {...register("category", {
+                    required: "Category is required",
+                  })}
                 >
                   <option value="">Select Category</option>
                   {categories.map((cat, index) => (
@@ -166,7 +184,9 @@ const AddProduct = () => {
                   ))}
                 </select>
               </div>
-              {errors.category && <span className="error">{errors.category.message}</span>}
+              {errors.category && (
+                <span className="error">{errors.category.message}</span>
+              )}
             </div>
           </div>
 
@@ -178,26 +198,30 @@ const AddProduct = () => {
               <textarea
                 rows="4"
                 placeholder="Product details, ingredients, etc..."
-                {...register('description')}
+                {...register("description")}
               ></textarea>
             </div>
-            {errors.description && <span className="error">{errors.description.message}</span>}
+            {errors.description && (
+              <span className="error">{errors.description.message}</span>
+            )}
           </div>
 
           {/* Featured Checkbox */}
           <div className="form-group checkbox-group">
             <label className="checkbox-container">
-              <input
-                type="checkbox"
-                {...register('isFeatured')}
-              />
+              <input type="checkbox" {...register("isFeatured")} />
               <span className="checkmark"></span>
               Mark as Featured Product
             </label>
           </div>
 
           <button type="submit" className="submit-btn">
-            {isLoading ? <span className="loading-spinner"></span> : <Plus size={20} />} Add Product
+            {isLoading ? (
+              <span className="loading-spinner"></span>
+            ) : (
+              <Plus size={20} />
+            )}{" "}
+            Add Product
           </button>
         </div>
       </form>
