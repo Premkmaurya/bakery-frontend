@@ -60,7 +60,8 @@ const AddProduct = () => {
     setIsLoading(true);
     const submitData = {
       ...formData,
-      image: imageFile
+      image: imageFile,
+      inStock: true,
     };
     const formPayload = new FormData();
     for (const key in submitData) {
