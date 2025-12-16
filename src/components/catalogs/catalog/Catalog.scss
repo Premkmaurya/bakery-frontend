@@ -115,90 +115,113 @@
 
   // === PRODUCT GRID STYLES ===
   .product-grid {
+    position: relative;
     display: grid;
     // Auto-fill creates responsive columns automatically
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 2rem;
 
-    .product-card {
-      background-color: white;
-      border-radius: 12px;
-      overflow: hidden;
-      transition: all 0.3s ease;
-      border: 1px solid transparent;
+    .product-card-wrapper {
+      position: relative;
+      width: 100%;
+      .heart-btn {
+        position: absolute;
+        top: 1rem;
+        right: 0.3rem;
+        color: #a82719; // Red color for heart
+        background: white;
+        border-radius: 50%;
+        padding: 0.3rem;
+        z-index: 34;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: transform 0.2s;
 
-      &:hover {
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-        border-color: #f0f0f0;
-
-        .add-to-cart-btn {
-          opacity: 1;
-          transform: scale(1);
+        &:hover {
+          transform: scale(1.1);
         }
       }
-
-      .image-wrapper {
-        height: 250px;
-        width: 100%;
+      .product-card {
+        background-color: white;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
         position: relative;
-        background-color: #f4f4f4;
 
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: contain; // Ensures whole product is visible like reference
-          padding: 1rem; // Give it some breathing room
-          mix-blend-mode: multiply; // Helps remove white backgrounds visually
-        }
+        &:hover {
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+          border-color: #f0f0f0;
 
-        // Floating Add to Cart Button
-        .add-to-cart-btn {
-          position: absolute;
-          bottom: 1.5rem;
-          right: 3rem;
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          color: white;
-          border: none;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-
-          img {
-            width: 9vw;
-            height: 9vh;
-            object-fit: cover;
+          .add-to-cart-btn {
+            opacity: 1;
+            transform: scale(1);
           }
         }
-      }
 
-      .card-info {
-        padding: 1.5rem;
-        text-align: center;
+        .image-wrapper {
+          height: 250px;
+          width: 100%;
+          position: relative;
+          background-color: #f4f4f4;
 
-        .product-name {
-          font-family: var(--font-serif);
-          font-size: 1.2rem;
-          margin-bottom: 0.2rem;
-          color: var(--color-text-main);
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; // Ensures whole product is visible like reference
+            padding: 1rem; // Give it some breathing room
+            mix-blend-mode: multiply; // Helps remove white backgrounds visually
+          }
+
+          // Floating Add to Cart Button
+          .add-to-cart-btn {
+            position: absolute;
+            bottom: 1.5rem;
+            right: 3rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+
+            img {
+              width: 9vw;
+              height: 9vh;
+              object-fit: cover;
+            }
+          }
         }
 
-        .product-category {
-          font-family: var(--font-sans);
-          font-size: 0.8rem;
-          color: #999;
-          text-transform: uppercase;
-          margin-bottom: 0.5rem;
-          letter-spacing: 1px;
-        }
+        .card-info {
+          padding: 1.5rem;
+          text-align: center;
 
-        .price {
-          font-family: var(--font-sans);
-          font-size: 1.1rem;
-          font-weight: 700;
-          color: #d4a373; // Gold/Brown color from your reference image for price
+          .product-name {
+            font-family: var(--font-serif);
+            font-size: 1.2rem;
+            margin-bottom: 0.2rem;
+            color: var(--color-text-main);
+          }
+
+          .product-category {
+            font-family: var(--font-sans);
+            font-size: 0.8rem;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+          }
+
+          .price {
+            font-family: var(--font-sans);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #d4a373; // Gold/Brown color from your reference image for price
+          }
         }
       }
     }

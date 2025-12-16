@@ -156,12 +156,9 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        color: #ccc;
+        color: red;
         transition: color 0.2s;
 
-        &:hover {
-          color: red; // Heart turns red on hover
-        }
       }
     }
 

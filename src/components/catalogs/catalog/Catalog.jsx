@@ -1,17 +1,57 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import "./Catalog.scss";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 import { useNavigate } from "react-router-dom";
-import { Search, SlidersHorizontal, ShoppingCart } from "lucide-react";
+
+import { FaHeart } from "react-icons/fa";
+import { Heart, Search, SlidersHorizontal, ShoppingCart } from "lucide-react";
 
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/all";
+import axios from "axios";
 
 const Catalog = () => {
   const notyf = new Notyf();
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    async function getProducts() {
+      const response = await axios.get("http://localhost:3000/products/get", {
+        withCredentials: true,
+      });
+
+      setProducts((prev) => [...prev, ...response.data]);
+    }
+    getProducts();
+  }, []);
   const navigate = useNavigate();
+
+  const [wishedProducts, setWishedProducts] = useState({});
+
+  // Toggle wishlist for a specific product
+  const toggleWishlist = async (productId) => {
+    setWishedProducts((prev) => ({
+      ...prev,
+      [productId]: !prev[productId],
+    }));
+    const response = await axios.post(
+      "http://localhost:3000/wishlist/toggleWishlist",
+      { productId },
+      {
+        withCredentials: true,
+      }
+    );
+    if (response.data) {
+      notyf.success({
+        message: response.data.message,
+        duration: 2000,
+        background: "#17701fff",
+        position: { x: "left", y: "bottom" },
+      });
+    }
+  };
 
   gsap.registerPlugin(useGSAP);
   gsap.registerPlugin(SplitText);
@@ -19,7 +59,7 @@ const Catalog = () => {
   useGSAP(() => {
     document.fonts.ready.then(() => {
       const split = new SplitText(".page-title", { type: "words,lines" });
-  
+
       const tl = gsap.timeline();
       tl.from(split.lines, {
         duration: 0.8,
@@ -28,92 +68,32 @@ const Catalog = () => {
         stagger: 0.1,
         ease: "expo.out",
       })
-      .from(".filter-bar", {
-        duration: 0.6,
-        y: 20,
-        opacity: 0,
-        ease: "expo.out",
-      }, "-=0.4"
-      )
-      .from(".category-tabs", {
-        duration: 0.6,
-        y: 20,
-        opacity: 0,
-        stagger: 0.1,
-        ease: "expo.out",
-      }, "-=0.4");
+        .from(
+          ".filter-bar",
+          {
+            duration: 0.6,
+            y: 20,
+            opacity: 0,
+            ease: "expo.out",
+          },
+          "-=0.4"
+        )
+        .from(
+          ".category-tabs",
+          {
+            duration: 0.6,
+            y: 20,
+            opacity: 0,
+            stagger: 0.1,
+            ease: "expo.out",
+          },
+          "-=0.4"
+        );
     });
   }, []);
 
-
   // === 1. MOCK DATA ===
   // In a real app, this would come from an API
-  const products = [
-    {
-      id: 1,
-      name: "Oatmeal Muffins",
-      price: 7.0,
-      category: "Muffins",
-      image:
-        "https://images.unsplash.com/photo-1603532648955-039310d9ed75?q=80&w=1000&auto=format&fit=crop",
-    },
-    {
-      id: 2,
-      name: "French Bread",
-      price: 18.0,
-      category: "Bread",
-      image:
-        "https://images.unsplash.com/photo-1589367920969-ab8e050bbb04?q=80&w=1000&auto=format&fit=crop",
-    },
-    {
-      id: 3,
-      name: "Bread Stick",
-      price: 25.0,
-      category: "Bread",
-      image:
-        "https://images.unsplash.com/photo-1573143529242-7a5223c72639?q=80&w=1000&auto=format&fit=crop",
-    },
-    {
-      id: 4,
-      name: "Pound Cake",
-      price: 17.0,
-      category: "Cakes",
-      image:
-        "https://images.unsplash.com/photo-1627308595229-7830a5c91f9f?q=80&w=1000&auto=format&fit=crop",
-    },
-    {
-      id: 5,
-      name: "Rye Bread",
-      price: 15.0,
-      category: "Bread",
-      image:
-        "https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=1000&auto=format&fit=crop",
-    },
-    {
-      id: 6,
-      name: "Swiss Roll",
-      price: 30.0,
-      category: "Cakes",
-      image:
-        "https://images.unsplash.com/photo-1535497223631-c42ba5974c0b?q=80&w=1000&auto=format&fit=crop",
-    },
-    {
-      id: 7,
-      name: "Baking Flour",
-      price: 25.0,
-      category: "Ingredients",
-      image:
-        "https://images.unsplash.com/photo-1574315042614-2c1b75c87e59?q=80&w=1000&auto=format&fit=crop",
-    },
-    {
-      id: 8,
-      name: "Sourdough",
-      price: 12.0,
-      category: "Bread",
-      image:
-        "https://images.unsplash.com/photo-1585476686161-b4f00998c081?q=80&w=1000&auto=format&fit=crop",
-    },
-  ];
 
   // === 2. STATE MANAGEMENT ===
   const [searchTerm, setSearchTerm] = useState("");
@@ -122,19 +102,37 @@ const Catalog = () => {
 
   // === 3. FILTERING LOGIC ===
   const filteredProducts = useMemo(() => {
+    console.log("Filtering products, total:", products);
     return products.filter((product) => {
-      const matchesSearch = product.name
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
-      const matchesPrice = product.price <= maxPrice;
-      const matchesCategory =
-        activeCategory === "All" || product.category === activeCategory;
+      try {
+        // Use optional chaining to safely access properties
+        const matchesSearch =
+          !product.name ||
+          product.name?.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesPrice = !product.price || product.price <= maxPrice;
+        const matchesCategory =
+          activeCategory === "All" ||
+          !product.category ||
+          product.category === activeCategory;
 
-      return matchesSearch && matchesPrice && matchesCategory;
+        return matchesSearch && matchesPrice && matchesCategory;
+      } catch (error) {
+        console.warn("Filter error for product:", product, error);
+        return true; // Include product if there's an error
+      }
     });
-  }, [searchTerm, maxPrice, activeCategory]);
+  }, [products, searchTerm, maxPrice, activeCategory]);
 
-  const categories = ["All", "Bread", "Cakes", "Muffins", "Ingredients"];
+  const categories = [
+    "All",
+    "Popular cakes",
+    "Celebration cakes",
+    "Baby cakes",
+    "Wedding cakes",
+    "Special cakes",
+    "Breads",
+    "Muffins",
+  ];
 
   return (
     <section className="catalog-section">
@@ -188,32 +186,48 @@ const Catalog = () => {
         <div className="product-grid">
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product) => (
-              <div key={product.id} onClick={()=> navigate(`/products/${product.id}`)} className="product-card">
-                {/* Image Area */}
-                <div className="image-wrapper">
-                  <img src={product.image} alt={product.name} />
-                  <button
-                    onClick={() =>
-                      notyf.success({
-                        message: `${product.name} added to cart!`,
-                        duration: 2000,
-                        background: "#17701fff",
-                        position: { x: "left", y: "bottom" },
-                      })
-                    }
-                    className="add-to-cart-btn"
-                    aria-label="Add to cart"
-                  >
-                    <img src="cart.gif" alt="" />
-                  </button>
+              <div key={product._id} className="product-card-wrapper">
+                <div
+                  onClick={() => toggleWishlist(product._id)}
+                  className="heart-btn"
+                  aria-label="Add to wishlist"
+                >
+                  {wishedProducts[product._id] ? (
+                    <FaHeart size={18} />
+                  ) : (
+                    <Heart size={18} />
+                  )}
                 </div>
+                <div
+                  onClick={() => navigate(`/products/${product._id}`)}
+                  className="product-card"
+                >
+                  {/* Image Area */}
+                  <div className="image-wrapper">
+                    <img src={product.imageUrl} alt={product.name} />
+                    <button
+                      onClick={() =>
+                        notyf.success({
+                          message: `${product.name} added to cart!`,
+                          duration: 2000,
+                          background: "#17701fff",
+                          position: { x: "left", y: "bottom" },
+                        })
+                      }
+                      className="add-to-cart-btn"
+                      aria-label="Add to cart"
+                    >
+                      <img src="cart.gif" alt="" />
+                    </button>
+                  </div>
 
-                {/* Info Area */}
-                <div className="card-info">
-                  <h3 className="product-name">{product.name}</h3>
-                  <p className="product-category">{product.category}</p>
-                  <div className="price-row">
-                    <span className="price">${product.price.toFixed(2)}</span>
+                  {/* Info Area */}
+                  <div className="card-info">
+                    <h3 className="product-name">{product.name}</h3>
+                    <p className="product-category">{product.category}</p>
+                    <div className="price-row">
+                      <span className="price">${product.price.toFixed(2)}</span>
+                    </div>
                   </div>
                 </div>
               </div>

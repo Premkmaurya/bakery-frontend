@@ -4,7 +4,6 @@ import { LogOut, User, Package, MapPin, Lock, Plus } from "lucide-react";
 import "./UserProfile.scss";
 import { useAuth } from "../../context/NavContext";
 
-import PasswordManager from "./password-manager/PasswordManager";
 import PersonalInformation from "./Information/PersonalInformation";
 import ManageAddress from "./address-manager/ManageAddress";
 import MyOrders from "./my-orders/MyOrders";
