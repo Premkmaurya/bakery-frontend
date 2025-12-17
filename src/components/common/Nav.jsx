@@ -130,7 +130,7 @@ const Nav = () => {
         ) : (
           <FaRegUser onClick={() => navigate("/profile")} className="nav-icons" size={20} />
         )}
-        <div onClick={() => navigate("/wishlist")} className="nav-icons">
+        <div onClick={() => navigate("/cart")} className="nav-icons">
           <FaShoppingCart size={20} />
         </div>
       </div>

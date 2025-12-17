@@ -92,17 +92,12 @@ const Catalog = () => {
     });
   }, []);
 
-  // === 1. MOCK DATA ===
-  // In a real app, this would come from an API
-
-  // === 2. STATE MANAGEMENT ===
   const [searchTerm, setSearchTerm] = useState("");
   const [maxPrice, setMaxPrice] = useState(50); // Default max price
   const [activeCategory, setActiveCategory] = useState("All");
 
   // === 3. FILTERING LOGIC ===
   const filteredProducts = useMemo(() => {
-    console.log("Filtering products, total:", products);
     return products.filter((product) => {
       try {
         // Use optional chaining to safely access properties
@@ -133,6 +128,18 @@ const Catalog = () => {
     "Breads",
     "Muffins",
   ];
+
+  const cartHandler = async (product) => {
+    const response = await axios.post(`http://localhost:3000/cart/addToCart/${product._id}`, {
+      withCredentials: true,
+    })
+    notyf.success({
+      message: `${product.name} added to cart!`,
+      duration: 2000,
+      background: "#17701fff",
+      position: { x: "left", y: "bottom" },
+    });
+  };
 
   return (
     <section className="catalog-section">
@@ -205,20 +212,6 @@ const Catalog = () => {
                   {/* Image Area */}
                   <div className="image-wrapper">
                     <img src={product.imageUrl} alt={product.name} />
-                    <button
-                      onClick={() =>
-                        notyf.success({
-                          message: `${product.name} added to cart!`,
-                          duration: 2000,
-                          background: "#17701fff",
-                          position: { x: "left", y: "bottom" },
-                        })
-                      }
-                      className="add-to-cart-btn"
-                      aria-label="Add to cart"
-                    >
-                      <img src="cart.gif" alt="" />
-                    </button>
                   </div>
 
                   {/* Info Area */}
@@ -230,6 +223,13 @@ const Catalog = () => {
                     </div>
                   </div>
                 </div>
+                <button
+                  onClick={() => cartHandler(product)}
+                  className="add-to-cart-btn"
+                  aria-label="Add to cart"
+                >
+                  <img src="cart.gif" alt="" />
+                </button>
               </div>
             ))
           ) : (

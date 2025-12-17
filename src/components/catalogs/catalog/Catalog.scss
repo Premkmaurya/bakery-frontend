@@ -172,28 +172,6 @@
             padding: 1rem; // Give it some breathing room
             mix-blend-mode: multiply; // Helps remove white backgrounds visually
           }
-
-          // Floating Add to Cart Button
-          .add-to-cart-btn {
-            position: absolute;
-            bottom: 1.5rem;
-            right: 3rem;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            color: white;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-
-            img {
-              width: 9vw;
-              height: 9vh;
-              object-fit: cover;
-            }
-          }
         }
 
         .card-info {
@@ -222,6 +200,27 @@
             font-weight: 700;
             color: #d4a373; // Gold/Brown color from your reference image for price
           }
+        }
+      }
+      .add-to-cart-btn {
+        position: absolute;
+        top: 16vw;
+        right: 1vw;
+        width: 4vw;
+        height: 6vh;
+        border-radius: 50%;
+        color: white;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+        img {
+          width: 2.7vw;
+          height: 2.7vh;
+          object-fit: cover;
         }
       }
     }
