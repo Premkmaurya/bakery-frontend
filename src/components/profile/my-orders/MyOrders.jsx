@@ -122,7 +122,7 @@ const MyOrders = () => {
               <div className="card-footer">
                 <div className="total-wrapper">
                   <span className="label">Total Amount</span>
-                  <span className="amount">${order.total.toFixed(2)}</span>
+                  <span className="amount">₹{order.total.toFixed(2)}</span>
                 </div>
 
                 <div className="actions">

@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { CreditCard, DollarSign, Wallet, CheckCircle, ShieldCheck } from 'lucide-react';
 import './PaymentPage.scss';
+import { useLocation } from 'react-router-dom';
 
 const PaymentPage = () => {
+
+  const { state } = useLocation();
+  console.log("Payment Page State:", state);
   // === STATE ===
   const [paymentMethod, setPaymentMethod] = useState('upi'); // 'upi' or 'cod'
   const [upiId, setUpiId] = useState('');
   const [isVerified, setIsVerified] = useState(false);
 
-  // === MOCK PRICE DATA ===
-  const subTotal = 1200;
-  const deliveryFee = 50;
-  const discount = 100;
-  const total = subTotal + deliveryFee - discount;
+ 
 
   // === HANDLERS ===
   const handleVerify = () => {
@@ -29,7 +29,7 @@ const PaymentPage = () => {
       alert("Please verify your UPI ID first.");
       return;
     }
-    alert(`Processing payment of $${total} via ${paymentMethod === 'upi' ? 'UPI' : 'Cash on Delivery'}`);
+    alert(`Processing payment of ₹${state?.total} via ${paymentMethod === 'upi' ? 'UPI' : 'Cash on Delivery'}`);
   };
 
   return (
@@ -106,22 +106,22 @@ const PaymentPage = () => {
               
               <div className="price-row">
                 <span>Subtotal</span>
-                <span>${subTotal}</span>
+                <span>₹{state?.subTotal || 0}</span>
               </div>
               <div className="price-row">
                 <span>Delivery Fee</span>
-                <span>${deliveryFee}</span>
+                <span>₹{state?.deliveryFee || 0}</span>
               </div>
               <div className="price-row discount">
                 <span>Discount</span>
-                <span>-${discount}</span>
+                <span>-₹{state?.discount || 0}</span>
               </div>
               
               <div className="divider"></div>
               
               <div className="price-row total">
                 <span>Total Amount</span>
-                <span>${total}</span>
+                <span>₹{state?.totalAmount || 0}</span>
               </div>
 
               <div className="security-badge">
@@ -130,7 +130,7 @@ const PaymentPage = () => {
               </div>
 
               <button className="pay-btn" onClick={handlePayment}>
-                Pay ${total}
+                Pay ₹{state?.totalAmount || 0}
               </button>
             </div>
           </div>

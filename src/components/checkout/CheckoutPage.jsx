@@ -363,18 +363,18 @@ const CheckoutPage = () => {
 
               <div className="price-row">
                 <span>Subtotal</span>
-                <span>${subTotal}</span>
+                <span>₹{subTotal}</span>
               </div>
               <div className="price-row">
                 <span>Delivery Fee</span>
-                <span>${deliveryFee}</span>
+                <span>₹{deliveryFee}</span>
               </div>
 
               <div className="divider"></div>
 
               <div className="price-row total">
                 <span>Total Amount</span>
-                <span>${total}</span>
+                <span>₹{total}</span>
               </div>
 
               <div className="security-note">

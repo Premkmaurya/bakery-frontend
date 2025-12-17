@@ -119,7 +119,7 @@ const WishlistPage = () => {
                 <div className="card-content">
                   <span className="category">{item.category}</span>
                   <h3 className="product-name">{item.name}</h3>
-                  <div className="price">${item.price.toFixed(2)}</div>
+                  <div className="price">₹{item.price.toFixed(2)}</div>
 
                   <button
                     className="add-cart-btn"

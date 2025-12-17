@@ -176,7 +176,7 @@ const Catalog = () => {
           <div className="price-filter">
             <div className="price-label">
               <SlidersHorizontal size={16} />
-              <span>Max Price: ${maxPrice}</span>
+              <span>Max Price: ₹{maxPrice}</span>
             </div>
             <input
               type="range"
@@ -206,7 +206,7 @@ const Catalog = () => {
                   )}
                 </div>
                 <div
-                  onClick={() => navigate(`/products/${product._id}`)}
+                  onClick={() => navigate(`/products/${product._id}`,{state:{product}})}
                   className="product-card"
                 >
                   {/* Image Area */}
@@ -219,7 +219,7 @@ const Catalog = () => {
                     <h3 className="product-name">{product.name}</h3>
                     <p className="product-category">{product.category}</p>
                     <div className="price-row">
-                      <span className="price">${product.price.toFixed(2)}</span>
+                      <span className="price">₹{product.price.toFixed(2)}</span>
                     </div>
                   </div>
                 </div>

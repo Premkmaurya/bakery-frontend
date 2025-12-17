@@ -145,7 +145,7 @@ const AddProduct = () => {
           <div className="form-row">
             {/* Price */}
             <div className="form-group">
-              <label>Price ($) *</label>
+              <label>Price (₹) *</label>
               <div className="input-with-icon">
                 <DollarSign size={18} className="input-icon" />
                 <input

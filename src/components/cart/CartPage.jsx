@@ -22,32 +22,46 @@ const CartPage = () => {
     fetchCartItems();
   }, []);
 
-  
-  const [cartItems, setCartItems] = useState(initialCartItems);
-
   // Function to handle quantity changes
-  const updateQuantity = (id, newQuantity) => {
+  const updateQuantity = async (id, newQuantity) => {
     if (newQuantity < 1) return;
-    setCartItems((prevItems) =>
+    setInitialCartItems((prevItems) =>
       prevItems.map((item) =>
-        item.id === id ? { ...item, quantity: newQuantity } : item
+        item._id === id ? { ...item, quantity: newQuantity } : item
       )
     );
+
+    const response = await axios.patch(
+      `http://localhost:3000/cart/updateCart/${id}`,
+      { quantity: newQuantity },
+      {
+        withCredentials: true,
+      }
+    );
+    console.log(response.data);
   };
 
   // Function to remove an item from the cart
-  const removeItem = (id) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
+  const removeItem = async (id) => {
+    setInitialCartItems((prevItems) =>
+      prevItems.filter((item) => item._id !== id)
+    );
+    const response = await axios.delete(
+      `http://localhost:3000/cart/removeFromCart/${id}`,
+      {
+        withCredentials: true,
+      }
+    );
   };
 
   // Calculate cart summary totals
-  const subTotal = cartItems.reduce(
-    (acc, item) => acc + item.price * item.quantity,
+  const subTotal = initialCartItems.reduce(
+    (acc, item) => acc + item.productId.price * item.quantity,
     0
   );
   const discountPercentage = 10; // 10% discount as per image
   const discountAmount = (subTotal * discountPercentage) / 100;
-  const deliveryFee = 50;
+  const deliveryFee = 10;
   const total = subTotal - discountAmount + deliveryFee;
 
   return (
@@ -92,12 +106,12 @@ const CartPage = () => {
               <span>Sub Total</span>
               <span>
                 {subTotal
-                  .toLocaleString("en-US", {
+                  .toLocaleString("en-IN", {
                     style: "currency",
-                    currency: "USD",
+                    currency: "INR",
                   })
-                  .replace("$", "")}{" "}
-                USD
+                  .replace("₹", "")}{" "}
+                INR
               </span>
             </div>
             <div className="summary-row discount">
@@ -105,29 +119,29 @@ const CartPage = () => {
               <span>
                 -
                 {discountAmount
-                  .toLocaleString("en-US", {
+                  .toLocaleString("en-IN", {
                     style: "currency",
-                    currency: "USD",
+                    currency: "INR",
                   })
-                  .replace("$", "")}{" "}
-                USD
+                  .replace("₹", "")}{" "}
+                INR
               </span>
             </div>
             <div className="summary-row">
               <span>Delivery fee</span>
-              <span>{deliveryFee.toFixed(2)} USD</span>
+              <span>{deliveryFee.toFixed(2)} INR</span>
             </div>
 
             <div className="summary-row total">
               <span>Total</span>
               <span className="total-price">
                 {total
-                  .toLocaleString("en-US", {
+                  .toLocaleString("en-IN", {
                     style: "currency",
-                    currency: "USD",
+                    currency: "INR",
                   })
-                  .replace("$", "")}{" "}
-                USD
+                  .replace("₹", "")}{" "}
+                INR
               </span>
             </div>
 
@@ -142,7 +156,16 @@ const CartPage = () => {
             </p>
 
             <button
-              onClick={() => navigate("/products/1/payment-method")}
+              onClick={() =>
+                navigate("/products/1/payment-method", {
+                  state: {
+                    discount: discountAmount,
+                    deliveryFee: deliveryFee,
+                    subTotal: subTotal,
+                    totalAmount: total,
+                  },
+                })
+              }
               className="checkout-btn"
             >
               Checkout Now
@@ -159,7 +182,11 @@ const CartItem = ({ item, updateQuantity, removeItem }) => {
   return (
     <div className="cart-item">
       <div className="product-details">
-        <img src={item.productId.imageUrl} alt={item.productId.name} className="product-image" />
+        <img
+          src={item.productId.imageUrl}
+          alt={item.productId.name}
+          className="product-image"
+        />
         <div className="product-info">
           <h3 className="product-name">{item.productId.name}</h3>
         </div>
@@ -175,7 +202,7 @@ const CartItem = ({ item, updateQuantity, removeItem }) => {
           </button>
         </div>
       </div>
-      <div className="item-total">${item.productId.price * item.quantity}</div>
+      <div className="item-total">₹{item.productId.price * item.quantity}</div>
       <div className="item-action">
         <button onClick={() => removeItem(item._id)} className="delete-btn">
           <Trash2 size={20} />
