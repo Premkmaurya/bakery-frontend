@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./SingleProductHero.scss";
 import { ShoppingBag, Star, Truck, ShieldCheck } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -9,7 +9,6 @@ import { SplitText } from "gsap/all";
 
 const SingleProductHero = ({ product }) => {
   const navigate = useNavigate();
-  console.log(product);
   gsap.registerPlugin(useGSAP);
   gsap.registerPlugin(SplitText);
 
@@ -80,7 +79,7 @@ const SingleProductHero = ({ product }) => {
           "-=0.5"
         )
         .fromTo(
-          ".tabs-header .tab-btn",
+          ".desc",
           {
             y: 20,
             opacity: 0,
@@ -95,20 +94,20 @@ const SingleProductHero = ({ product }) => {
           "-=0.5"
         )
         .fromTo(
-          ".tab-content .content-pane",
+          ".desc p",
           {
             opacity: 0,
           },
           {
             opacity: 1,
-          },
-          "-=0.5"
+            duration: 1,
+          }
         );
     });
   }, []);
 
+
   // === 2. STATE FOR TABS ===
-  const [activeTab, setActiveTab] = useState("description");
   const [quantity, setQuantity] = useState(1);
 
   return (
@@ -141,7 +140,11 @@ const SingleProductHero = ({ product }) => {
 
               {/* Order Button */}
               <button
-                onClick={() => navigate(`/products/${product.id}/checkout`,{state:{product,quantity}})}
+                onClick={() =>
+                  navigate(`/products/${product.id}/checkout`, {
+                    state: { product, quantity },
+                  })
+                }
                 className="order-btn"
               >
                 <span>ORDER ONLINE</span>
@@ -163,47 +166,9 @@ const SingleProductHero = ({ product }) => {
 
             {/* === TAB SYSTEM === */}
             <div className="product-tabs">
-              {/* Tab Headers */}
-              <div className="tabs-header">
-                <button
-                  className={`tab-btn ${
-                    activeTab === "description" ? "active" : ""
-                  }`}
-                  onClick={() => setActiveTab("description")}
-                >
-                  DESCRIPTION
-                </button>
-                <button
-                  className={`tab-btn ${
-                    activeTab === "details" ? "active" : ""
-                  }`}
-                  onClick={() => setActiveTab("details")}
-                >
-                  DETAILS
-                </button>
-              </div>
-
-              {/* Tab Content */}
-              <div className="tab-content">
-                {activeTab === "description" && (
-                  <div className="content-pane fade-in">
-                    <p>{product.description}</p>
-                    <p className="meta-info">
-                      <strong>Allergens:</strong> {product.allergens}
-                    </p>
-                  </div>
-                )}
-
-                {activeTab === "details" && (
-                  <div className="content-pane fade-in">
-                    <h4>Consumption & Storage Guidelines:</h4>
-                    <ul className="guidelines-list">
-                      {product.storage.map((line, index) => (
-                        <li key={index}>{line}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+              <div className="desc">
+                <h4>Description</h4>
+                <p>{product.description}</p>
               </div>
             </div>
           </div>

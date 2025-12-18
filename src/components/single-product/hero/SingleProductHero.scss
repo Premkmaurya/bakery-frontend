@@ -37,7 +37,7 @@
         transform: scale(1.05); // Subtle zoom effect
       }
     }
-    
+
     @media (max-width: 768px) {
       height: 350px;
     }
@@ -86,7 +86,9 @@
           cursor: pointer;
           color: var(--color-text-main);
           width: 30px;
-          &:hover { color: var(--color-accent); }
+          &:hover {
+            color: var(--color-accent);
+          }
         }
 
         span {
@@ -121,7 +123,7 @@
         }
       }
     }
-    
+
     // Trust Badges
     .trust-badges {
       display: flex;
@@ -142,85 +144,21 @@
 
     // === TAB SYSTEM STYLES ===
     .product-tabs {
-      
-      .tabs-header {
-        display: flex;
-        gap: 2rem;
-        margin-bottom: 1.5rem;
-        border-bottom: 2px solid #f0f0f0; // The grey line underneath
-
-        .tab-btn {
-          background: none;
-          border: none;
+      .desc {
+        h4{
           font-family: var(--font-sans);
-          font-size: 0.9rem;
-          font-weight: 700;
-          color: #999; // Inactive color
-          padding-bottom: 0.8rem;
-          text-transform: uppercase;
-          cursor: pointer;
-          position: relative;
-          transition: color 0.3s;
-
-          // The Active Underline
-          &::after {
-            content: '';
-            position: absolute;
-            bottom: -2px; // Sit on top of the grey border
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: var(--color-accent); // Brand color
-            transition: width 0.3s ease;
-          }
-
-          &:hover {
-            color: var(--color-accent);
-          }
-
-          &.active {
-            color: var(--color-accent); // Active text color
-            &::after {
-              width: 100%; // Show underline
-            }
-          }
-        }
-      }
-
-      .tab-content {
-        font-family: var(--font-sans);
-        color: var(--color-text-sub);
-        line-height: 1.6;
-        min-height: 150px; // Prevent jumping height
-
-        .fade-in {
-          animation: fadeIn 0.4s ease-in-out;
-        }
-
-        .meta-info {
-          margin-top: 1rem;
-          font-style: italic;
-        }
-
-        .guidelines-list {
-          padding-left: 1.2rem;
-          margin-top: 0.5rem;
-          li { margin-bottom: 0.5rem; }
-        }
-
-        .review-item {
-          background-color: #f9f9f9;
-          padding: 1rem;
-          border-radius: 8px;
+          font-size: 1.2rem;
+          color: var(--color-accent);
+          text-decoration: underline 1px;
           margin-bottom: 1rem;
-
-          .review-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-            
-            .user-name { font-weight: 700; color: var(--color-text-main); }
-          }
+          animation: fadeIn 0.5s ease-in-out;
+        }
+        p {
+          font-family: var(--font-sans);
+          font-size: 1rem;
+          color: var(--color-text-sub);
+          line-height: 1.6;
+          animation: fadeIn 0.5s ease-in-out;
         }
       }
     }
@@ -228,6 +166,12 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(5px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

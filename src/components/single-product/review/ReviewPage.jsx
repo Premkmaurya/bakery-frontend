@@ -1,16 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useForm, Controller } from "react-hook-form";
 import "./ReviewPage.scss";
-import { Star, User, CheckCircle } from "lucide-react";
+import { Star, User, CheckCircle, UserRound } from "lucide-react";
+import dayjs from "dayjs";
+
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
 
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger, SplitText } from "gsap/all";
+import axios from "axios";
 
-const ReviewsPage = () => {
+const ReviewsPage = ({ product }) => {
+  const [reviews, setReviews] = useState([]);
+
   gsap.registerPlugin(useGSAP);
   gsap.registerPlugin(SplitText);
   gsap.registerPlugin(ScrollTrigger);
-
   useGSAP(() => {
     document.fonts.ready.then(() => {
       const split = new SplitText(".page-title", { type: "words,lines" });
@@ -57,66 +65,39 @@ const ReviewsPage = () => {
     });
   }, []);
 
+  useEffect(() => {
+    const fetchReviews = async () => {
+      const response = await axios.get(
+        `http://localhost:3000/reviews/get/${product._id}`,
+        {
+          withCredentials: true,
+        }
+      );
+      setReviews(response.data);
+    };
+    fetchReviews();
+  }, []);
+
   // === MOCK DATA FOR REVIEWS ===
-  const [reviews, setReviews] = useState([
-    {
-      id: 1,
-      name: "Robert Karmazov",
-      rating: 5,
-      date: "2 days ago",
-      text: "The cake was absolutely stunning! Not only did it look perfect for our wedding, but the taste was out of this world. Highly recommended!",
-      avatar:
-        "https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=200&auto=format&fit=crop",
-    },
-    {
-      id: 2,
-      name: "Alice M.",
-      rating: 4,
-      date: "1 week ago",
-      text: "Great service and fast delivery. The cupcakes were moist and delicious. Taking off one star because the box was slightly dented.",
-      avatar:
-        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop",
-    },
-    {
-      id: 3,
-      name: "John Doe",
-      rating: 5,
-      date: "3 weeks ago",
-      text: "Best bakery in town. The sourdough bread is authentic and the staff is super friendly.",
-      avatar:
-        "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200&auto=format&fit=crop",
-    },
-  ]);
 
   // === FORM STATE ===
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    rating: 0,
-    text: "",
+  const {
+    register,
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+    watch,
+    setValue,
+  } = useForm({
+    defaultValues: {
+      rating: 0,
+      comment: "",
+    },
   });
 
-  // Handle Form Change
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const rating = watch("rating");
 
-  // Handle Star Click in Form
-  const handleRatingClick = (score) => {
-    setFormData({ ...formData, rating: score });
-  };
-
-  // Handle Submit
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (formData.rating === 0) {
-      alert("Please select a star rating!");
-      return;
-    }
-    alert("Thank you for your review! It has been submitted for moderation.");
-    // Here you would send data to backend
-    setFormData({ name: "", email: "", rating: 0, text: "" });
-  };
 
   // Helper to render stars
   const renderStars = (rating) => {
@@ -130,6 +111,58 @@ const ReviewsPage = () => {
     ));
   };
 
+  // Calculate rating statistics from reviews
+  const getRatingStats = () => {
+    if (reviews.length === 0) {
+      return {
+        averageRating: 0,
+        totalReviews: 0,
+        ratingCounts: [0, 0, 0, 0, 0],
+        ratingPercentages: [0, 0, 0, 0, 0],
+      };
+    }
+
+    const ratingCounts = [0, 0, 0, 0, 0];
+    let totalRating = 0;
+
+    reviews.forEach((review) => {
+      const ratingIndex = review.rating - 1;
+      if (ratingIndex >= 0 && ratingIndex < 5) {
+        ratingCounts[ratingIndex]++;
+        totalRating += review.rating;
+      }
+    });
+
+    const averageRating = (totalRating / reviews.length).toFixed(1);
+    const ratingPercentages = ratingCounts.map((count) =>
+      reviews.length > 0 ? Math.round((count / reviews.length) * 100) : 0
+    );
+
+    return {
+      averageRating,
+      totalReviews: reviews.length,
+      ratingCounts,
+      ratingPercentages,
+    };
+  };
+
+  const stats = getRatingStats();
+
+  const formHandler = async (data) => {
+    if (data.rating === 0) {
+      alert("Please select a star rating!");
+      return;
+    }
+    const addReview = await axios.post(
+      `http://localhost:3000/reviews/create/${product._id}`,
+      data,
+      {
+        withCredentials: true,
+      }
+    );
+    reset();
+  };
+
   return (
     <section className="reviews-page-section">
       <div className="container">
@@ -139,48 +172,36 @@ const ReviewsPage = () => {
         <div className="stats-container">
           {/* Left: Progress Bars */}
           <div className="breakdown-col">
-            <div className="rating-row">
-              <span className="label">5 Stars</span>
-              <div className="progress-bg">
-                <div className="progress-fill" style={{ width: "85%" }}></div>
+            {[5, 4, 3, 2, 1].map((starCount) => (
+              <div key={starCount} className="rating-row">
+                <span className="label">
+                  {starCount} Star{starCount !== 1 ? "s" : ""}
+                </span>
+                <div className="progress-bg">
+                  <div
+                    className="progress-fill"
+                    style={{
+                      width: `${stats.ratingPercentages[starCount - 1]}%`,
+                    }}
+                  ></div>
+                </div>
+                <span className="count">
+                  {stats.ratingCounts[starCount - 1]}
+                </span>
               </div>
-              <span className="count">989</span>
-            </div>
-            <div className="rating-row">
-              <span className="label">4 Stars</span>
-              <div className="progress-bg">
-                <div className="progress-fill" style={{ width: "60%" }}></div>
-              </div>
-              <span className="count">450</span>
-            </div>
-            <div className="rating-row">
-              <span className="label">3 Stars</span>
-              <div className="progress-bg">
-                <div className="progress-fill" style={{ width: "10%" }}></div>
-              </div>
-              <span className="count">50</span>
-            </div>
-            <div className="rating-row">
-              <span className="label">2 Stars</span>
-              <div className="progress-bg">
-                <div className="progress-fill" style={{ width: "5%" }}></div>
-              </div>
-              <span className="count">16</span>
-            </div>
-            <div className="rating-row">
-              <span className="label">1 Star</span>
-              <div className="progress-bg">
-                <div className="progress-fill" style={{ width: "2%" }}></div>
-              </div>
-              <span className="count">8</span>
-            </div>
+            ))}
           </div>
 
           {/* Right: Big Score Card */}
           <div className="score-col">
-            <div className="big-score">4.8</div>
-            <div className="stars-wrapper">{renderStars(5)}</div>
-            <span className="total-ratings">Based on 1,513 Reviews</span>
+            <div className="big-score">{stats.averageRating}</div>
+            <div className="stars-wrapper">
+              {renderStars(Math.round(stats.averageRating))}
+            </div>
+            <span className="total-ratings">
+              Based on {stats.totalReviews} Review
+              {stats.totalReviews !== 1 ? "s" : ""}
+            </span>
           </div>
         </div>
 
@@ -192,22 +213,28 @@ const ReviewsPage = () => {
 
             <div className="feedback-list">
               {reviews.map((review) => (
-                <div key={review.id} className="review-card">
+                <div key={review._id} className="review-card">
                   <div className="review-head">
-                    <img
-                      src={review.avatar}
-                      alt={review.name}
-                      className="user-avatar"
-                    />
+                    {review.userId.imageUrl ? (
+                      <img
+                        src={review.userId.imageUrl}
+                        alt={review.userId.name}
+                        className="user-img"
+                      />
+                    ) : (
+                      <UserRound className="user-logo" size={26} />
+                    )}
                     <div className="user-info">
-                      <h4 className="user-name">{review.name}</h4>
+                      <h4 className="user-name">{review.userId.firstName + " " + review.userId.lastName}</h4>
                       <div className="user-rating">
                         {renderStars(review.rating)}
                       </div>
                     </div>
-                    <span className="review-date">{review.date}</span>
+                    <span className="review-date">
+                      {dayjs(review.createdAt).fromNow()}
+                    </span>
                   </div>
-                  <p className="review-text">{review.text}</p>
+                  <p className="review-text">{review.comment}</p>
                 </div>
               ))}
             </div>
@@ -217,7 +244,7 @@ const ReviewsPage = () => {
           <div className="form-col">
             <h2 className="section-header">Add a Review</h2>
 
-            <form className="review-form" onSubmit={handleSubmit}>
+            <form className="review-form" onSubmit={handleSubmit(formHandler)}>
               {/* Interactive Rating */}
               <div className="form-group">
                 <label>Your Rating *</label>
@@ -227,51 +254,47 @@ const ReviewsPage = () => {
                       key={star}
                       size={24}
                       className="star-btn"
-                      onClick={() => handleRatingClick(star)}
-                      fill={star <= formData.rating ? "#ffc107" : "none"}
-                      color={star <= formData.rating ? "#ffc107" : "#ccc"}
+                      onClick={() => setValue("rating", star)}
+                      fill={star <= rating ? "#ffc107" : "none"}
+                      color={star <= rating ? "#ffc107" : "#ccc"}
+                      style={{ cursor: "pointer" }}
                     />
                   ))}
                 </div>
-              </div>
-
-              <div className="form-group">
-                <label>Name *</label>
                 <input
-                  type="text"
-                  name="name"
-                  placeholder="John Doe"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
+                  type="hidden"
+                  {...register("rating", {
+                    required: "Please select a star rating",
+                    min: { value: 1, message: "Please select a rating" },
+                  })}
                 />
-              </div>
-
-              <div className="form-group">
-                <label>Email *</label>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="john@example.com"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
+                {errors.rating && (
+                  <span className="error">{errors.rating.message}</span>
+                )}
               </div>
 
               <div className="form-group">
                 <label>Write Your Review *</label>
                 <textarea
-                  name="text"
                   rows="5"
                   placeholder="Tell us about your experience..."
-                  value={formData.text}
-                  onChange={handleChange}
-                  required
+                  {...register("comment", {
+                    required: "Review text is required",
+                    minLength: {
+                      value: 10,
+                      message: "Review must be at least 10 characters",
+                    },
+                  })}
                 ></textarea>
+                {errors.comment && (
+                  <span className="error">{errors.comment.message}</span>
+                )}
               </div>
 
-              <button type="submit" className="submit-btn">
+              <button
+                type="submit"
+                className="submit-btn"
+              >
                 Submit Review
               </button>
             </form>

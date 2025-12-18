@@ -7,12 +7,11 @@ import { useLocation } from "react-router-dom";
 const SingleProduct = () => {
   const location = useLocation();
   const product = location.state?.product;
-  console.log(product);
   return (
     <div>
       <SingleProductHero product={product} />
       <RelatedProducts />
-      <ReviewPage />
+      <ReviewPage product={product} />
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   MapPin,
   Plus,
@@ -13,6 +13,9 @@ import "./CheckoutPage.scss";
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { state } = location;
+  console.log(state);
   // === 1. MOCK DATA ===
   const [addresses, setAddresses] = useState([
     {
@@ -39,19 +42,10 @@ const CheckoutPage = () => {
     },
   ]);
 
-  const [orderItems, setOrderItems] = useState([
-    {
-      id: 1,
-      name: "Furniture Set",
-      variant: "Set : Colour: Coffee",
-      price: 437,
-      quantity: 1,
-      desc: "French bread loaf with a crisp outer crust, chewy texture and a soft crumb. Perfect accompaniment for soups & salads.",
-      image:
-        "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=200",
-    },
-  ]);
-
+  const [orderItems, setOrderItems] = useState([]);
+  useEffect(()=>{
+    setOrderItems(state);
+  },[])
   // Track which order item description is expanded
   const [expandedItemId, setExpandedItemId] = useState(null);
 
@@ -309,33 +303,32 @@ const CheckoutPage = () => {
               <h2 className="section-title">Order Details</h2>
               <div className="order-items">
                 {orderItems.map((item) => (
-                  <div key={item.id} className="item-row">
-                    <img src={item.img} alt={item.name} />
+                  <div key={item.product._id} className="item-row">
+                    <img src={item.img} alt={item.product.name} />
                     <div className="item-info">
-                      <h4>{item.name}</h4>
-                      <p>Variant: {item.variant}</p>
+                      <h4>{item.product.name}</h4>
                       <p
                         className="item-desc"
-                        onClick={() => toggleExpand(item.id)}
+                        onClick={() => toggleExpand(item.product._id)}
                         role="button"
                         tabIndex={0}
                         onKeyDown={(e) => {
-                          if (e.key === "Enter" || e.key === " ") toggleExpand(item.id);
+                          if (e.key === "Enter" || e.key === " ") toggleExpand(item.product._id);
                         }}
                       >
-                        {expandedItemId === item.id
+                        {expandedItemId === item.product._id
                           ? item.desc
                           : `${item.desc.slice(0, 100)}...`}
-                        {expandedItemId !== item.id && <span> Read More</span>}
+                        {expandedItemId !== item.product._id && <span> Read More</span>}
                       </p>
                     </div>
-                    <span className="item-price">${item.price}</span>
+                    <span className="item-price">${item.product.price}</span>
 
                     <div className="qty-adjuster">
                       <button
                         className="qty-btn"
                         onClick={() =>
-                          updateQuantity(item.id, item.quantity - 1)
+                          updateQuantity(item._id, item.quantity - 1)
                         }
                       >
                         <Minus size={14} />
@@ -344,7 +337,7 @@ const CheckoutPage = () => {
                       <button
                         className="qty-btn"
                         onClick={() =>
-                          updateQuantity(item.id, item.quantity + 1)
+                          updateQuantity(item._id, item.quantity + 1)
                         }
                       >
                         <Plus size={14} />
