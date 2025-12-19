@@ -141,7 +141,7 @@ const SingleProductHero = ({ product }) => {
               {/* Order Button */}
               <button
                 onClick={() =>
-                  navigate(`/products/${product.id}/checkout`, {
+                  navigate(`/products/${product._id}/checkout`, {
                     state: { product, quantity },
                   })
                 }

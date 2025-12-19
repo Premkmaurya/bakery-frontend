@@ -36,32 +36,21 @@ const ReviewsPage = ({ product }) => {
         opacity: 0,
         stagger: 0.1,
         ease: "expo.out",
-      })
-        .from(
-          ".progress-fill",
-          {
-            duration: 1.2,
-            width: "0%",
-            ease: "power2.out",
-            stagger: 0.1,
-          },
-          "-=0.5"
-        )
-        .fromTo(
-          ".feedback-list .review-card",
-          {
-            yPercent: 50,
-            opacity: 0,
-          },
-          {
-            duration: 0.5,
-            yPercent: 0,
-            opacity: 1,
-            ease: "expo.out",
-            stagger: 0.2,
-          },
-          "-=0.8"
-        );
+      }).fromTo(
+        ".feedback-list .review-card",
+        {
+          yPercent: 50,
+          opacity: 0,
+        },
+        {
+          duration: 0.5,
+          yPercent: 0,
+          opacity: 1,
+          ease: "expo.out",
+          stagger: 0.2,
+        },
+        "-=0.8"
+      )
     });
   }, []);
 
@@ -97,7 +86,6 @@ const ReviewsPage = ({ product }) => {
   });
 
   const rating = watch("rating");
-
 
   // Helper to render stars
   const renderStars = (rating) => {
@@ -225,7 +213,9 @@ const ReviewsPage = ({ product }) => {
                       <UserRound className="user-logo" size={26} />
                     )}
                     <div className="user-info">
-                      <h4 className="user-name">{review.userId.firstName + " " + review.userId.lastName}</h4>
+                      <h4 className="user-name">
+                        {review.userId.firstName + " " + review.userId.lastName}
+                      </h4>
                       <div className="user-rating">
                         {renderStars(review.rating)}
                       </div>
@@ -291,10 +281,7 @@ const ReviewsPage = ({ product }) => {
                 )}
               </div>
 
-              <button
-                type="submit"
-                className="submit-btn"
-              >
+              <button type="submit" className="submit-btn">
                 Submit Review
               </button>
             </form>

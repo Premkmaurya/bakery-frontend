@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   MapPin,
@@ -10,42 +10,19 @@ import {
   Minus,
 } from "lucide-react";
 import "./CheckoutPage.scss";
+import axios from "axios";
+import { useAuth } from "../../context/NavContext";
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { state } = location;
-  console.log(state);
-  // === 1. MOCK DATA ===
-  const [addresses, setAddresses] = useState([
-    {
-      id: 1,
-      type: "Home",
-      name: "Leslie Cooper",
-      phone: "+1 234 567 890",
-      street: "2443 Oak Ridge",
-      city: "Omaha",
-      state: "NE",
-      zip: "45065",
-      country: "United States",
-    },
-    {
-      id: 2,
-      type: "Office",
-      name: "Leslie Cooper",
-      phone: "+1 987 654 321",
-      street: "4521 Elm Street, Suite 400",
-      city: "Chicago",
-      state: "IL",
-      zip: "60614",
-      country: "United States",
-    },
-  ]);
+  const { user } = useAuth();
 
-  const [orderItems, setOrderItems] = useState([]);
-  useEffect(()=>{
-    setOrderItems(state);
-  },[])
+  // === 1. MOCK DATA ===
+  const [addresses, setAddresses] = useState(user?.address || []);
+
+  const [orderItems, setOrderItems] = useState([state] || []);
   // Track which order item description is expanded
   const [expandedItemId, setExpandedItemId] = useState(null);
 
@@ -103,10 +80,14 @@ const CheckoutPage = () => {
   };
 
   // Save Address (Add or Update)
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
 
     if (editingId) {
+      const addAddress = axios.post('http://localhost:3000/user/add-address', formData, {
+        withCredentials: true,
+      });
+      console.log(addAddress.data);
       // Update existing
       setAddresses((prev) =>
         prev.map((addr) =>
@@ -135,11 +116,29 @@ const CheckoutPage = () => {
 
   // Calculate Total
   const subTotal = orderItems.reduce(
-    (acc, item) => acc + item.price * item.quantity,
+    (acc, item) => acc + item.product.price * item.quantity,
     0
   );
   const deliveryFee = 50;
   const total = subTotal + deliveryFee;
+
+  // Navigate to Payment Method
+  const navigateHandler = () => {
+    if (addresses.length === 0) {
+      alert("Please add a shipping address before proceeding to payment.");
+      return;
+    }
+    navigate(`/products/${state.product._id}/payment-method`, {
+      state: {
+        subTotal,
+        deliveryFee,
+        total,
+        selectedAddress: addresses.find(
+          (addr) => addr.id === selectedAddressId
+        ),
+      },
+    });
+  };
 
   return (
     <div className="checkout-page-wrapper">
@@ -304,7 +303,7 @@ const CheckoutPage = () => {
               <div className="order-items">
                 {orderItems.map((item) => (
                   <div key={item.product._id} className="item-row">
-                    <img src={item.img} alt={item.product.name} />
+                    <img src={item.product.imageUrl} alt={item.product.name} />
                     <div className="item-info">
                       <h4>{item.product.name}</h4>
                       <p
@@ -313,13 +312,16 @@ const CheckoutPage = () => {
                         role="button"
                         tabIndex={0}
                         onKeyDown={(e) => {
-                          if (e.key === "Enter" || e.key === " ") toggleExpand(item.product._id);
+                          if (e.key === "Enter" || e.key === " ")
+                            toggleExpand(item.product._id);
                         }}
                       >
                         {expandedItemId === item.product._id
-                          ? item.desc
-                          : `${item.desc.slice(0, 100)}...`}
-                        {expandedItemId !== item.product._id && <span> Read More</span>}
+                          ? item.product.description
+                          : `${item.product.description.slice(0, 100)}...`}
+                        {expandedItemId !== item.product._id && (
+                          <span> Read More</span>
+                        )}
                       </p>
                     </div>
                     <span className="item-price">${item.product.price}</span>
@@ -375,7 +377,9 @@ const CheckoutPage = () => {
                 <p>Safe and Secure Payments. 100% Authentic products.</p>
               </div>
 
-              <button onClick={()=> navigate("/products/2/payment-method")} className="place-order-btn">Place Order</button>
+              <button onClick={navigateHandler} className="place-order-btn">
+                Place Order
+              </button>
             </div>
           </div>
         </div>
