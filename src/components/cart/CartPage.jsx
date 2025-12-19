@@ -60,7 +60,12 @@ const CartPage = () => {
   );
   const discountPercentage = 10; // 10% discount as per image
   const discountAmount = (subTotal * discountPercentage) / 100;
-  const deliveryFee = 10;
+  let deliveryFee = 0;
+  if(subTotal - discountAmount >=299){
+    deliveryFee = 0;
+  } else{
+    deliveryFee = 40;
+  }
   const total = subTotal - discountAmount + deliveryFee;
 
 

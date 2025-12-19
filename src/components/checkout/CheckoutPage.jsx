@@ -32,11 +32,19 @@ const CheckoutPage = () => {
     }
   }, [user]);
 
-  const [orderItems, setOrderItems] = useState([state.initialCartItems ? state.initialCartItems : state] || []);
+  const [orderItems, setOrderItems] = useState([]);
+  useEffect(() => {
+    if (Array.isArray(state?.initialCartItems)) {
+      setOrderItems(state.initialCartItems);
+    } else if (state) {
+      setOrderItems([state]);
+    } else {
+      setOrderItems([]);
+    }
+  }, []);
   // Track which order item description is expanded
   const [expandedItemId, setExpandedItemId] = useState(null);
-  console.log(orderItems);
-
+ 
   const toggleExpand = (id) => {
     setExpandedItemId((prev) => (prev === id ? null : id));
   };
@@ -150,12 +158,28 @@ const CheckoutPage = () => {
     }
   };
 
-  // Calculate Total
-  const subTotal = orderItems.reduce(
-    (acc, item) => acc + (item.product.price || item.productId.price) * item.quantity,
-    0
-  );
-  const deliveryFee = 50;
+  // Calculate subtotal with conditional logic
+  const subTotal = orderItems && orderItems.length > 0
+    ? orderItems.reduce((sum, item) => {
+        const product = item?.product || item?.productId || {};
+        const price = typeof product.price === 'number' ? product.price : 0;
+        const qty = typeof item.quantity === 'number' ? item.quantity : 1;
+        return sum + price * qty;
+      }, 0)
+    : 0;
+
+  // Delivery fee logic: from state if present, else based on subtotal
+  let deliveryFee = 0;
+  if (typeof state?.deliveryFee === 'number') {
+    deliveryFee = state.deliveryFee;
+  } else if (subTotal > 299) {
+    deliveryFee = 0;
+  } else if (subTotal > 0) {
+    deliveryFee = 40;
+  } else {
+    deliveryFee = 0;
+  }
+
   const total = subTotal + deliveryFee;
 
   // Navigate to Payment Method
@@ -164,7 +188,7 @@ const CheckoutPage = () => {
       alert("Please add a shipping address before proceeding to payment.");
       return;
     }
-    navigate(`/products/${state.product._id}/payment-method`, {
+    navigate(`/products/payment-method`, {
       state: {
         subTotal,
         deliveryFee,
@@ -367,52 +391,53 @@ const CheckoutPage = () => {
             <section className="checkout-section">
               <h2 className="section-title">Order Details</h2>
               <div className="order-items">
-                {orderItems.map((item) => (
-                  <div key={item.product._id} className="item-row">
-                    <img src={item.product.imageUrl} alt={item.product.name} />
-                    <div className="item-info">
-                      <h4>{item.product.name}</h4>
-                      <p
-                        className="item-desc"
-                        onClick={() => toggleExpand(item.product._id)}
-                        role="button"
-                        tabIndex={0}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" || e.key === " ")
-                            toggleExpand(item.product._id);
-                        }}
-                      >
-                        {expandedItemId === item.product._id
-                          ? item.product.description
-                          : `${item.product.description.slice(0, 100)}...`}
-                        {expandedItemId !== item.product._id && (
-                          <span> Read More</span>
-                        )}
-                      </p>
+                {orderItems.map((item, idx) => {
+                  // Defensive checks for product and productId
+                  const product = item?.product || item?.productId || {};
+                  const imageUrl = product?.imageUrl || "fallback-image-url.jpg";
+                  const name = product?.name || "Product image";
+                  const description = product?.description || "No description available.";
+                  const price = product?.price || 0;
+                  const id = product?._id || item?._id || idx;
+                  return (
+                    <div key={id} className="item-row">
+                      <img src={imageUrl} alt={name} />
+                      <div className="item-info">
+                        <h4>{name}</h4>
+                        <p
+                          className="item-desc"
+                          onClick={() => toggleExpand(id)}
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") toggleExpand(id);
+                          }}
+                        >
+                          {expandedItemId === id
+                            ? description
+                            : `${description.slice(0, 100)}...`}
+                          {expandedItemId !== id && <span> Read More</span>}
+                        </p>
+                      </div>
+                      <span className="item-price">${price}</span>
+                      <div className="qty-adjuster">
+                        <button
+                          className="qty-btn"
+                          onClick={() => updateQuantity(item._id, item.quantity - 1)}
+                        >
+                          <Minus size={14} />
+                        </button>
+                        <span className="qty-value">{item.quantity}</span>
+                        <button
+                          className="qty-btn"
+                          onClick={() => updateQuantity(item._id, item.quantity + 1)}
+                        >
+                          <Plus size={14} />
+                        </button>
+                      </div>
                     </div>
-                    <span className="item-price">${item.product.price}</span>
-
-                    <div className="qty-adjuster">
-                      <button
-                        className="qty-btn"
-                        onClick={() =>
-                          updateQuantity(item._id, item.quantity - 1)
-                        }
-                      >
-                        <Minus size={14} />
-                      </button>
-                      <span className="qty-value">{item.quantity}</span>
-                      <button
-                        className="qty-btn"
-                        onClick={() =>
-                          updateQuantity(item._id, item.quantity + 1)
-                        }
-                      >
-                        <Plus size={14} />
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </section>
           </div>
@@ -424,18 +449,18 @@ const CheckoutPage = () => {
 
               <div className="price-row">
                 <span>Subtotal</span>
-                <span>₹{subTotal}</span>
+                <span>₹{subTotal > 0 ? subTotal : 0}</span>
               </div>
               <div className="price-row">
                 <span>Delivery Fee</span>
-                <span>₹{deliveryFee}</span>
+                <span>₹{subTotal > 0 ? deliveryFee : 0}</span>
               </div>
 
               <div className="divider"></div>
 
               <div className="price-row total">
                 <span>Total Amount</span>
-                <span>₹{total}</span>
+                <span>₹{subTotal > 0 ? total : 0}</span>
               </div>
 
               <div className="security-note">

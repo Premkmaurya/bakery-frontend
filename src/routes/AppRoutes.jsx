@@ -41,7 +41,7 @@ const AppRoutes = () => {
         <Route path="/products/:id" element={<SingleProduct />} />
         <Route path="/products/:id/checkout" element={<Checkout />} />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/products/:id/payment-method" element={<PaymentMethod />} />
+        <Route path="/products/payment-method" element={<PaymentMethod />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/wishlist" element={<WishList />} />
       </Route>

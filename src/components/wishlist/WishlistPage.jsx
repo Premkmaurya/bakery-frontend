@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Trash2, ShoppingCart, HeartOff } from "lucide-react";
 import "./WishlistPage.scss";
 
@@ -7,9 +7,15 @@ import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/all";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const WishlistPage = () => {
   const navigate = useNavigate();
+
+  // === MOCK DATA ===
+  const [wishlistItems, setWishlistItems] = useState([]);
+
+
   // === GSAP ANIMATIONS ===
   gsap.registerPlugin(useGSAP);
   gsap.registerPlugin(SplitText);
@@ -52,45 +58,32 @@ const WishlistPage = () => {
       );
     });
   }, []);
-  // === MOCK DATA ===
-  const [wishlistItems, setWishlistItems] = useState([
-    {
-      id: 1,
-      name: "Chocolate Truffle",
-      price: 140,
-      category: "Cakes",
-      image:
-        "https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-      inStock: true,
-    },
-    {
-      id: 2,
-      name: "Blueberry Muffin",
-      price: 50,
-      category: "Muffins",
-      image:
-        "https://images.unsplash.com/photo-1557308536-ee471ef2c39a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-      inStock: true,
-    },
-    {
-      id: 3,
-      name: "Strawberry Cupcake",
-      price: 50,
-      category: "Cupcakes",
-      image:
-        "https://images.unsplash.com/photo-1599785209796-786432b228bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-      inStock: false, // Out of stock example
-    },
-  ]);
+
+  useEffect(() => {
+    const fetchWishlistItems = async () => {
+      const response = await axios.get(
+        "http://localhost:3000/wishlist/getWishlist",
+        {
+          withCredentials: true,
+        }
+      );
+      setWishlistItems(response.data.products);
+      console.log(response.data.products);
+    };
+    fetchWishlistItems();
+  }, []);
 
   // === HANDLERS ===
-  const removeFromWishlist = (id) => {
-    setWishlistItems((prev) => prev.filter((item) => item.id !== id));
+  const removeFromWishlist = async (id) => {
+    setWishlistItems((prev) => prev.filter((item) => item.productId._id !== id));
+    await axios.post(`http://localhost:3000/wishlist/toggleWishlist/${id}`,{
+      withCredentials:true,
+    })
   };
 
   const addToCart = (item) => {
     // In a real app, this would dispatch to your Cart Context/Redux
-    alert(`Added ${item.name} to cart!`);
+    alert(`Added ${item.productId.name} to cart!`);
   };
 
   return (
@@ -99,35 +92,35 @@ const WishlistPage = () => {
         {wishlistItems.length > 0 ? (
           <div className="wishlist-grid">
             {wishlistItems.map((item) => (
-              <div key={item.id} className="wishlist-card">
+              <div key={item.productId._id} className="wishlist-card">
                 {/* Image & Remove Button */}
                 <div className="image-container">
-                  <img src={item.image} alt={item.name} />
+                  <img src={item.productId.imageUrl} alt={item.productId.name} />
                   <button
                     className="remove-btn"
-                    onClick={() => removeFromWishlist(item.id)}
+                    onClick={() => removeFromWishlist(item._id)}
                     title="Remove from Wishlist"
                   >
                     <Trash2 size={18} />
                   </button>
-                  {!item.inStock && (
+                  {!item.productId.inStock && (
                     <span className="out-of-stock-badge">Out of Stock</span>
                   )}
                 </div>
 
                 {/* Content */}
                 <div className="card-content">
-                  <span className="category">{item.category}</span>
-                  <h3 className="product-name">{item.name}</h3>
-                  <div className="price">₹{item.price.toFixed(2)}</div>
+                  <span className="category">{item.productId.category}</span>
+                  <h3 className="product-name">{item.productId.name}</h3>
+                  <div className="price">₹{item.productId.price.toFixed(2)}</div>
 
                   <button
                     className="add-cart-btn"
                     onClick={() => addToCart(item)}
-                    disabled={!item.inStock}
+                    disabled={!item.productId.inStock}
                   >
                     <ShoppingCart size={18} />
-                    {item.inStock ? "Add to Cart" : "Unavailable"}
+                    {item.productId.inStock ? "Add to Cart" : "Unavailable"}
                   </button>
                 </div>
               </div>

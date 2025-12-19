@@ -36,6 +36,8 @@ const Nav = () => {
       setActiveLink("About");
     } else if (currentPath.includes("contacts")) {
       setActiveLink("Contacts");
+    } else{
+      setActiveLink("");
     }
   }, [location.pathname]);
 
