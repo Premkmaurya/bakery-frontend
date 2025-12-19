@@ -6,7 +6,6 @@ import { useLocation } from 'react-router-dom';
 const PaymentPage = () => {
 
   const { state } = useLocation();
-  console.log("Payment Page State:", state);
   // === STATE ===
   const [paymentMethod, setPaymentMethod] = useState('upi'); // 'upi' or 'cod'
   const [upiId, setUpiId] = useState('');
@@ -121,7 +120,7 @@ const PaymentPage = () => {
               
               <div className="price-row total">
                 <span>Total Amount</span>
-                <span>₹{state?.totalAmount || 0}</span>
+                <span>₹{state?.total || 0}</span>
               </div>
 
               <div className="security-badge">
@@ -130,7 +129,7 @@ const PaymentPage = () => {
               </div>
 
               <button className="pay-btn" onClick={handlePayment}>
-                Pay ₹{state?.totalAmount || 0}
+                Pay ₹{state?.total || 0}
               </button>
             </div>
           </div>

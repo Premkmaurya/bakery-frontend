@@ -201,6 +201,11 @@
               border-color: var(--color-accent);
             }
           }
+          .error-msg{
+            color: red;
+            font-size: 0.75rem;
+            margin-top: 0.3rem;
+          }
         }
       }
 

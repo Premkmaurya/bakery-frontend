@@ -38,7 +38,6 @@ const CartPage = () => {
         withCredentials: true,
       }
     );
-    console.log(response.data);
   };
 
   // Function to remove an item from the cart
@@ -63,6 +62,7 @@ const CartPage = () => {
   const discountAmount = (subTotal * discountPercentage) / 100;
   const deliveryFee = 10;
   const total = subTotal - discountAmount + deliveryFee;
+
 
   return (
     <div className="shopping-cart-page">
@@ -157,14 +157,18 @@ const CartPage = () => {
 
             <button
               onClick={() =>
-                navigate("/products/1/payment-method", {
-                  state: {
-                    discount: discountAmount,
-                    deliveryFee: deliveryFee,
-                    subTotal: subTotal,
-                    totalAmount: total,
-                  },
-                })
+                navigate(
+                  `/products/${initialCartItems[0]?.productId._id}/checkout`,
+                  {
+                    state: {
+                      initialCartItems: initialCartItems,
+                      total: total,
+                      discountAmount: discountAmount,
+                      deliveryFee: deliveryFee,
+                      subTotal: subTotal,
+                    },
+                  }
+                )
               }
               className="checkout-btn"
             >

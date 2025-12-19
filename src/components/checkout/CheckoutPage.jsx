@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   MapPin,
@@ -19,34 +20,50 @@ const CheckoutPage = () => {
   const { state } = location;
   const { user } = useAuth();
 
-  // === 1. MOCK DATA ===
+  // === 1. ADDRESS STATE ===
   const [addresses, setAddresses] = useState(user?.address || []);
+  const [selectedAddressId, setSelectedAddressId] = useState(null);
 
-  const [orderItems, setOrderItems] = useState([state] || []);
+  // Ensure addresses are loaded from context on mount and when user changes
+  useEffect(() => {
+    if (user?.address && user.address.length > 0) {
+      setAddresses(user.address);
+      setSelectedAddressId(user.address[0]._id); // Select first address by default
+    }
+  }, [user]);
+
+  const [orderItems, setOrderItems] = useState([state.initialCartItems ? state.initialCartItems : state] || []);
   // Track which order item description is expanded
   const [expandedItemId, setExpandedItemId] = useState(null);
+  console.log(orderItems);
 
   const toggleExpand = (id) => {
     setExpandedItemId((prev) => (prev === id ? null : id));
   };
 
   // === 2. STATE ===
-  const [selectedAddressId, setSelectedAddressId] = useState(1);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState(null); // If null, we are adding new. If set, we are editing.
 
-  // Form State
-  const initialFormState = {
-    type: "Home",
-    name: "",
-    phone: "",
-    street: "",
-    city: "",
-    state: "",
-    zip: "",
-    country: "",
-  };
-  const [formData, setFormData] = useState(initialFormState);
+  // react-hook-form setup
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      addressType: "Home",
+      fullName: "",
+      phone: "",
+      street: "",
+      city: "",
+      state: "",
+      zip: "",
+      country: "",
+    },
+  });
 
   // === 3. HANDLERS ===
   const updateQuantity = (id, newQty) => {
@@ -58,15 +75,18 @@ const CheckoutPage = () => {
     );
   };
 
-  // Handle form input changes
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
   // Open "Add New" Form
   const handleAddNew = () => {
-    setFormData(initialFormState);
+    reset({
+      addressType: "Home",
+      fullName: "",
+      phone: "",
+      street: "",
+      city: "",
+      state: "",
+      zip: "",
+      country: "",
+    });
     setEditingId(null);
     setIsFormOpen(true);
   };
@@ -74,34 +94,50 @@ const CheckoutPage = () => {
   // Open "Edit" Form
   const handleEdit = (e, address) => {
     e.stopPropagation(); // Prevent selecting the card when clicking edit
-    setFormData(address);
+    reset({
+      ...address,
+      fullName: address.name,
+      addressType: address.type,
+    });
     setEditingId(address.id);
     setIsFormOpen(true);
   };
 
   // Save Address (Add or Update)
-  const handleSave = async (e) => {
-    e.preventDefault();
-
-    if (editingId) {
-      const addAddress = axios.post('http://localhost:3000/user/add-address', formData, {
+  const handleSave = async (data) => {
+    const addAddress = await axios.post(
+      "http://localhost:3000/user/add-address",
+      data,
+      {
         withCredentials: true,
-      });
-      console.log(addAddress.data);
+      }
+    );
+    if (editingId) {
       // Update existing
       setAddresses((prev) =>
         prev.map((addr) =>
-          addr.id === editingId ? { ...formData, id: editingId } : addr
+          addr.id === editingId
+            ? {
+                ...data,
+                id: editingId,
+                name: data.fullName,
+                type: data.addressType,
+              }
+            : addr
         )
       );
     } else {
       // Add new
       const newId = addresses.length + 1;
-      const newAddress = { ...formData, id: newId };
+      const newAddress = {
+        ...data,
+        id: newId,
+        name: data.fullName,
+        type: data.addressType,
+      };
       setAddresses([...addresses, newAddress]);
       setSelectedAddressId(newId); // Auto-select the new address
     }
-
     setIsFormOpen(false); // Close form
   };
 
@@ -116,7 +152,7 @@ const CheckoutPage = () => {
 
   // Calculate Total
   const subTotal = orderItems.reduce(
-    (acc, item) => acc + item.product.price * item.quantity,
+    (acc, item) => acc + (item.product.price || item.productId.price) * item.quantity,
     0
   );
   const deliveryFee = 50;
@@ -133,9 +169,6 @@ const CheckoutPage = () => {
         subTotal,
         deliveryFee,
         total,
-        selectedAddress: addresses.find(
-          (addr) => addr.id === selectedAddressId
-        ),
       },
     });
   };
@@ -161,83 +194,112 @@ const CheckoutPage = () => {
 
               {isFormOpen ? (
                 // === ADDRESS FORM ===
-                <form className="address-form" onSubmit={handleSave}>
-                  <h3 className="form-title">
-                    {editingId ? "Edit Address" : "Add New Address"}
-                  </h3>
+                <form
+                  className="address-form"
+                  onSubmit={handleSubmit(handleSave)}
+                >
+                  <div className="form-content">
+                    <h3 className="form-title">
+                      {editingId ? "Edit Address" : "Add New Address"}
+                    </h3>
 
-                  <div className="form-grid">
-                    <div className="form-group">
-                      <label>Name</label>
-                      <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        required
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label>Phone</label>
-                      <input
-                        type="tel"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        required
-                      />
-                    </div>
-                    <div className="form-group full-width">
-                      <label>Street Address</label>
-                      <input
-                        type="text"
-                        name="street"
-                        value={formData.street}
-                        onChange={handleChange}
-                        required
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label>City</label>
-                      <input
-                        type="text"
-                        name="city"
-                        value={formData.city}
-                        onChange={handleChange}
-                        required
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label>State</label>
-                      <input
-                        type="text"
-                        name="state"
-                        value={formData.state}
-                        onChange={handleChange}
-                        required
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label>Zip Code</label>
-                      <input
-                        type="text"
-                        name="zip"
-                        value={formData.zip}
-                        onChange={handleChange}
-                        required
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label>Address Type</label>
-                      <select
-                        name="type"
-                        value={formData.type}
-                        onChange={handleChange}
-                      >
-                        <option value="Home">Home</option>
-                        <option value="Office">Office</option>
-                        <option value="Other">Other</option>
-                      </select>
+                    <div className="form-grid">
+                      <div className="form-group">
+                        <label>Full Name</label>
+                        <input
+                          type="text"
+                          {...register("fullName", {
+                            required: "Full Name is required",
+                          })}
+                        />
+                        {errors.fullName && (
+                          <span className="error-msg">
+                            {errors.fullName.message}
+                          </span>
+                        )}
+                      </div>
+                      <div className="form-group">
+                        <label>Phone</label>
+                        <input
+                          type="tel"
+                          {...register("phone", {
+                            required: "Phone is required",
+                            pattern: {
+                              value: /^[0-9]{10,15}$/,
+                              message: "Enter a valid phone number",
+                            },
+                          })}
+                        />
+                        {errors.phone && (
+                          <span className="error-msg">
+                            {errors.phone.message}
+                          </span>
+                        )}
+                      </div>
+                      <div className="form-group full-width">
+                        <label>Street Address</label>
+                        <input
+                          type="text"
+                          {...register("street", {
+                            required: "Street is required",
+                          })}
+                        />
+                        {errors.street && (
+                          <span className="error-msg">
+                            {errors.street.message}
+                          </span>
+                        )}
+                      </div>
+                      <div className="form-group">
+                        <label>City</label>
+                        <input
+                          type="text"
+                          {...register("city", {
+                            required: "City is required",
+                          })}
+                        />
+                        {errors.city && (
+                          <span className="error-msg">
+                            {errors.city.message}
+                          </span>
+                        )}
+                      </div>
+                      <div className="form-group">
+                        <label>State</label>
+                        <input
+                          type="text"
+                          {...register("state", {
+                            required: "State is required",
+                          })}
+                        />
+                        {errors.state && (
+                          <span className="error-msg">
+                            {errors.state.message}
+                          </span>
+                        )}
+                      </div>
+                      <div className="form-group">
+                        <label>Zip Code</label>
+                        <input
+                          type="text"
+                          {...register("zip", {
+                            required: "Zip code is required",
+                          })}
+                        />
+                        {errors.zip && (
+                          <span className="error-msg">
+                            {errors.zip.message}
+                          </span>
+                        )}
+                      </div>
+                      <div className="form-group">
+                        <label>Address Type</label>
+                        <select {...register("addressType")}>
+                          <option value="Home">Home</option>
+                          <option value="Office">Office</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </div>
                     </div>
                   </div>
 
@@ -259,19 +321,23 @@ const CheckoutPage = () => {
                 <div className="address-list">
                   {addresses.map((addr) => (
                     <div
-                      key={addr.id}
+                      key={addr._id}
                       className={`address-card ${
-                        selectedAddressId === addr.id ? "selected" : ""
+                        selectedAddressId === addr._id ? "selected" : ""
                       }`}
-                      onClick={() => setSelectedAddressId(addr.id)}
+                      onClick={() => setSelectedAddressId(addr._id)}
                     >
                       <div className="card-top">
-                        <span className="addr-type">{addr.type}</span>
-                        {selectedAddressId === addr.id && (
+                        <span className="addr-type">
+                          {addr.addressType || addr.type}
+                        </span>
+                        {selectedAddressId === addr._id && (
                           <CheckCircle size={18} className="check-icon" />
                         )}
                       </div>
-                      <h4 className="addr-name">{addr.name}</h4>
+                      <h4 className="addr-name">
+                        {addr.fullName || addr.name}
+                      </h4>
                       <p className="addr-details">
                         {addr.street}, {addr.city}, {addr.state} {addr.zip}
                       </p>
@@ -286,7 +352,7 @@ const CheckoutPage = () => {
                         </button>
                         <button
                           className="action-btn delete"
-                          onClick={(e) => handleDelete(e, addr.id)}
+                          onClick={(e) => handleDelete(e, addr._id)}
                         >
                           <Trash2 size={14} /> Delete
                         </button>
