@@ -48,9 +48,6 @@ export const NavProvider = ({ children }) => {
     setUser(updatedUser);
   };
 
-  const updateOrders = (newOrders) => {
-    setOrders(newOrders);
-  }
 
   const value = {
     isLoggedIn,

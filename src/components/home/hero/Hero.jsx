@@ -103,13 +103,6 @@ const Hero = () => {
             className="hero-image"
           />
 
-          {/* Carousel Dots (Visual only for now) */}
-          <div className="carousel-dots">
-            <span className="dot active"></span>
-            <span className="dot"></span>
-            <span className="dot"></span>
-            <span className="dot"></span>
-          </div>
         </div>
       </main>
     </div>

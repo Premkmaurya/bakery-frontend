@@ -57,26 +57,6 @@ const PaymentPage = () => {
                 <Wallet size={24} className="method-icon" />
               </div>
 
-              {/* UPI Form (Only visible if selected) */}
-              {paymentMethod === 'upi' && (
-                <div className="upi-form">
-                  <div className="input-group">
-                    <input 
-                      type="text" 
-                      placeholder="Enter UPI ID (e.g. user@oksbi)" 
-                      value={upiId}
-                      onChange={(e) => {
-                        setUpiId(e.target.value);
-                        setIsVerified(false); // Reset verification on change
-                      }}
-                    />
-                    <button className="verify-btn" onClick={handleVerify}>
-                      {isVerified ? "Verified" : "Verify"}
-                    </button>
-                  </div>
-                  {isVerified && <p className="success-msg"><CheckCircle size={14} /> Verified Successfully</p>}
-                </div>
-              )}
             </div>
 
             {/* Option 2: Cash on Delivery */}
