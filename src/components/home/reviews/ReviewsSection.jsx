@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./review.scss"; // We will write this next
 import { ArrowLeft, ArrowRight } from "lucide-react"; // Or use simple SVG icons
 
@@ -45,27 +45,25 @@ const ReviewsSection = () => {
   gsap.registerPlugin(ScrollTrigger);
 
   useGSAP(() => {
-    document.fonts.ready.then(() => {
-      const split = new SplitText(".section-title", { type: "words,lines" });
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: ".reviews-section",
-          start: "top 80%",
-          end: "top 30%",
-        },
-      });
-      tl.from(split.lines, {
-        duration: 0.8,
-        yPercent: 100,
-        opacity: 0,
-        stagger: 0.1,
-        ease: "expo.out",
-      });
+    const split = new SplitText(".review-title", { type: "words,lines" });
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".reviews-section",
+        start: "20% 80%",
+        end: "20% 70%",
+      },
+    });
+    tl.from(split.lines, {
+      duration: 0.8,
+      yPercent: 100,
+      opacity: 0,
+      stagger: 0.1,
+      ease: "expo.out",
     });
   }, []);
 
   // Animate slide content on mount and when currentIndex changes
-  useGSAP(() => {
+  useEffect(() => {
     const allCards = document.querySelectorAll(".review-card");
     const currentCard = allCards[currentIndex];
 
@@ -96,7 +94,6 @@ const ReviewsSection = () => {
     );
   }, [currentIndex]);
 
-
   // === SLIDER LOGIC (like RelatedProducts) ===
   const isAtStart = currentIndex === 0;
   const isAtEnd = currentIndex === reviewsData.length - 1;
@@ -118,7 +115,7 @@ const ReviewsSection = () => {
       <div className="container">
         {/* Header: Title + Controls */}
         <div className="reviews-header">
-          <h2 className="section-title">Reviews</h2>
+          <h2 className="review-title">Reviews</h2>
 
           <div className="slider-controls">
             <button

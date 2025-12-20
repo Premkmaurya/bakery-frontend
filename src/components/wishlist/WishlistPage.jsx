@@ -8,9 +8,11 @@ import { SplitText } from "gsap/all";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Notyf } from "notyf";
 
 const WishlistPage = () => {
   const navigate = useNavigate();
+  const notfy = new Notyf();
 
   // === MOCK DATA ===
   const [wishlistItems, setWishlistItems] = useState([]);
@@ -91,6 +93,14 @@ const WishlistPage = () => {
         withCredentials: true,
       }
     );
+    if (response.data) {
+      notfy.success({
+        message: "Added to cart!",
+        duration: 2000,
+        background: "#17701fff",
+        position: { x: "left", y: "bottom" },
+      });
+    }
   };
 
   return (

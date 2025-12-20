@@ -11,7 +11,6 @@ const App = () => {
     duration: 1.6,
     easing: (t) => Math.min(1, 1.01 - Math.pow(2, -10 * t)),
     smoothWheel: true,
-    autoResize: true,
     wheelMultiplier: 1,
     syncTouch: true,
     syncTouchLerp: 0.1,

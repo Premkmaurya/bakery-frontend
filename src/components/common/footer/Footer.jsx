@@ -54,15 +54,15 @@ const Footer = () => {
               <ul className="link-list">
                 {/* Assuming these map to routes in your App.js */}
                 <li><Link to="/">Home</Link></li>
-                <li><Link to="/catalog">Catalog</Link></li>
+                <li><Link to="/products">Catalog</Link></li>
               </ul>
               <ul className="link-list">
-                <li><Link to="/team">Our team</Link></li>
-                <li><Link to="/reviews">Reviews</Link></li>
+                <li><Link to="/about">About</Link></li>
+                <li><Link to="/contacts">Contact</Link></li>
               </ul>
               <ul className="link-list">
-                <li><Link to="/order-info">How to order</Link></li>
-                <li><Link to="/delivery">Delivery</Link></li>
+                <li><Link to="/cart">Cart</Link></li>
+                <li><Link to="/term">Term & Conditions</Link></li>
               </ul>
             </div>
           </div>

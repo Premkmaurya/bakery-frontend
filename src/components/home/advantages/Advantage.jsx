@@ -12,7 +12,7 @@ const Advantages = () => {
 
   useGSAP(() => {
     document.fonts.ready.then(() => {
-      const split = new SplitText(".section-title", { type: "words,lines" });
+      const split = new SplitText(".advantage-title", { type: "words,lines" });
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: ".advantages-container",
@@ -65,7 +65,7 @@ const Advantages = () => {
   return (
     <>
       <section className="advantages-container">
-        <h2 className="section-title">Our advantages</h2>
+        <h2 className="advantage-title">Our advantages</h2>
 
         <div className="advantages-grid">
           {advantagesData.map((item, idx) => (
