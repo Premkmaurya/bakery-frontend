@@ -4,8 +4,10 @@ import { FaFacebookF, FaVk, FaInstagram, FaSearch } from "react-icons/fa";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/all";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
+  const navigate = useNavigate();
   gsap.registerPlugin(useGSAP);
   gsap.registerPlugin(SplitText);
 
@@ -77,7 +79,7 @@ const Hero = () => {
 
           <p className="subtitle">Same day cake delivery in Hardoi</p>
 
-          <button className="cta-button">Shop now</button>
+          <button onClick={()=>navigate('/products')} className="cta-button">Shop now</button>
 
           <div className="social-icons">
             <div className="icon-circle">

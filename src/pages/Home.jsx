@@ -9,7 +9,7 @@ import Footer from '../components/common/footer/Footer'
 
 const Home = () => {
   return (
-    <div>
+    <div style={{overflow:"hidden"}}>
       <Hero />
       <Catalog />
       <Advantage />

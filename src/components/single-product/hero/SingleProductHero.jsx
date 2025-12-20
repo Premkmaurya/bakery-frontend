@@ -106,7 +106,6 @@ const SingleProductHero = ({ product }) => {
     });
   }, []);
 
-
   // === 2. STATE FOR TABS ===
   const [quantity, setQuantity] = useState(1);
 
@@ -139,17 +138,23 @@ const SingleProductHero = ({ product }) => {
               </div>
 
               {/* Order Button */}
-              <button
-                onClick={() =>
-                  navigate(`/products/${product._id}/checkout`, {
-                    state: { product, quantity },
-                  })
-                }
-                className="order-btn"
-              >
-                <span>ORDER ONLINE</span>
-                <ShoppingBag size={18} />
-              </button>
+              <div>
+                <button
+                  onClick={() =>
+                    navigate(`/products/${product._id}/checkout`, {
+                      state: { product, quantity },
+                    })
+                  }
+                  className="order-btn"
+                >
+                  <span>ORDER ONLINE</span>
+                  <ShoppingBag size={18} />
+                </button>
+                <button>
+                  <span>ADD TO CART</span>
+                  <ShoppingBag size={18} />
+                </button>
+              </div>
             </div>
 
             {/* Trust Badges (Bonus UX) */}

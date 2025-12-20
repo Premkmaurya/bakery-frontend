@@ -96,18 +96,21 @@ const ReviewsSection = () => {
     );
   }, [currentIndex]);
 
-  // Logic to go to the next slide
+
+  // === SLIDER LOGIC (like RelatedProducts) ===
+  const isAtStart = currentIndex === 0;
+  const isAtEnd = currentIndex === reviewsData.length - 1;
+
   const handleNext = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === reviewsData.length - 1 ? 0 : prevIndex + 1
-    );
+    if (!isAtEnd) {
+      setCurrentIndex((prev) => prev + 1);
+    }
   };
 
-  // Logic to go to the previous slide
   const handlePrev = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? reviewsData.length - 1 : prevIndex - 1
-    );
+    if (!isAtStart) {
+      setCurrentIndex((prev) => prev - 1);
+    }
   };
 
   return (
@@ -121,6 +124,7 @@ const ReviewsSection = () => {
             <button
               className="control-btn"
               onClick={handlePrev}
+              disabled={isAtStart}
               aria-label="Previous Review"
             >
               <ArrowLeft size={20} />
@@ -133,6 +137,7 @@ const ReviewsSection = () => {
             <button
               className="control-btn"
               onClick={handleNext}
+              disabled={isAtEnd}
               aria-label="Next Review"
             >
               <ArrowRight size={20} />

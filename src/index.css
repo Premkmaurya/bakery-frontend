@@ -1,3 +1,28 @@
+/* Custom Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 10px;
+  background: #f5f5f5;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #9c5b1e;
+  border-radius: 8px;
+  border: 2px solid #f5f5f5;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d19a66;
+}
+
+::-webkit-scrollbar-corner {
+  background: #f5f5f5;
+}
+
+/* Firefox */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #e0b084 #f5f5f5;
+}
 *{
     margin: 0;
     padding: 0;
