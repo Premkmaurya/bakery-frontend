@@ -15,20 +15,43 @@ import axios from "axios";
 const Catalog = () => {
   const notyf = new Notyf();
   const [products, setProducts] = useState([]);
+  const [wishedProducts, setWishedProducts] = useState({});
 
+  // Fetch wished products from backend and set state
+  useEffect(() => {
+    async function fetchWishedProducts() {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/wishlist/getWishlist",
+          {
+            withCredentials: true,
+          }
+        );
+        if (response.data && Array.isArray(response.data.products)) {
+          // Convert wishedProduct array to an object for quick lookup
+          const wishedMap = {};
+          response.data.products.forEach((item) => {
+            wishedMap[item.productId._id] = true;
+          });
+          setWishedProducts(wishedMap);
+        }
+      } catch (error) {
+        // Optionally handle error
+        setWishedProducts({});
+      }
+    }
+    fetchWishedProducts();
+  }, []);
   useEffect(() => {
     async function getProducts() {
       const response = await axios.get("http://localhost:3000/products/get", {
         withCredentials: true,
       });
-
       setProducts((prev) => [...prev, ...response.data]);
     }
     getProducts();
   }, []);
   const navigate = useNavigate();
-
-  const [wishedProducts, setWishedProducts] = useState({});
 
   // Toggle wishlist for a specific product
   const toggleWishlist = async (productId) => {
@@ -37,7 +60,7 @@ const Catalog = () => {
       [productId]: !prev[productId],
     }));
     const response = await axios.post(
-      "http://localhost:3000/wishlist/toggleWishlist",
+      `http://localhost:3000/wishlist/toggleWishlist/${productId}`,
       { productId },
       {
         withCredentials: true,
@@ -129,18 +152,6 @@ const Catalog = () => {
     "Muffins",
   ];
 
-  const cartHandler = async (product) => {
-    const response = await axios.post(`http://localhost:3000/cart/addToCart/${product._id}`, {
-      withCredentials: true,
-    })
-    notyf.success({
-      message: `${product.name} added to cart!`,
-      duration: 2000,
-      background: "#17701fff",
-      position: { x: "left", y: "bottom" },
-    });
-  };
-
   return (
     <section className="catalog-section">
       <div className="container">
@@ -206,7 +217,9 @@ const Catalog = () => {
                   )}
                 </div>
                 <div
-                  onClick={() => navigate(`/products/${product._id}`,{state:{product}})}
+                  onClick={() =>
+                    navigate(`/products/${product._id}`, { state: { product } })
+                  }
                   className="product-card"
                 >
                   {/* Image Area */}
@@ -223,13 +236,6 @@ const Catalog = () => {
                     </div>
                   </div>
                 </div>
-                <button
-                  onClick={() => cartHandler(product)}
-                  className="add-to-cart-btn"
-                  aria-label="Add to cart"
-                >
-                  <img src="cart.gif" alt="" />
-                </button>
               </div>
             ))
           ) : (

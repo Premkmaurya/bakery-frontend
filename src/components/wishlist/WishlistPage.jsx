@@ -15,7 +15,6 @@ const WishlistPage = () => {
   // === MOCK DATA ===
   const [wishlistItems, setWishlistItems] = useState([]);
 
-
   // === GSAP ANIMATIONS ===
   gsap.registerPlugin(useGSAP);
   gsap.registerPlugin(SplitText);
@@ -68,22 +67,30 @@ const WishlistPage = () => {
         }
       );
       setWishlistItems(response.data.products);
-      console.log(response.data.products);
     };
     fetchWishlistItems();
   }, []);
 
   // === HANDLERS ===
   const removeFromWishlist = async (id) => {
-    setWishlistItems((prev) => prev.filter((item) => item.productId._id !== id));
-    await axios.post(`http://localhost:3000/wishlist/toggleWishlist/${id}`,{
-      withCredentials:true,
-    })
+    setWishlistItems((prev) =>
+      prev.filter((item) => item.productId._id !== id)
+    );
+    await axios.post(`http://localhost:3000/wishlist/toggleWishlist/${id}`, {
+      withCredentials: true,
+    });
   };
 
-  const addToCart = (item) => {
-    // In a real app, this would dispatch to your Cart Context/Redux
-    alert(`Added ${item.productId.name} to cart!`);
+  const addToCart = async (item) => {
+    const response = await axios.post(
+      `http://localhost:3000/cart/addToCart/${item.productId._id}`,
+      {
+        quantity: 1,
+      },
+      {
+        withCredentials: true,
+      }
+    );
   };
 
   return (
@@ -95,7 +102,10 @@ const WishlistPage = () => {
               <div key={item.productId._id} className="wishlist-card">
                 {/* Image & Remove Button */}
                 <div className="image-container">
-                  <img src={item.productId.imageUrl} alt={item.productId.name} />
+                  <img
+                    src={item.productId.imageUrl}
+                    alt={item.productId.name}
+                  />
                   <button
                     className="remove-btn"
                     onClick={() => removeFromWishlist(item._id)}
@@ -112,7 +122,9 @@ const WishlistPage = () => {
                 <div className="card-content">
                   <span className="category">{item.productId.category}</span>
                   <h3 className="product-name">{item.productId.name}</h3>
-                  <div className="price">₹{item.productId.price.toFixed(2)}</div>
+                  <div className="price">
+                    ₹{item.productId.price.toFixed(2)}
+                  </div>
 
                   <button
                     className="add-cart-btn"
