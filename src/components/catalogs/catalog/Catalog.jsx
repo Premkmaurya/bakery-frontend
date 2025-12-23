@@ -42,15 +42,36 @@ const Catalog = () => {
     }
     fetchWishedProducts();
   }, []);
+  // Fetch products from backend with filters
+  const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [maxPrice, setMaxPrice] = useState(50); // Default max price
+  const [activeCategory, setActiveCategory] = useState("All");
+
   useEffect(() => {
-    async function getProducts() {
-      const response = await axios.get("http://localhost:3000/products/get", {
-        withCredentials: true,
-      });
-      setProducts((prev) => [...prev, ...response.data]);
-    }
-    getProducts();
-  }, []);
+    setLoading(true);
+    const timerId = setTimeout(() => {
+      async function fetchProducts() {
+        try {
+          const params = {
+            search: searchTerm,
+            category: activeCategory === "All" ? undefined : activeCategory,
+            maxPrice,
+          };
+          const response = await axios.get("http://localhost:3000/products/search", {
+            params,
+            withCredentials: true,
+          });
+          setProducts(Array.isArray(response.data) ? response.data : []);
+        } catch (err) {
+          setProducts([]);
+        }
+        setLoading(false);
+      }
+      fetchProducts();
+    }, 300);
+    return () => clearTimeout(timerId);
+  }, [searchTerm, maxPrice, activeCategory]);
   const navigate = useNavigate();
 
   // Toggle wishlist for a specific product
@@ -115,32 +136,6 @@ const Catalog = () => {
     });
   }, []);
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [maxPrice, setMaxPrice] = useState(50); // Default max price
-  const [activeCategory, setActiveCategory] = useState("All");
-
-  // === 3. FILTERING LOGIC ===
-  const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
-      try {
-        // Use optional chaining to safely access properties
-        const matchesSearch =
-          !product.name ||
-          product.name?.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesPrice = !product.price || product.price <= maxPrice;
-        const matchesCategory =
-          activeCategory === "All" ||
-          !product.category ||
-          product.category === activeCategory;
-
-        return matchesSearch && matchesPrice && matchesCategory;
-      } catch (error) {
-        console.warn("Filter error for product:", product, error);
-        return true; // Include product if there's an error
-      }
-    });
-  }, [products, searchTerm, maxPrice, activeCategory]);
-
   const categories = [
     "All",
     "Popular cakes",
@@ -151,6 +146,7 @@ const Catalog = () => {
     "Breads",
     "Muffins",
   ];
+
 
   return (
     <section className="catalog-section">
@@ -201,9 +197,14 @@ const Catalog = () => {
         </div>
 
         {/* === PRODUCT GRID === */}
+        {loading && (
+          <div style={{ textAlign: "center", margin: "2rem 0" }}>
+            <span role="status" aria-live="polite">Loading...</span>
+          </div>
+        )}
         <div className="product-grid">
-          {filteredProducts.length > 0 ? (
-            filteredProducts.map((product) => (
+          {!loading && products.length > 0 ? (
+            products.map((product) => (
               <div key={product._id} className="product-card-wrapper">
                 <div
                   onClick={() => toggleWishlist(product._id)}
@@ -238,12 +239,12 @@ const Catalog = () => {
                 </div>
               </div>
             ))
-          ) : (
+          ) : !loading ? (
             <div className="no-results">
               <h3>No products found</h3>
               <p>Try adjusting your search or price filter.</p>
             </div>
-          )}
+          ) : null}
         </div>
       </div>
     </section>

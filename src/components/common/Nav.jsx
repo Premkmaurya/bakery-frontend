@@ -19,7 +19,7 @@ const Nav = () => {
   const [activeLink, setActiveLink] = useState("Home");
   const navigate = useNavigate();
   const location = useLocation();
-  const navItems = ["Home", "Products", "How to order", "About", "Contacts"];
+  const navItems = ["Home", "Products", "About", "Contacts"];
 
   // Update active link based on current URL path
   useEffect(() => {
@@ -30,8 +30,6 @@ const Nav = () => {
       setActiveLink("Home");
     } else if (currentPath.includes("products")) {
       setActiveLink("Products");
-    } else if (currentPath.includes("how-to-order")) {
-      setActiveLink("How to order");
     } else if (currentPath.includes("about")) {
       setActiveLink("About");
     } else if (currentPath.includes("contacts")) {
