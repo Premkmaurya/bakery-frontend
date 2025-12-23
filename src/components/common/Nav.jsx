@@ -1,5 +1,5 @@
 import "./nav.scss";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   FaFacebookF,
@@ -11,6 +11,7 @@ import {
 } from "react-icons/fa";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { useAuth } from "../../context/NavContext";
 
@@ -20,6 +21,8 @@ const Nav = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const navItems = ["Home", "Products", "About", "Contacts"];
+
+  const navRef = useRef(null);
 
   // Update active link based on current URL path
   useEffect(() => {
@@ -34,12 +37,13 @@ const Nav = () => {
       setActiveLink("About");
     } else if (currentPath.includes("contacts")) {
       setActiveLink("Contacts");
-    } else{
+    } else {
       setActiveLink("");
     }
   }, [location.pathname]);
 
   gsap.registerPlugin(useGSAP);
+  gsap.registerPlugin(ScrollTrigger);
 
   useGSAP(() => {
     const tl = gsap.timeline();
@@ -99,8 +103,39 @@ const Nav = () => {
       );
   }, []);
 
+  useEffect(() => {
+    const nav = navRef.current;
+
+    gsap.fromTo(
+      nav,
+      { y: 0 },
+      {
+        y: -100,
+        duration: 0.4,
+        ease: "power3.out",
+        scrollTrigger: {
+          start: "top top",
+          end: 99999,
+          onUpdate: (self) => {
+            if (Math.abs(self.getVelocity()) < 50) return;
+
+            if (self.direction === -1) {
+              // scrolling down → show navbar
+              gsap.to(nav, { y: 0, duration: 0.4, ease: "power3.out" });
+            } else {
+              // scrolling up → hide navbar
+              gsap.to(nav, { y: -100, duration: 0.4, ease: "power3.out" });
+            }
+          },
+        },
+      }
+    );
+
+    return () => ScrollTrigger.killAll();
+  }, []);
+
   return (
-    <nav className="navbar">
+    <nav ref={navRef} className="navbar">
       <div className="logo">Cake Shop</div>
 
       <ul className="nav-links">
@@ -128,7 +163,11 @@ const Nav = () => {
             Log In
           </button>
         ) : (
-          <FaRegUser onClick={() => navigate("/profile")} className="nav-icons" size={20} />
+          <FaRegUser
+            onClick={() => navigate("/profile")}
+            className="nav-icons"
+            size={20}
+          />
         )}
         <div onClick={() => navigate("/cart")} className="nav-icons">
           <FaShoppingCart size={20} />

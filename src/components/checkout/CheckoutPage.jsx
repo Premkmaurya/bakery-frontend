@@ -44,7 +44,7 @@ const CheckoutPage = () => {
   }, []);
   // Track which order item description is expanded
   const [expandedItemId, setExpandedItemId] = useState(null);
- 
+
   const toggleExpand = (id) => {
     setExpandedItemId((prev) => (prev === id ? null : id));
   };
@@ -150,27 +150,32 @@ const CheckoutPage = () => {
   };
 
   // Delete Address
-  const handleDelete = (e, id) => {
+  const handleDelete = async (e, id) => {
     e.stopPropagation();
     if (window.confirm("Delete this address?")) {
-      setAddresses((prev) => prev.filter((addr) => addr.id !== id));
+      const response = await axios.delete(
+        `http://localhost:3000/user/delete-address/${id}`,
+        { withCredentials: true }
+      );
+      setAddresses((prev) => prev.filter((addr) => addr._id !== id));
       if (selectedAddressId === id) setSelectedAddressId(null); // Deselect if deleted
     }
   };
 
   // Calculate subtotal with conditional logic
-  const subTotal = orderItems && orderItems.length > 0
-    ? orderItems.reduce((sum, item) => {
-        const product = item?.product || item?.productId || {};
-        const price = typeof product.price === 'number' ? product.price : 0;
-        const qty = typeof item.quantity === 'number' ? item.quantity : 1;
-        return sum + price * qty;
-      }, 0)
-    : 0;
+  const subTotal =
+    orderItems && orderItems.length > 0
+      ? orderItems.reduce((sum, item) => {
+          const product = item?.product || item?.productId || {};
+          const price = typeof product.price === "number" ? product.price : 0;
+          const qty = typeof item.quantity === "number" ? item.quantity : 1;
+          return sum + price * qty;
+        }, 0)
+      : 0;
 
   // Delivery fee logic: from state if present, else based on subtotal
   let deliveryFee = 0;
-  if (typeof state?.deliveryFee === 'number') {
+  if (typeof state?.deliveryFee === "number") {
     deliveryFee = state.deliveryFee;
   } else if (subTotal > 299) {
     deliveryFee = 0;
@@ -394,9 +399,11 @@ const CheckoutPage = () => {
                 {orderItems.map((item, idx) => {
                   // Defensive checks for product and productId
                   const product = item?.product || item?.productId || {};
-                  const imageUrl = product?.imageUrl || "fallback-image-url.jpg";
+                  const imageUrl =
+                    product?.imageUrl || "fallback-image-url.jpg";
                   const name = product?.name || "Product image";
-                  const description = product?.description || "No description available.";
+                  const description =
+                    product?.description || "No description available.";
                   const price = product?.price || 0;
                   const id = product?._id || item?._id || idx;
                   return (
@@ -410,7 +417,8 @@ const CheckoutPage = () => {
                           role="button"
                           tabIndex={0}
                           onKeyDown={(e) => {
-                            if (e.key === "Enter" || e.key === " ") toggleExpand(id);
+                            if (e.key === "Enter" || e.key === " ")
+                              toggleExpand(id);
                           }}
                         >
                           {expandedItemId === id
@@ -423,14 +431,18 @@ const CheckoutPage = () => {
                       <div className="qty-adjuster">
                         <button
                           className="qty-btn"
-                          onClick={() => updateQuantity(item._id, item.quantity - 1)}
+                          onClick={() =>
+                            updateQuantity(item._id, item.quantity - 1)
+                          }
                         >
                           <Minus size={14} />
                         </button>
                         <span className="qty-value">{item.quantity}</span>
                         <button
                           className="qty-btn"
-                          onClick={() => updateQuantity(item._id, item.quantity + 1)}
+                          onClick={() =>
+                            updateQuantity(item._id, item.quantity + 1)
+                          }
                         >
                           <Plus size={14} />
                         </button>

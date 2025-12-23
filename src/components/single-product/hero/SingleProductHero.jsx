@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
 import "./SingleProductHero.scss";
-import { ShoppingBag, Star, Truck, ShieldCheck } from "lucide-react";
+import { ShoppingBag, ShoppingCart, Truck, ShieldCheck } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/all";
+import axios from "axios";
+import { Notyf } from "notyf";
 
 const SingleProductHero = ({ product }) => {
+  const notfy = new Notyf();
   const navigate = useNavigate();
   gsap.registerPlugin(useGSAP);
   gsap.registerPlugin(SplitText);
@@ -109,6 +112,26 @@ const SingleProductHero = ({ product }) => {
   // === 2. STATE FOR TABS ===
   const [quantity, setQuantity] = useState(1);
 
+  const addToCart = async (item) => {
+    const response = await axios.post(
+      `http://localhost:3000/cart/addToCart/${item}`,
+      {
+        quantity: 1,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+    if (response.data) {
+      notfy.success({
+        message: "Added to cart!",
+        duration: 2000,
+        background: "#17701fff",
+        position: { x: "left", y: "bottom" },
+      });
+    }
+  };
+
   return (
     <section className="single-product-section">
       <div className="container">
@@ -138,21 +161,24 @@ const SingleProductHero = ({ product }) => {
               </div>
 
               {/* Order Button */}
-              <div>
+              <div className="order-btn">
                 <button
                   onClick={() =>
-                    navigate(`/products/${product._id}/checkout`, {
+                    navigate(`/products/checkout`, {
                       state: { product, quantity },
                     })
                   }
-                  className="order-btn"
+                  className="common order-btn-1"
                 >
                   <span>ORDER ONLINE</span>
                   <ShoppingBag size={18} />
                 </button>
-                <button>
+                <button
+                  onClick={() => addToCart(product._id)}
+                  className="common order-btn-2"
+                >
+                  <ShoppingCart size={18} />
                   <span>ADD TO CART</span>
-                  <ShoppingBag size={18} />
                 </button>
               </div>
             </div>
