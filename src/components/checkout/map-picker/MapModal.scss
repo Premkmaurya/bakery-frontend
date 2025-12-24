@@ -1,0 +1,25 @@
+.map-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .map-modal-content {
+    width: 90%;
+    max-width: 700px;
+    height: 450px;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .map-actions {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    display: flex;
+    gap: 10px;
+  }
+}

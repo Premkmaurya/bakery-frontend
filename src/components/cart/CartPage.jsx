@@ -163,7 +163,7 @@ const CartPage = () => {
             <button
               onClick={() =>
                 navigate(
-                  `/products/${initialCartItems[0]?.productId._id}/checkout`,
+                  `/products/checkout`,
                   {
                     state: {
                       initialCartItems: initialCartItems,
