@@ -14,9 +14,6 @@ import "./CheckoutPage.scss";
 import axios from "axios";
 import { useAuth } from "../../context/NavContext";
 
-import MapPicker from "../checkout/map-picker/MapPicker";
-import MapModal from "../checkout/map-picker/MapModal";
-
 const CheckoutPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,9 +23,6 @@ const CheckoutPage = () => {
   // === 1. ADDRESS STATE ===
   const [addresses, setAddresses] = useState(user?.address || []);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
-
-  const [mapOpen, setMapOpen] = useState(false);
-  const [selectedLocation, setSelectedLocation] = useState(null);
 
   // Ensure addresses are loaded from context on mount and when user changes
   useEffect(() => {
@@ -40,6 +34,22 @@ const CheckoutPage = () => {
 
   const [orderItems, setOrderItems] = useState([]);
   useEffect(() => {
+    const fetchAddressData = async () => {
+      const finalQuery = `avas vikas colony, Hardoi, Uttar Pradesh`;
+      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+        finalQuery
+      )}&bounded=1&countrycodes=in&limit=5&accept-language=en-IN`;
+
+      const res = await fetch(url, {
+        headers: {
+          Accept: "application/json",
+          "User-Agent": "HardoiDeliveryApp/1.0 (contact@example.com)",
+        },
+      });
+
+      console.log("Address API Response:", await res.json());
+    };
+    fetchAddressData();
     if (Array.isArray(state?.initialCartItems)) {
       setOrderItems(state.initialCartItems);
     } else if (state) {
@@ -271,25 +281,60 @@ const CheckoutPage = () => {
                           </span>
                         )}
                       </div>
+                      <div className="form-group full-width">
+                        <label>Street Address</label>
+                        <input
+                          type="text"
+                          {...register("street", {
+                            required: "Street is required",
+                          })}
+                        />
+                        {errors.street && (
+                          <span className="error-msg">
+                            {errors.street.message}
+                          </span>
+                        )}
+                      </div>
                       <div className="form-group">
-                        <label>Location</label>
-                        <button
-                          type="button"
-                          className="map-btn"
-                          onClick={() => setMapOpen(true)}
-                        >
-                          Choose from Map
-                        </button>
-                        {selectedLocation && <p>Location selected ✓</p>}
-                        {mapOpen && (
-                          <MapModal>
-                            <MapPicker
-                              onSelect={(location) =>
-                                setSelectedLocation(location)
-                              }
-                              onClose={() => setMapOpen(false)}
-                            />
-                          </MapModal>
+                        <label>City</label>
+                        <input
+                          type="text"
+                          {...register("city", {
+                            required: "City is required",
+                          })}
+                        />
+                        {errors.city && (
+                          <span className="error-msg">
+                            {errors.city.message}
+                          </span>
+                        )}
+                      </div>
+                      <div className="form-group">
+                        <label>State</label>
+                        <input
+                          type="text"
+                          {...register("state", {
+                            required: "State is required",
+                          })}
+                        />
+                        {errors.state && (
+                          <span className="error-msg">
+                            {errors.state.message}
+                          </span>
+                        )}
+                      </div>
+                      <div className="form-group">
+                        <label>Zip Code</label>
+                        <input
+                          type="text"
+                          {...register("zip", {
+                            required: "Zip code is required",
+                          })}
+                        />
+                        {errors.zip && (
+                          <span className="error-msg">
+                            {errors.zip.message}
+                          </span>
                         )}
                       </div>
                       <div className="form-group">
