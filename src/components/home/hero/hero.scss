@@ -1,6 +1,7 @@
-// 2. Mixins for responsiveness
 @mixin mobile {
-  @media (max-width: 768px) { @content; }
+  @media (max-width: 768px) {
+    @content;
+  }
 }
 
 // 3. Main Styles
@@ -13,7 +14,8 @@
   overflow-x: hidden;
 
   @include mobile {
-    padding: 0 1.5rem;
+    padding: 0 1rem;
+    margin-top: 1rem;
   }
 }
 
@@ -31,6 +33,7 @@
     grid-template-columns: 1fr; // Stack on mobile
     height: auto;
     text-align: center;
+    height: 80vh;
   }
 
   // Left Side
@@ -41,7 +44,7 @@
 
     @include mobile {
       align-items: center;
-      margin-bottom: 3rem;
+      margin-bottom: 1rem;
     }
 
     h1 {
@@ -91,7 +94,7 @@
       gap: 1.5rem;
 
       @include mobile {
-        margin-top: 3rem;
+        margin-top: 1.5rem;
         justify-content: center;
       }
 
@@ -127,44 +130,9 @@
       width: 90%;
       height: 85%;
       object-fit: cover;
-      // In the design, the image has no border-radius, but distinct boundaries
-    }
-
-    .carousel-dots {
-      position: absolute;
-      bottom: 10%;
-      left: 15%; // Adjust based on alignment
-      display: flex;
-      gap: 15px;
-
       @include mobile {
-        left: 50%;
-        transform: translateX(-50%);
-        bottom: -20px;
-      }
-
-      .dot {
-        width: 8px;
-        height: 8px;
-        background-color: #ddd;
-        border-radius: 50%;
-        cursor: pointer;
-
-        &.active {
-          border: 1px solid var(--color-accent); // Ring effect
-          background-color: transparent;
-          position: relative;
-
-          &::after {
-            content: '';
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 4px; height: 4px;
-            background-color: var(--color-accent);
-            border-radius: 50%;
-          }
-        }
+        width: 100%;
+        height: 100%;
       }
     }
   }
