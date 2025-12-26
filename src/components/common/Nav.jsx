@@ -173,6 +173,40 @@ const Nav = () => {
           <FaShoppingCart size={20} />
         </div>
       </div>
+      <div className="nav-sidebar">
+        <div className="sidebar-logo">
+          <div className="logo">Cake Shop</div>
+          <div>
+            {!isLoggedIn ? (
+              <button onClick={() => navigate("/login")} className="login-btn">
+                Log In
+              </button>
+            ) : (
+              <FaRegUser
+                onClick={() => navigate("/profile")}
+                className="nav-icons"
+                size={20}
+              />
+            )}
+          </div>
+        </div>
+        <ul className="sidebar-links">
+          {navItems.map((item) => (
+            <Link
+              to={`/${
+                item.toLowerCase().replace(/\s+/g, "-") === "home"
+                  ? ""
+                  : item.toLowerCase().replace(/\s+/g, "-")
+              }`}
+              key={item}
+              className={`links ${activeLink === item ? "active" : ""}`}
+              onClick={() => setActiveLink(item)}
+            >
+              {item} <span>{item}</span>
+            </Link>
+          ))}
+        </ul>
+      </div>
     </nav>
   );
 };

@@ -22,6 +22,7 @@ export default function SwiperSlider({ activeCategory, catalogData }) {
           delay: 3500,
           disableOnInteraction: false,
         }}
+        loop={true}
         navigation={true}
         modules={[Autoplay, Navigation]}
         className="mySwiper"

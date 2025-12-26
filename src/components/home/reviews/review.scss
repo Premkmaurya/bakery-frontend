@@ -1,11 +1,24 @@
+@mixin mobile {
+  @media (max-width: 768px) {
+    @content;
+  }
+}
+
 .reviews-section {
   padding: 4rem 2rem;
   background-color: var(--color-bg);
   overflow: hidden; // Prevents horizontal scrollbars
 
+  @include mobile {
+    padding: 2rem 1rem;
+  }
   .container {
     max-width: 1200px;
     margin: 0 auto;
+
+    @include mobile {
+      max-width: 100%;
+    }
   }
 
   // Header Styling
@@ -14,6 +27,12 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 3rem;
+    @include mobile {
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
 
     .review-title {
       font-family: var(--font-serif);
@@ -21,12 +40,19 @@
       font-weight: 400;
       color: var(--color-text-main);
       margin: 0;
+      @include mobile {
+        font-size: 2.5rem;
+      }
     }
 
     .slider-controls {
       display: flex;
       align-items: center;
       gap: 1.5rem;
+
+      @include mobile {
+        gap: 0.7rem;
+      }
 
       .counter {
         font-family: var(--font-sans);
@@ -50,6 +76,11 @@
         transition: all 0.3s ease;
         color: var(--color-text-main);
 
+        @include mobile {
+          width: 40px;
+          height: 40px;
+        }
+
         &:hover {
           border-color: var(--color-text-main);
           background-color: var(--color-text-main);
@@ -62,7 +93,7 @@
   // Slider Logic
   .reviews-slider-window {
     width: 100%;
-    overflow: hidden; // Hides the slides that are off-screen
+    overflow: hidden; 
   }
 
   .reviews-track {
@@ -73,13 +104,13 @@
 
   // The Individual Card
   .review-card {
-    min-width: 100%; // Each card takes full width of the window
+    min-width: 100%; 
     display: flex;
-    align-items: center; // Vertically center content
+    align-items: center; 
     gap: 4rem;
 
     // Mobile Responsive: Stack them vertically
-    @media (max-width: 768px) {
+    @include mobile {
       flex-direction: column;
       gap: 2rem;
       align-items: flex-start;
@@ -90,6 +121,10 @@
       width: 100%;
       height: 400px;
       overflow: hidden;
+
+      @include mobile {
+        height: 200px;
+      }
 
       img {
         width: 100%;
@@ -118,6 +153,9 @@
         margin-bottom: 2rem;
         text-transform: uppercase; // Assuming "Ordered a..." is stylized
         letter-spacing: 0.5px;
+        @include mobile {
+          margin-bottom: 1rem;
+        }
       }
 
       .reviewer-text {

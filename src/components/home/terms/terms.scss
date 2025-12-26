@@ -1,27 +1,47 @@
+@mixin mobile {
+  @media (max-width: 768px) {
+    @content;
+  }
+}
+
 .delivery-section {
   display: flex;
   align-items: center; // Vertically center text with image
   justify-content: space-between;
   gap: 4rem;
-  @media (max-width: 900px) {
+  @include mobile {
     flex-direction: column-reverse; // Puts image on top on mobile
     gap: 3rem;
   }
 
   .delivery-content {
     flex: 1;
-    max-width: 500px;
+    max-width: 400px;
     padding-left: 2rem;
+
+    @include mobile {
+      padding-left: 0;
+      text-align: center;
+    }
+
     .section-title {
       font-family: var(--font-serif);
       font-size: 3.5rem;
       font-weight: 400;
       margin-bottom: 2rem;
+      @include mobile {
+        font-size: 3rem;
+        margin-bottom: 1.5rem;
+      }
     }
 
     .delivery-list {
       list-style: none;
       padding: 0;
+
+      @include mobile{
+        padding: 0 1rem;
+      }
 
       li {
         position: relative;
@@ -31,6 +51,11 @@
         color: var(--color-text-sub);
         padding-left: 1.5rem;
         margin-bottom: 1.5rem;
+
+        @include mobile {
+          padding-left: 0.7rem;
+          font-size: 0.95rem;
+        }
 
         // The dash bullet point
         &::before {
@@ -47,15 +72,13 @@
     flex: 1;
     position: relative;
 
-    // Decorative elements like the napkin could be pseudo-elements,
-    // but purely using the image is safer for responsiveness.
+    
     img {
       width: 100%;
       max-width: 600px;
       height: auto;
       object-fit: cover;
-      border-radius: 4px; // Slight softness
-      // Optional: Adding a subtle shadow to lift it off the white bg
+      border-radius: 4px; 
       box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.05);
     }
   }
