@@ -1,3 +1,9 @@
+@mixin mobile {
+  @media (max-width: 768px) {
+    @content;
+  }
+}
+
 .shopping-cart-page {
   padding: 4rem 2rem;
   background-color: var(--color-bg);
@@ -20,7 +26,7 @@
     grid-template-columns: 2fr 1fr; // Two columns for desktop
     gap: 4rem;
 
-    @media (max-width: 900px) {
+    @include mobile {
       grid-template-columns: 1fr; // Single column for mobile/tablet
       gap: 3rem;
     }
@@ -37,7 +43,7 @@
       margin-bottom: 2rem;
       color: var(--color-text-sub);
 
-      @media (max-width: 600px) {
+      @include mobile {
         display: none; // Hide header on small screens
       }
     }
@@ -50,9 +56,9 @@
       margin-bottom: 2rem;
       border-bottom: 1px solid #e0e0e0;
 
-      @media (max-width: 600px) {
-        grid-template-columns: 1fr; // Stack item details on small screens
-        gap: 1.5rem;
+      @include mobile {
+        grid-template-columns: 0.5fr 0.5fr 0.5fr;
+        gap: 1rem;
         text-align: center;
       }
 
@@ -61,9 +67,6 @@
         align-items: center;
         gap: 1.5rem;
 
-        @media (max-width: 600px) {
-          flex-direction: column;
-        }
 
         .product-image {
           width: 100px;
@@ -104,7 +107,9 @@
             cursor: pointer;
             color: var(--color-text-main);
             padding: 0 0.8rem;
-            &:hover { color: var(--color-accent); }
+            &:hover {
+              color: var(--color-accent);
+            }
           }
 
           span {
@@ -135,7 +140,9 @@
           cursor: pointer;
           color: var(--color-text-sub);
           transition: color 0.3s;
-          &:hover { color: var(--color-accent); }
+          &:hover {
+            color: var(--color-accent);
+          }
         }
       }
     }
@@ -167,7 +174,9 @@
         font-family: var(--font-sans);
         outline: none;
         transition: border 0.3s;
-        &:focus { border-color: var(--color-text-main); }
+        &:focus {
+          border-color: var(--color-text-main);
+        }
       }
 
       .apply-btn {
@@ -180,7 +189,10 @@
         font-weight: 700;
         cursor: pointer;
         transition: all 0.3s;
-        &:hover { background-color: var(--color-text-main); color: white; }
+        &:hover {
+          background-color: var(--color-text-main);
+          color: white;
+        }
       }
     }
 
@@ -201,10 +213,10 @@
         margin-top: 1.5rem;
         padding-top: 1.5rem;
         border-top: 1px solid #e0e0e0;
-        
+
         .total-price {
-            font-family: var(--font-serif);
-            font-size: 1.8rem;
+          font-family: var(--font-serif);
+          font-size: 1.8rem;
         }
       }
     }

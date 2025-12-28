@@ -1,12 +1,20 @@
 // Importing variables (or ensure they are available globally)
 // :root variables assumed present as per previous context
+@mixin mobile {
+  @media (max-width: 768px) {
+    @content;
+  }
+}
+
 
 .site-footer {
   background-color: var(--color-bg);
   padding: 5rem 2rem 3rem; // Top padding handles the space above Delivery terms
   color: var(--color-text-main);
   overflow: hidden;
-
+  @include mobile {
+    padding: 0 1rem 2rem;
+  }
   .container {
     max-width: 1200px;
     margin: 0 auto;

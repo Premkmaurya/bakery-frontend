@@ -99,7 +99,7 @@ const RelatedProducts = () => {
 
             {/* Simple Counter: e.g. 1/3 */}
             <span className="counter">
-              {currentIndex + 1} / {maxIndex + 1}
+              {currentIndex + 1} / {maxIndex}
             </span>
 
             <button
@@ -118,8 +118,7 @@ const RelatedProducts = () => {
           <div
             className="slider-track"
             style={{
-              // Moves the track to the left based on index
-              transform: `translateX(-${currentIndex * (100 / itemsPerView)}%)`,
+              transform: `translateX(-${currentIndex * 100}%)`,
             }}
           >
             {products.map((product) => (

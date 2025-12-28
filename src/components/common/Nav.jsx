@@ -27,6 +27,7 @@ const Nav = () => {
   const location = useLocation();
   const animateRef = useRef(null);
   const navItems = ["Home", "Products", "About", "Contacts"];
+  const sidebarNavItems = ["Home", "Products", "Cart", "About", "Contacts"];
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -172,31 +173,29 @@ const Nav = () => {
           </Link>
         ))}
       </ul>
-
-      {isSidebarOpen ? (
-        <div className="nav-actions">
-          {!isLoggedIn ? (
-            <button onClick={() => navigate("/login")} className="login-btn">
-              Log In
-            </button>
-          ) : (
-            <FaRegUser
-              onClick={() => navigate("/profile")}
-              className="nav-icons"
-              size={20}
-            />
-          )}
-          <div onClick={() => navigate("/cart")} className="nav-icons">
-            <FaShoppingCart size={20} />
-          </div>
+      <div className="nav-actions">
+        {!isLoggedIn ? (
+          <button onClick={() => navigate("/login")} className="login-btn">
+            Log In
+          </button>
+        ) : (
+          <FaRegUser
+            onClick={() => navigate("/profile")}
+            className="nav-icons"
+            size={20}
+          />
+        )}
+        <div onClick={() => navigate("/cart")} className="nav-icons">
+          <FaShoppingCart size={20} />
         </div>
-      ) : (
+      </div>
+      <div className="nav-burger">
         <HiMiniBars3BottomRight
           size={30}
           className="menu-icon"
           onClick={() => setIsSidebarOpen(true)}
         />
-      )}
+      </div>
       {isSidebarOpen && (
         <div ref={animateRef} className="nav-sidebar">
           <div className="sidebar-logo">
@@ -207,7 +206,7 @@ const Nav = () => {
           </div>
           <div className="sidebar-container">
             <ul className="sidebar-links">
-              {navItems.map((item, index) => {
+              {sidebarNavItems.map((item, index) => {
                 // Safe handling for string generation
                 const itemText = typeof item === "string" ? item : String(item);
                 const urlSlug = itemText.toLowerCase().replace(/\s+/g, "-");

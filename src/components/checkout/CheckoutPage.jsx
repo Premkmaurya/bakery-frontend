@@ -46,8 +46,6 @@ const CheckoutPage = () => {
           "User-Agent": "HardoiDeliveryApp/1.0 (contact@example.com)",
         },
       });
-
-      console.log("Address API Response:", await res.json());
     };
     fetchAddressData();
     if (Array.isArray(state?.initialCartItems)) {
