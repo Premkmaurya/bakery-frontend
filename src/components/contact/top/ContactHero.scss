@@ -63,7 +63,7 @@
     // Mobile adjustments
     @media (max-width: 900px) {
       height: 50%; // Shrink them down significantly
-      opacity: 0.4; // Fade them out so text is clearer
+      opacity: 0.7; // More transparency on smaller screens
 
       &.left {
         left: -20px;
@@ -73,9 +73,5 @@
       }
     }
 
-    // Hide entirely on small phones for a cleaner look
-    @media (max-width: 480px) {
-      display: none;
-    }
   }
 }

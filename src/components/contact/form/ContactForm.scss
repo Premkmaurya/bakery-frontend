@@ -1,16 +1,31 @@
+@mixin mobile {
+  @media (max-width: 768px) {
+    @content;
+  }
+}
+
 .contact-form-section {
   padding: 5rem 2rem;
   background-color: var(--color-bg); // White background
-  
+  @include mobile {
+    padding: 1rem 0;
+  }
+
   .container {
     max-width: 50vw; // Limits the width so the form looks elegant
     margin: 0 auto;
+    @include mobile {
+      max-width: 90vw; // Full width on mobile
+    }
   }
 
   // === Header ===
   .form-header {
     text-align: center;
     margin-bottom: 3rem;
+    @include mobile {
+      margin-bottom: 2rem;
+    }
 
     .form-title {
       font-family: var(--font-serif);
@@ -26,6 +41,10 @@
       line-height: 1.6;
       max-width: 600px;
       margin: 0 auto;
+      @include mobile {
+        font-size: 1rem;
+        margin: 0;
+      }
     }
   }
 
@@ -34,7 +53,7 @@
     background-color: white;
     // Optional: Add a subtle shadow or border if you want it to look like a card
     // box-shadow: 0 10px 40px rgba(0,0,0,0.05);
-    // padding: 2rem; 
+    // padding: 2rem;
     // border-radius: 12px;
 
     .form-group {
@@ -49,7 +68,8 @@
         margin-bottom: 0.5rem;
       }
 
-      input, textarea {
+      input,
+      textarea {
         width: 100%;
         padding: 1rem 1.2rem;
         font-family: var(--font-sans);
@@ -87,19 +107,19 @@
       border-radius: 50px; // Pill shape button
       background-color: var(--color-accent); // Your Brand Pink/Red
       color: white;
-      
+
       font-family: var(--font-sans);
       font-weight: 700;
       font-size: 1rem;
       text-transform: uppercase;
       letter-spacing: 1px;
       cursor: pointer;
-      
+
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 0.5rem; // Space between text and icon
-      
+
       transition: all 0.3s ease;
       box-shadow: 0 10px 20px rgba(185, 28, 70, 0.2); // Colored shadow
 
