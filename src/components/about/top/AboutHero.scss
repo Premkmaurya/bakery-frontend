@@ -1,3 +1,9 @@
+@mixin mobile {
+  @media (max-width: 768px) {
+    @content;
+  }
+}
+
 .about-hero-section {
   position: relative;
   // Use your brand's accent color for the bold banner background
@@ -12,8 +18,8 @@
   overflow: hidden; // Prevents illustrations from spilling out
 
   // Adjust height for smaller screens
-  @media (max-width: 768px) {
-    height: 250px;
+  @include mobile {
+    height: 200px;
   }
 
   // The Centered Text Content
@@ -28,7 +34,7 @@
       font-weight: 700;
       margin-bottom: 1rem;
 
-      @media (max-width: 768px) {
+      @include mobile {
         font-size: 2.5rem;
       }
     }
@@ -87,10 +93,13 @@
       width: auto;
       // Optional: make placeholders slightly transparent so they don't clash too much
       opacity: 0.9;
+      @include mobile {
+        width: 80%;
+      }
     }
 
     &.left {
-      left: 5%; // Offset slightly from the edge
+      left: 5%;
     }
 
     &.right {
@@ -100,25 +109,26 @@
     // Mobile adjustments for illustrations
     @media (max-width: 900px) {
       height: 50%; // Shrink them down
-      opacity: 0.5; // Fade them out so text is clearer
+      opacity: 0.8; // Fade them out so text is clearer
 
       &.left {
-        left: -20px;
+        left: 0;
       }
       &.right {
-        right: -20px;
+        right: -6%;
       }
     }
-    // Hide entirely on very small phones if needed for clarity
-    @media (max-width: 480px) {
-      display: none;
-    }
+    
   }
 }
 .who-we-are-section {
   padding: 5rem 2rem 2rem; // Extra top padding for breathing room
   background-color: var(--color-bg);
   overflow: hidden; // Keeps the watermark from causing scrollbars
+
+  @include mobile {
+    padding: 3rem 1rem 1rem;
+  }
 
   .container {
     max-width: 1200px;
@@ -196,7 +206,7 @@
           display: block;
           object-fit: cover;
           box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); // Soft shadow for depth
-          transition: transform 0.45s cubic-bezier(.2,.9,.2,1);
+          transition: transform 0.45s cubic-bezier(0.2, 0.9, 0.2, 1);
           transform-origin: center center;
         }
 

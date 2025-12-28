@@ -9,18 +9,26 @@ import {
   FaShoppingCart,
   FaRegUser,
 } from "react-icons/fa";
+import { HiMiniBars3BottomRight } from "react-icons/hi2";
+import { IoIosClose } from "react-icons/io";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { useAuth } from "../../context/NavContext";
 
+gsap.registerPlugin(useGSAP);
+gsap.registerPlugin(ScrollTrigger);
+
 const Nav = () => {
   const { isLoggedIn, user } = useAuth();
   const [activeLink, setActiveLink] = useState("Home");
   const navigate = useNavigate();
   const location = useLocation();
+  const animateRef = useRef(null);
   const navItems = ["Home", "Products", "About", "Contacts"];
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const navRef = useRef(null);
 
@@ -41,9 +49,6 @@ const Nav = () => {
       setActiveLink("");
     }
   }, [location.pathname]);
-
-  gsap.registerPlugin(useGSAP);
-  gsap.registerPlugin(ScrollTrigger);
 
   useGSAP(() => {
     const tl = gsap.timeline();
@@ -133,6 +138,17 @@ const Nav = () => {
 
     return () => ScrollTrigger.killAll();
   }, []);
+  useEffect(() => {
+    gsap.fromTo(
+      ".nav-sidebar",
+      { left: "100%" },
+      {
+        left: 0,
+        duration: 0.5,
+        ease: "ease-in-out",
+      }
+    );
+  }, [isSidebarOpen]);
 
   return (
     <nav ref={navRef} className="navbar">
@@ -157,56 +173,89 @@ const Nav = () => {
         ))}
       </ul>
 
-      <div className="nav-actions">
-        {!isLoggedIn ? (
-          <button onClick={() => navigate("/login")} className="login-btn">
-            Log In
-          </button>
-        ) : (
-          <FaRegUser
-            onClick={() => navigate("/profile")}
-            className="nav-icons"
-            size={20}
-          />
-        )}
-        <div onClick={() => navigate("/cart")} className="nav-icons">
-          <FaShoppingCart size={20} />
-        </div>
-      </div>
-      <div className="nav-sidebar">
-        <div className="sidebar-logo">
-          <div className="logo">Cake Shop</div>
-          <div>
-            {!isLoggedIn ? (
-              <button onClick={() => navigate("/login")} className="login-btn">
-                Log In
-              </button>
-            ) : (
-              <FaRegUser
-                onClick={() => navigate("/profile")}
-                className="nav-icons"
-                size={20}
-              />
-            )}
+      {isSidebarOpen ? (
+        <div className="nav-actions">
+          {!isLoggedIn ? (
+            <button onClick={() => navigate("/login")} className="login-btn">
+              Log In
+            </button>
+          ) : (
+            <FaRegUser
+              onClick={() => navigate("/profile")}
+              className="nav-icons"
+              size={20}
+            />
+          )}
+          <div onClick={() => navigate("/cart")} className="nav-icons">
+            <FaShoppingCart size={20} />
           </div>
         </div>
-        <ul className="sidebar-links">
-          {navItems.map((item) => (
-            <Link
-              to={`/${
-                item.toLowerCase().replace(/\s+/g, "-") === "home"
-                  ? ""
-                  : item.toLowerCase().replace(/\s+/g, "-")
-              }`}
-              key={item}
-              className={`links ${activeLink === item ? "active" : ""}`}
-              onClick={() => setActiveLink(item)}
-            >
-              {item} <span>{item}</span>
-            </Link>
-          ))}
-        </ul>
-      </div>
+      ) : (
+        <HiMiniBars3BottomRight
+          size={30}
+          className="menu-icon"
+          onClick={() => setIsSidebarOpen(true)}
+        />
+      )}
+      {isSidebarOpen && (
+        <div ref={animateRef} className="nav-sidebar">
+          <div className="sidebar-logo">
+            <div className="logo">Cake Shop</div>
+            <div className="close-icon">
+              <IoIosClose size={40} onClick={() => setIsSidebarOpen(false)} />
+            </div>
+          </div>
+          <div className="sidebar-container">
+            <ul className="sidebar-links">
+              {navItems.map((item, index) => {
+                // Safe handling for string generation
+                const itemText = typeof item === "string" ? item : String(item);
+                const urlSlug = itemText.toLowerCase().replace(/\s+/g, "-");
+                const toPath = urlSlug === "home" ? "/" : `/${urlSlug}`;
+
+                return (
+                  <Link
+                    to={toPath}
+                    key={itemText || index}
+                    className={`links ${
+                      activeLink === itemText ? "active" : ""
+                    }`}
+                    onClick={() => isSidebarOpen(false)}
+                  >
+                    <div className="roll-wrapper">
+                      <span className="roll-item">{itemText}</span>
+                      <span className="roll-item clone" aria-hidden="true">
+                        {itemText}
+                      </span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </ul>
+          </div>
+          <div className="sidebar-bottom">
+            <div className="social-links">
+              <a
+                href="https://www.facebook.com"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <FaFacebookF size={20} />
+              </a>
+              <a href="https://www.vk.com" target="_blank" rel="noreferrer">
+                <FaVk size={20} />
+              </a>
+              <a
+                href="https://www.instagram.com"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <FaInstagram size={20} />
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
