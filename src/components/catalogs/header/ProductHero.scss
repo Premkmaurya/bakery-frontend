@@ -1,22 +1,32 @@
+@mixin mobile {
+  @media (max-width: 768px) {
+    @content;
+  }
+}
+
 .product-hero-section {
   position: relative;
-  background-color: var(--color-accent); 
+  background-color: var(--color-accent);
   color: white;
-  
-  height: 350px; 
+
+  height: 350px;
   align-items: center;
   justify-content: center;
-  overflow: hidden; 
-  @media (max-width: 768px) {
+  overflow: hidden;
+  @include mobile {
     height: 250px;
   }
 
   // === The Centered Text Content ===
   .hero-content {
     position: relative;
-    z-index: 2; 
+    z-index: 2;
     text-align: center;
     left: 30%;
+    @include mobile {
+      left: 0;
+      top: -50%;
+    }
 
     .hero-title {
       font-family: var(--font-serif);
@@ -75,15 +85,15 @@
     position: absolute;
     bottom: 0;
     z-index: 1;
-    height: 85%; 
+    height: 85%;
     display: flex;
     align-items: flex-end;
-    pointer-events: none; 
+    pointer-events: none;
     img {
       max-height: 100%;
       width: auto;
       // Optional: make placeholders slightly transparent so they don't clash
-      opacity: 0.9; 
+      opacity: 0.9;
     }
 
     &.left {
@@ -96,16 +106,15 @@
 
     // Mobile adjustments
     @media (max-width: 900px) {
-        height: 50%; // Shrink them down significantly
-        opacity: 0.4; // Fade them out so text is clearer
+      height: 50%; // Shrink them down significantly
+      opacity: 0.8; // Fade them out so text is clearer
 
-        &.left { left: -20px; }
-        &.right { right: -20px; }
-    }
-    
-    // Hide entirely on small phones for a cleaner look
-    @media (max-width: 480px) {
-       display: none;
+      &.left {
+        left: -20px;
+      }
+      &.right {
+        right: -20px;
+      }
     }
   }
 }

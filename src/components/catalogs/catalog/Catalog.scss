@@ -1,7 +1,16 @@
+@mixin mobile {
+  @media (max-width: 768px) {
+    @content;
+  }
+}
+
 .catalog-section {
   padding: 4rem 2rem;
   background-color: #f9f9f9; // Slight off-white background to make cards pop
   min-height: 80vh;
+  @include mobile {
+    padding: 2rem 0.8rem;
+  }
 
   .container {
     max-width: 1200px;
@@ -29,12 +38,22 @@
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
     margin-bottom: 3rem;
 
+    @include mobile {
+      width: 100%;
+      flex-direction: column;
+      padding: 1rem 0.8rem;
+      align-items: stretch;
+    }
+
     // Search Styling
     .search-wrapper {
       position: relative;
       flex: 1;
       min-width: 250px;
 
+      @include mobile {
+        width: 100%;
+      }
       .search-icon {
         position: absolute;
         left: 1rem;
@@ -63,6 +82,10 @@
       display: flex;
       gap: 0.5rem;
       overflow-x: auto; // Allow scroll on mobile
+      @include mobile {
+        width: 100%;
+        padding-bottom: 0.5rem; // Space for scrollbar
+      }
 
       .cat-btn {
         background: transparent;
@@ -120,6 +143,12 @@
     // Auto-fill creates responsive columns automatically
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 2rem;
+
+    @include mobile {
+      width: 100%;
+      grid-template-columns: repeat(2, 1fr); // 2 columns on tablet
+      gap: 1rem;
+    }
 
     .product-card-wrapper {
       position: relative;
@@ -215,29 +244,6 @@
       font-family: var(--font-serif);
       font-size: 1.5rem;
       margin-bottom: 0.5rem;
-    }
-  }
-
-  // === MOBILE ADJUSTMENTS ===
-  @media (max-width: 768px) {
-    .filter-bar {
-      flex-direction: column;
-      align-items: stretch;
-
-      .category-tabs {
-        padding-bottom: 0.5rem; // Space for scrollbar
-      }
-    }
-
-    .product-grid {
-      grid-template-columns: repeat(2, 1fr); // 2 columns on tablet
-      gap: 1rem;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .product-grid {
-      grid-template-columns: 1fr; // 1 column on phone
     }
   }
 }
