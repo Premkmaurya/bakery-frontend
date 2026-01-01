@@ -10,6 +10,10 @@
   color: var(--color-text-main);
   font-family: var(--font-sans);
 
+  @include mobile {
+    padding: 2rem 1rem;
+  }
+
   .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -49,6 +53,7 @@
     }
 
     .cart-item {
+      position: relative;
       display: grid;
       grid-template-columns: 3fr 1fr 1fr 0.5fr;
       align-items: center;
@@ -57,8 +62,8 @@
       border-bottom: 1px solid #e0e0e0;
 
       @include mobile {
-        grid-template-columns: 0.5fr 0.5fr 0.5fr;
-        gap: 1rem;
+        grid-template-columns: 0.5fr 0.5fr 0.5fr 0.5fr;
+        gap: 0.5rem;
         text-align: center;
       }
 
@@ -67,13 +72,19 @@
         align-items: center;
         gap: 1.5rem;
 
-
+        @include mobile {
+          gap: 0.8rem;
+        }
         .product-image {
           width: 100px;
           height: 100px;
           object-fit: cover;
           border-radius: 12px;
           background-color: var(--color-gray-light);
+          @include mobile {
+            width: 70px;
+            height: 70px;
+          }
         }
 
         .product-info {
@@ -90,7 +101,7 @@
       }
 
       .quantity-control {
-        @media (max-width: 600px) {
+        @include mobile {
           justify-self: center;
         }
         .quantity-btn-group {
@@ -123,7 +134,7 @@
       .item-total {
         font-weight: 700;
         font-size: 1.1rem;
-        @media (max-width: 600px) {
+        @include mobile {
           justify-self: center;
           margin-bottom: 1rem;
         }
@@ -131,8 +142,11 @@
 
       .item-action {
         text-align: right;
-        @media (max-width: 600px) {
-          justify-self: center;
+        @include mobile {
+          position: absolute;
+          top: 0;
+          justify-self: flex-end;
+          text-align: center;
         }
         .delete-btn {
           background: none;
@@ -140,6 +154,10 @@
           cursor: pointer;
           color: var(--color-text-sub);
           transition: color 0.3s;
+
+          @include mobile {
+            font-size: 0.8rem;
+          }
           &:hover {
             color: var(--color-accent);
           }

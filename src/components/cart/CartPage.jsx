@@ -85,7 +85,7 @@ const CartPage = () => {
             {initialCartItems.map((item) => (
               <CartItem
                 key={item._id}
-                item={item}
+                item={item} 
                 updateQuantity={updateQuantity}
                 removeItem={removeItem}
               />
