@@ -1,7 +1,17 @@
+@mixin moblie {
+  @media (max-width: 600px) {
+    @content;
+  }
+}
+
 .user-profile-page {
   padding: 0 2rem;
   background-color: #fcfcfc; // Light background
   min-height: 100vh;
+
+  @include moblie {
+    padding: 0 1rem;
+  }
 
   .container {
     max-width: 1100px;

@@ -39,9 +39,6 @@ const ManageAddress = () => {
       phone: '',
       street: '',
       city: '',
-      state: '',
-      zip: '',
-      country: ''
     }
   });
 
@@ -244,14 +241,6 @@ const ManageAddress = () => {
               />
               {errors.city && <span className="error">{errors.city.message}</span>}
             </div>
-            <div className="form-group">
-              <label>State / Province *</label>
-              <input 
-                type="text" 
-                {...register('state', { required: 'State is required' })}
-              />
-              {errors.state && <span className="error">{errors.state.message}</span>}
-            </div>
           </div>
 
           <div className="form-row">
@@ -262,14 +251,6 @@ const ManageAddress = () => {
                 {...register('zip', { required: 'Zip code is required' })}
               />
               {errors.zip && <span className="error">{errors.zip.message}</span>}
-            </div>
-            <div className="form-group">
-              <label>Country *</label>
-              <input 
-                type="text" 
-                {...register('country', { required: 'Country is required' })}
-              />
-              {errors.country && <span className="error">{errors.country.message}</span>}
             </div>
           </div>
           

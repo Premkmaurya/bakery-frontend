@@ -308,20 +308,6 @@ const CheckoutPage = () => {
                         )}
                       </div>
                       <div className="form-group">
-                        <label>State</label>
-                        <input
-                          type="text"
-                          {...register("state", {
-                            required: "State is required",
-                          })}
-                        />
-                        {errors.state && (
-                          <span className="error-msg">
-                            {errors.state.message}
-                          </span>
-                        )}
-                      </div>
-                      <div className="form-group">
                         <label>Zip Code</label>
                         <input
                           type="text"
