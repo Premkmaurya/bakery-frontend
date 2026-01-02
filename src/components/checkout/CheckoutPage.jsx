@@ -34,20 +34,6 @@ const CheckoutPage = () => {
 
   const [orderItems, setOrderItems] = useState([]);
   useEffect(() => {
-    const fetchAddressData = async () => {
-      const finalQuery = `avas vikas colony, Hardoi, Uttar Pradesh`;
-      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-        finalQuery
-      )}&bounded=1&countrycodes=in&limit=5&accept-language=en-IN`;
-
-      const res = await fetch(url, {
-        headers: {
-          Accept: "application/json",
-          "User-Agent": "HardoiDeliveryApp/1.0 (contact@example.com)",
-        },
-      });
-    };
-    fetchAddressData();
     if (Array.isArray(state?.initialCartItems)) {
       setOrderItems(state.initialCartItems);
     } else if (state) {
@@ -81,9 +67,7 @@ const CheckoutPage = () => {
       phone: "",
       street: "",
       city: "",
-      state: "",
       zip: "",
-      country: "",
     },
   });
 
@@ -105,9 +89,7 @@ const CheckoutPage = () => {
       phone: "",
       street: "",
       city: "",
-      state: "",
       zip: "",
-      country: "",
     });
     setEditingId(null);
     setIsFormOpen(true);
@@ -164,15 +146,27 @@ const CheckoutPage = () => {
   };
 
   // Delete Address
-  const handleDelete = async (e, id) => {
-    e.stopPropagation();
+  const handleDelete = async (id) => {
     if (window.confirm("Delete this address?")) {
-      const response = await axios.delete(
-        `http://localhost:3000/user/delete-address/${id}`,
-        { withCredentials: true }
-      );
-      setAddresses((prev) => prev.filter((addr) => addr._id !== id));
-      if (selectedAddressId === id) setSelectedAddressId(null); // Deselect if deleted
+      try {
+        const response = await axios.delete(
+          `http://localhost:3000/user/delete-address/${id}`,
+          { withCredentials: true }
+        );
+
+        if (response.status === 200) {
+          setAddresses((prev) => prev.filter((addr) => addr._id !== id));
+          if (selectedAddressId === id) setSelectedAddressId(null); // Deselect if deleted
+        } else {
+          console.error("Unexpected response status:", response.status);
+          alert("Failed to delete address. Please try again.");
+        }
+      } catch (error) {
+        console.error("Error deleting address:", error);
+        alert(
+          error.response?.data?.message || "Failed to delete address. Please try again."
+        );
+      }
     }
   };
 
@@ -207,7 +201,7 @@ const CheckoutPage = () => {
       alert("Please add a shipping address before proceeding to payment.");
       return;
     }
-    navigate(`/products/payment-method`, {
+    navigate(`/payment-method`, {
       state: {
         subTotal,
         deliveryFee,
@@ -368,7 +362,7 @@ const CheckoutPage = () => {
                         {addr.fullName || addr.name}
                       </h4>
                       <p className="addr-details">
-                        {addr.street}, {addr.city}, {addr.state} {addr.zip}
+                        {addr.street}, {addr.city}, {addr.zip}
                       </p>
                       <p className="addr-phone">Phone: {addr.phone}</p>
 
@@ -381,7 +375,7 @@ const CheckoutPage = () => {
                         </button>
                         <button
                           className="action-btn delete"
-                          onClick={(e) => handleDelete(e, addr._id)}
+                          onClick={() => handleDelete(addr._id)}
                         >
                           <Trash2 size={14} /> Delete
                         </button>
