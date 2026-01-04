@@ -150,6 +150,25 @@ const Catalog = () => {
     "Muffins",
   ];
 
+  const addToCart = async (id) => {
+    const response = await axios.post(
+      `http://localhost:3000/cart/addToCart/${id}`,
+      {
+        quantity: 1,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+    if (response.data) {
+      notyf.success({
+        message: "added to cart",
+        duration: 2000,
+        background: "#17701fff",
+        position: { x: "left", y: "bottom" },
+      });
+    }
+  };
   return (
     <section className="catalog-section">
       <div className="container">

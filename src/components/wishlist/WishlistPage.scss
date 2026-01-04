@@ -1,7 +1,17 @@
+// 1. We define the mobile break-point (standard 768px for tablets/phones)
+@mixin mobile {
+  @media (max-width: 768px) {
+    @content;
+  }
+}
+
 .wishlist-page-wrapper {
   padding: 4rem 2rem;
   background-color: #f9f9f9;
   min-height: 80vh;
+  @include mobile {
+    padding: 2rem 0.5rem;
+  }
 
   .container {
     max-width: 1200px;
@@ -14,13 +24,25 @@
     color: var(--color-text-main);
     text-align: center;
     margin-bottom: 3rem;
+
+    // Shrink the header so it doesn't take up the whole screen on a phone
+    @include mobile {
+      font-size: 2.2rem;
+      margin-bottom: 2rem;
+    }
   }
 
   // === GRID LAYOUT ===
   .wishlist-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 2rem;
+
+    // Senior Move: Switch to 2 columns on mobile so the user sees more products
+    @include mobile {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
 
     .wishlist-card {
       background: white;
@@ -41,6 +63,11 @@
         height: 250px;
         background-color: #f4f4f4;
         overflow: hidden;
+
+        // Make the image shorter on mobile to prevent infinite scrolling
+        @include mobile {
+          height: 180px;
+        }
 
         img {
           width: 100%;
@@ -69,9 +96,18 @@
           color: #999;
           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
           transition: all 0.2s;
+          z-index: 5;
+
+          // Adjust button size for fingers
+          @include mobile {
+            width: 30px;
+            height: 30px;
+            top: 5px;
+            right: 5px;
+          }
 
           &:hover {
-            color: #d32f2f; // Red for trash
+            color: #d32f2f;
             background-color: #fff5f5;
           }
         }
@@ -96,6 +132,11 @@
         flex-direction: column;
         flex: 1;
 
+        @include mobile {
+          padding: 1rem;
+          text-align: center; // Centered look is very popular for high-end bakeries
+        }
+
         .category {
           font-size: 0.8rem;
           color: #999;
@@ -105,10 +146,16 @@
         }
 
         .product-name {
-          font-family: var(--font-serif);
+          font-family: var(--font-system);
           font-size: 1.2rem;
+          font-weight: 500;
           color: var(--color-text-main);
           margin-bottom: 0.5rem;
+          
+
+          @include mobile {
+            font-size: 1rem;
+          }
         }
 
         .price {
@@ -117,10 +164,15 @@
           font-weight: 700;
           color: var(--color-accent);
           margin-bottom: 1.2rem;
+
+          @include mobile {
+            font-size: 0.95rem;
+            margin-bottom: 0.8rem;
+          }
         }
 
         .add-cart-btn {
-          margin-top: auto; // Pushes button to bottom
+          margin-top: auto;
           width: 100%;
           padding: 0.8rem;
           background-color: transparent;
@@ -134,6 +186,12 @@
           justify-content: center;
           gap: 0.5rem;
           transition: all 0.3s;
+
+          // Responsive button padding
+          @include mobile {
+            padding: 0.6rem;
+            font-size: 0.75rem;
+          }
 
           &:hover:not(:disabled) {
             background-color: var(--color-accent);

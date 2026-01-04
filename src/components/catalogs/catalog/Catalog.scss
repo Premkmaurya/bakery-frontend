@@ -245,6 +245,8 @@
             justify-content: center;
             gap: 0.5rem;
             transition: all 0.3s ease;
+            position: relative;
+            z-index: 999;
 
             &:hover {
               background-color: var(--color-accent); // Pink/Red on hover
