@@ -153,7 +153,6 @@ const AddProduct = () => {
                 <input
                   type="number"
                   placeholder="0.00"
-                  step="0.01"
                   {...register("price", {
                     required: "Price is required",
                     min: {

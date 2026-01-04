@@ -3,45 +3,9 @@ import "./RelatedProducts.scss";
 import { FaHeart } from "react-icons/fa";
 import { Heart, ChevronLeft, ChevronRight, ShoppingCart } from "lucide-react";
 
-const RelatedProducts = () => {
+const RelatedProducts = ({ products }) => {
   // === MOCK DATA ===
-  const products = [
-    {
-      id: 1,
-      name: "Oreo Bliss",
-      price: 765,
-      image:
-        "https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=1000&auto=format&fit=crop",
-    },
-    {
-      id: 2,
-      name: "Strawberry Bliss",
-      price: 1068,
-      image:
-        "https://images.unsplash.com/photo-1565958011703-44f9829ba187?q=80&w=1000&auto=format&fit=crop",
-    },
-    {
-      id: 3,
-      name: "Elegant Bliss",
-      price: 712,
-      image:
-        "https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?q=80&w=1000&auto=format&fit=crop",
-    },
-    {
-      id: 4,
-      name: "Chocolate Truffle",
-      price: 850,
-      image:
-        "https://images.unsplash.com/photo-1588195538326-c5f1f23fa438?q=80&w=1000&auto=format&fit=crop",
-    },
-    {
-      id: 5,
-      name: "Vanilla Bean",
-      price: 600,
-      image:
-        "https://images.unsplash.com/photo-1535141192574-5d4897c12636?q=80&w=1000&auto=format&fit=crop",
-    },
-  ];
+
   const [wishedProducts, setWishedProducts] = useState({});
 
   // Toggle wishlist for a specific product
@@ -54,7 +18,7 @@ const RelatedProducts = () => {
 
   // === SLIDER LOGIC ===
   const [currentIndex, setCurrentIndex] = useState(0);
-  const itemsPerView = 3;
+  const itemsPerView = 1;
 
   // Calculate limits
   const maxIndex = products.length - itemsPerView;
@@ -62,15 +26,11 @@ const RelatedProducts = () => {
   const isAtEnd = currentIndex >= maxIndex;
 
   const nextSlide = () => {
-    if (!isAtEnd) {
-      setCurrentIndex((prev) => prev + 1);
-    }
+    setCurrentIndex((prev) => Math.min(prev + 1, maxIndex));
   };
 
   const prevSlide = () => {
-    if (!isAtStart) {
-      setCurrentIndex((prev) => prev - 1);
-    }
+    setCurrentIndex((prev) => Math.max(prev - 1, 0));
   };
 
   return (
@@ -99,7 +59,7 @@ const RelatedProducts = () => {
 
             {/* Simple Counter: e.g. 1/3 */}
             <span className="counter">
-              {currentIndex + 1} / {maxIndex}
+              {currentIndex + 1} / {maxIndex + 1}
             </span>
 
             <button
@@ -122,17 +82,17 @@ const RelatedProducts = () => {
             }}
           >
             {products.map((product) => (
-              <div key={product.id} className="product-card-wrapper">
+              <div key={product._id} className="product-card-wrapper">
                 <article className="product-card">
                   {/* Image Area */}
                   <div className="card-image">
-                    <img src={product.image} alt={product.name} />
+                    <img src={product.imageUrl} alt={product.name} />
                     <button
-                      onClick={() => toggleWishlist(product.id)}
+                      onClick={() => toggleWishlist(product._id)}
                       className="wishlist-btn"
                       aria-label="Add to wishlist"
                     >
-                      {wishedProducts[product.id] ? (
+                      {wishedProducts[product._id] ? (
                         <FaHeart color="red" size={18} />
                       ) : (
                         <Heart size={18} />

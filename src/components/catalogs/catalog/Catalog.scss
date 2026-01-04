@@ -176,7 +176,6 @@
         overflow: hidden;
         transition: all 0.3s ease;
         border: 1px solid transparent;
-        position: relative;
 
         &:hover {
           box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
@@ -191,13 +190,16 @@
         .image-wrapper {
           height: 250px;
           width: 100%;
-          position: relative;
           background-color: #f4f4f4;
+          display: flex;
+          justify-content: center;
+          align-items: center;
 
           img {
-            width: 100%;
+            aspect-ratio: 9/16;
+            width: 60%;
             height: 100%;
-            object-fit: contain; // Ensures whole product is visible like reference
+            object-fit: cover; // Ensures whole product is visible like reference
             padding: 1rem; // Give it some breathing room
             mix-blend-mode: multiply; // Helps remove white backgrounds visually
           }
