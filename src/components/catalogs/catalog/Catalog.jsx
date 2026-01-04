@@ -58,10 +58,13 @@ const Catalog = () => {
             category: activeCategory === "All" ? undefined : activeCategory,
             maxPrice,
           };
-          const response = await axios.get("http://localhost:3000/products/search", {
-            params,
-            withCredentials: true,
-          });
+          const response = await axios.get(
+            "http://localhost:3000/products/search",
+            {
+              params,
+              withCredentials: true,
+            }
+          );
           setProducts(Array.isArray(response.data) ? response.data : []);
         } catch (err) {
           setProducts([]);
@@ -147,7 +150,6 @@ const Catalog = () => {
     "Muffins",
   ];
 
-
   return (
     <section className="catalog-section">
       <div className="container">
@@ -199,7 +201,9 @@ const Catalog = () => {
         {/* === PRODUCT GRID === */}
         {loading && (
           <div style={{ textAlign: "center", margin: "2rem 0" }}>
-            <span role="status" aria-live="polite">Loading...</span>
+            <span role="status" aria-live="polite">
+              Loading...
+            </span>
           </div>
         )}
         <div className="product-grid">
@@ -235,6 +239,15 @@ const Catalog = () => {
                     <div className="price-row">
                       <span className="price">₹{product.price.toFixed(2)}</span>
                     </div>
+                    <button
+                      className="add-to-cart-btn"
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevents navigating to details page
+                        addToCart(product._id);
+                      }}
+                    >
+                      <ShoppingCart size={16} /> ADD TO CART
+                    </button>
                   </div>
                 </div>
               </div>
