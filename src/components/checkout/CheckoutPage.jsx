@@ -11,26 +11,21 @@ import {
   Minus,
 } from "lucide-react";
 import "./CheckoutPage.scss";
-import axios from "axios";
 import { useAuth } from "../../context/NavContext";
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { state } = location;
-  const { user } = useAuth();
+  const { addresses, updateAddresses, deleteAddress, editAddress } = useAuth(); // Use addresses and updateAddresses from NavContext
 
-  // === 1. ADDRESS STATE ===
-  const [addresses, setAddresses] = useState(user?.address || []);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
 
-  // Ensure addresses are loaded from context on mount and when user changes
   useEffect(() => {
-    if (user?.address && user.address.length > 0) {
-      setAddresses(user.address);
-      setSelectedAddressId(user.address[0]._id); // Select first address by default
+    if (addresses.length > 0) {
+      setSelectedAddressId(addresses[0]._id); // Select first address by default
     }
-  }, [user]);
+  }, [addresses]);
 
   const [orderItems, setOrderItems] = useState([]);
   useEffect(() => {
@@ -58,7 +53,6 @@ const CheckoutPage = () => {
     register,
     handleSubmit,
     reset,
-    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -100,73 +94,42 @@ const CheckoutPage = () => {
     e.stopPropagation(); // Prevent selecting the card when clicking edit
     reset({
       ...address,
-      fullName: address.name,
-      addressType: address.type,
+      fullName: address.fullName,
+      addressType: address.addressType,
     });
-    setEditingId(address.id);
+    setEditingId(address._id);
     setIsFormOpen(true);
   };
 
   // Save Address (Add or Update)
   const handleSave = async (data) => {
-    const addAddress = await axios.post(
-      "http://localhost:3000/user/add-address",
-      data,
-      {
-        withCredentials: true,
-      }
-    );
     if (editingId) {
-      // Update existing
-      setAddresses((prev) =>
-        prev.map((addr) =>
-          addr.id === editingId
-            ? {
-                ...data,
-                id: editingId,
-                name: data.fullName,
-                type: data.addressType,
-              }
-            : addr
-        )
-      );
+      editAddress(editingId, data);
     } else {
-      // Add new
-      const newId = addresses.length + 1;
+      const response = await axios.post(
+        "http://localhost:3000/user/add-address",
+        formData,
+        {
+          withCredentials: true,
+        }
+      );
+
       const newAddress = {
-        ...data,
-        id: newId,
-        name: data.fullName,
-        type: data.addressType,
+        _id: response.data._id || response.data.id,
+        ...formData,
       };
-      setAddresses([...addresses, newAddress]);
-      setSelectedAddressId(newId); // Auto-select the new address
+      updateAddresses([...addresses, newAddress]);
+      setSelectedAddressId(newAddress._id);
     }
-    setIsFormOpen(false); // Close form
+    setIsFormOpen(false);
   };
 
   // Delete Address
   const handleDelete = async (id) => {
     if (window.confirm("Delete this address?")) {
-      try {
-        const response = await axios.delete(
-          `http://localhost:3000/user/delete-address/${id}`,
-          { withCredentials: true }
-        );
-
-        if (response.status === 200) {
-          setAddresses((prev) => prev.filter((addr) => addr._id !== id));
-          if (selectedAddressId === id) setSelectedAddressId(null); // Deselect if deleted
-        } else {
-          console.error("Unexpected response status:", response.status);
-          alert("Failed to delete address. Please try again.");
-        }
-      } catch (error) {
-        console.error("Error deleting address:", error);
-        alert(
-          error.response?.data?.message || "Failed to delete address. Please try again."
-        );
-      }
+      updateAddresses(addresses.filter((addr) => addr._id !== id));
+      await deleteAddress(id);
+      if (selectedAddressId === id) setSelectedAddressId(null);
     }
   };
 

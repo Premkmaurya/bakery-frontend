@@ -1,5 +1,5 @@
 // :root variables presumed available
-// $primary-color: #b91c46; 
+// $primary-color: #b91c46;
 
 .manage-address-wrapper {
   .section-title {
@@ -14,7 +14,10 @@
   // === GRID LAYOUT ===
   .address-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); // Responsive columns
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(300px, 1fr)
+    ); // Responsive columns
     gap: 1.5rem;
 
     // === ADD NEW CARD ===
@@ -150,12 +153,16 @@
 
           &.edit {
             color: var(--color-text-main);
-            &:hover { background-color: #f0f0f0; }
+            &:hover {
+              background-color: #f0f0f0;
+            }
           }
 
           &.delete {
             color: #d32f2f;
-            &:hover { background-color: #fff5f5; }
+            &:hover {
+              background-color: #fff5f5;
+            }
           }
         }
       }
@@ -198,7 +205,8 @@
         color: var(--color-text-main);
       }
 
-      input {
+      input,
+      select {
         width: 100%;
         padding: 0.8rem 1rem;
         border: 1px solid #e0e0e0;
@@ -216,7 +224,7 @@
       .radio-group {
         display: flex;
         gap: 1.5rem;
-        
+
         .radio-label {
           display: flex;
           align-items: center;
@@ -251,14 +259,18 @@
         background: white;
         border: 1px solid #ddd;
         color: #555;
-        &:hover { background-color: #f4f4f4; }
+        &:hover {
+          background-color: #f4f4f4;
+        }
       }
 
       .save-btn {
         background: var(--color-accent);
         border: none;
         color: white;
-        &:hover { background-color: #b91c46; }
+        &:hover {
+          background-color: #b91c46;
+        }
       }
     }
   }

@@ -1,3 +1,9 @@
+@mixin mobile {
+  @media (max-width: 768px) {
+    @content;
+  }
+}
+
 .single-product-section {
   padding: 5rem 2rem;
   background-color: #ffffff;
@@ -13,186 +19,256 @@
     grid-template-columns: 1fr 1fr; // Split 50/50
     gap: 4rem;
 
-    @media (max-width: 900px) {
+    @include mobile {
       grid-template-columns: 1fr; // Stack on mobile
       gap: 3rem;
     }
-  }
 
-  // === LEFT: IMAGE ===
-  .product-image-wrapper {
-    width: 100%;
-    height: 500px;
-    border-radius: 12px;
-    overflow: hidden;
-    background-color: #f9f9f9;
-
-    img {
+    // === LEFT: IMAGE ===
+    .product-image-wrapper {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s ease;
+      height: 500px;
+      border-radius: 12px;
+      overflow: hidden;
+      background-color: #f9f9f9;
 
-      &:hover {
-        transform: scale(1.05); // Subtle zoom effect
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+
+        &:hover {
+          transform: scale(1.05); // Subtle zoom effect
+        }
+      }
+
+      @include mobile {
+        height: 350px;
       }
     }
 
-    @media (max-width: 768px) {
-      height: 350px;
-    }
-  }
-
-  // === RIGHT: INFO ===
-  .product-info-wrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    .product-title {
-      font-family: var(--font-serif);
-      font-size: 2.5rem;
-      color: var(--color-text-main); // Dark color
-      margin-bottom: 1rem;
-    }
-
-    .price-row {
-      margin-bottom: 2rem;
-      .current-price {
-        font-family: var(--font-sans);
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: var(--color-text-main);
-      }
-    }
-
-    // Buttons
-    .actions-row {
+    // === RIGHT: INFO ===
+    .product-info-wrapper {
       display: flex;
-      gap: 1.5rem;
-      margin-bottom: 2.5rem;
       flex-direction: column;
+      justify-content: center;
 
-      .quantity-selector {
-        display: flex;
-        align-items: center;
-        border: 1px solid #ddd;
-        border-radius: 50px;
-        padding: 0.5rem 1rem;
-        width: 30%;
+      .product-title {
+        font-family: var(--font-serif);
+        font-size: 2.5rem;
+        color: var(--color-text-main); // Dark color
+        margin-bottom: 1rem;
+      }
 
-        button {
-          background: none;
-          border: none;
-          font-size: 1.2rem;
-          cursor: pointer;
+      .price-row {
+        margin-bottom: 2rem;
+        .current-price {
+          font-family: var(--font-sans);
+          font-size: 1.8rem;
+          font-weight: 700;
           color: var(--color-text-main);
-          width: 30px;
-          &:hover {
-            color: var(--color-accent);
+        }
+      }
+
+      // Buttons
+      .actions-row {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+        flex-direction: column;
+
+        .quantity-selector {
+          display: flex;
+          align-items: center;
+          border: 1px solid #ddd;
+          border-radius: 50px;
+          padding: 0.5rem 1rem;
+          width: 30%;
+
+          button {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--color-text-main);
+            width: 30px;
+            &:hover {
+              color: var(--color-accent);
+            }
+          }
+
+          span {
+            margin: 0 1rem;
+            font-weight: 600;
+            min-width: 20px;
+            text-align: center;
           }
         }
 
-        span {
-          margin: 0 1rem;
-          font-weight: 600;
-          min-width: 20px;
-          text-align: center;
-        }
-      }
-
-      .order-btn {
-        flex: 1; // Take remaining space
-        max-width: 250px;
-        margin-left: 2rem;
-        background-color: #ffe6e9; // Light pink background (Like reference)
-        color: var(--color-accent);
-        border-radius: 50px;
-        font-family: var(--font-sans);
-        font-weight: 700;
-        text-transform: uppercase;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 2rem;
-        transition: all 0.3s;
-        .common {
-          cursor: pointer;
-          padding: 0.9rem 1rem;
-          outline: none;
-          flex-wrap: nowrap;
-          font-size: 0.7rem;
-          text-align: center;
+        .order-btn {
+          flex: 1; // Take remaining space
+          max-width: 250px;
+          margin-left: 2rem;
+          background-color: #ffe6e9; // Light pink background (Like reference)
+          color: var(--color-accent);
+          border-radius: 50px;
+          font-family: var(--font-sans);
+          font-weight: 700;
+          text-transform: uppercase;
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 0.3rem;
-          color: var(--color-text-main);
-          border-radius: 5rem;
-          border: 1px solid var(--color-accent);
-        }
+          gap: 2rem;
+          transition: all 0.3s;
+          .common {
+            cursor: pointer;
+            padding: 0.9rem 1rem;
+            outline: none;
+            flex-wrap: nowrap;
+            font-size: 0.7rem;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            color: var(--color-text-main);
+            border-radius: 5rem;
+            border: 1px solid var(--color-accent);
+          }
 
-        .order-btn-1 {
-          background-color: var(--color-accent);
-          color: #ffffff;
-          border: none;
-          transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.6s;
-          &:hover {
-            scale: 1.04;
-            box-shadow: 1px 1px 3px var(--color-text-sub);
+          .order-btn-1 {
+            background-color: var(--color-accent);
+            color: #ffffff;
+            border: none;
+            transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.6s;
+            &:hover {
+              scale: 1.04;
+              box-shadow: 1px 1px 3px var(--color-accent);
+            }
+            span {
+              width: 6rem;
+            }
           }
-          span {
-            width: 6rem;
+          .order-btn-2 {
+            transition: all cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.6s;
+            &:hover {
+              scale: 1.04;
+              box-shadow: 1px 1px 3px var(--color-accent);
+            }
+            span {
+              width: 5rem;
+            }
           }
         }
-        .order-btn-2 {
-          transition: all cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.6s;
-          &:hover {
-            scale: 1.04;
-            box-shadow: 1px 1px 3px var(--color-accent);
+      }
+
+      // Trust Badges
+      .trust-badges {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 1rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid #eee; // Subtle separator line
+
+        .badge {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-family: var(--font-sans);
+          font-size: 0.9rem;
+          color: #777;
+        }
+      }
+
+      // === TAB SYSTEM STYLES ===
+      .product-tabs {
+        .desc {
+          h4 {
+            font-family: var(--font-sans);
+            font-size: 1.2rem;
+            color: var(--color-accent);
+            text-decoration: underline 1px;
+            margin-bottom: 1rem;
+            animation: fadeIn 0.5s ease-in-out;
           }
-          span {
-            width: 5rem;
+          p {
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            color: var(--color-text-sub);
+            line-height: 1.6;
+            animation: fadeIn 0.5s ease-in-out;
           }
         }
       }
     }
+  }
 
-    // Trust Badges
-    .trust-badges {
-      display: flex;
+  .product-info-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr; // Left side is wider than right side
+    gap: 4rem;
+    margin-top: 3rem;
+    border-top: 1px solid #eee;
+    padding-top: 2rem;
+
+    @include mobile {
+      grid-template-columns: 1fr; // Stacks on mobile
       gap: 2rem;
-      margin-bottom: 3rem;
-      padding-bottom: 2rem;
-      border-bottom: 1px solid #eee; // Subtle separator line
+    }
 
-      .badge {
+    .product-details-wrapper {
+      border: 1px solid #eee;
+      border-radius: 12px;
+      padding: 2rem;
+      h1 {
+        font-family: var(--font-serif);
+
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+      }
+      p {
+        line-height: 2;
+        color: var(--color-text-sub);
+        b {
+          font-family: var(--font-serif);
+          color: var(--color-text-main);
+        }
+      }
+    }
+
+    .trust-signals-wrapper {
+      border: 1px solid #eee;
+      border-radius: 12px;
+      padding: 1.3rem;
+      h2 {
+        font-family: var(--font-serif);
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .signal-item {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        font-family: var(--font-sans);
-        font-size: 0.9rem;
-        color: #777;
-      }
-    }
+        gap: 1rem;
+        margin-bottom: 1.5rem;
 
-    // === TAB SYSTEM STYLES ===
-    .product-tabs {
-      .desc {
-        h4 {
-          font-family: var(--font-sans);
-          font-size: 1.2rem;
-          color: var(--color-accent);
-          text-decoration: underline 1px;
-          margin-bottom: 1rem;
-          animation: fadeIn 0.5s ease-in-out;
+        .icon-circle {
+          width: 45px;
+          height: 45px;
+          border: 1px solid #ddd;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.5rem;
+          color: #333;
         }
+
         p {
-          font-family: var(--font-sans);
-          font-size: 1rem;
-          color: var(--color-text-sub);
-          line-height: 1.6;
-          animation: fadeIn 0.5s ease-in-out;
+          font-size: 0.95rem;
+          color: var(--color-text-main);
+          margin: 0;
         }
       }
     }

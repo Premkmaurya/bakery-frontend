@@ -31,6 +31,8 @@ const AddProduct = () => {
       price: "",
       category: "",
       description: "",
+      details: "",
+      isStock: true,
       isFeatured: false,
     },
   });
@@ -80,7 +82,7 @@ const AddProduct = () => {
     reset();
     removeImage();
     notyf.success({
-      message: `${product.name} added successfully!`,
+      message: `${formData.name} added successfully!`,
       duration: 2000,
       background: "#17701fff",
       position: { x: "left", y: "bottom" },
@@ -197,12 +199,28 @@ const AddProduct = () => {
               <FileText size={18} className="input-icon area-icon" />
               <textarea
                 rows="4"
-                placeholder="Product details, ingredients, etc..."
+                placeholder="Product description..."
                 {...register("description")}
               ></textarea>
             </div>
             {errors.description && (
               <span className="error">{errors.description.message}</span>
+            )}
+          </div>
+
+          {/* Details */}
+          <div className="form-group">
+            <label>Details</label>
+            <div className="textarea-wrapper">
+              <FileText size={18} className="input-icon area-icon" />
+              <textarea
+                rows="4"
+                placeholder="Product details, ingredients, weight, size etc..."
+                {...register("details")}
+              ></textarea>
+            </div>
+            {errors.details && (
+              <span className="error">{errors.details.message}</span>
             )}
           </div>
 

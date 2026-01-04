@@ -45,7 +45,7 @@ const Catalog = () => {
   // Fetch products from backend with filters
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [maxPrice, setMaxPrice] = useState(50); // Default max price
+  const [maxPrice, setMaxPrice] = useState(1000); // Default max price
   const [activeCategory, setActiveCategory] = useState("All");
 
   useEffect(() => {
@@ -188,7 +188,7 @@ const Catalog = () => {
             <input
               type="range"
               min="0"
-              max="50"
+              max="1000"
               value={maxPrice}
               onChange={(e) => setMaxPrice(Number(e.target.value))}
               className="price-slider"

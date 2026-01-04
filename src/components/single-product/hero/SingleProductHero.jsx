@@ -3,6 +3,10 @@ import "./SingleProductHero.scss";
 import { ShoppingBag, ShoppingCart, Truck, ShieldCheck } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 
+import { TbTruckDelivery } from "react-icons/tb";
+import { GiCakeSlice } from "react-icons/gi";
+import { HiOutlineShieldCheck } from "react-icons/hi";
+
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/all";
@@ -132,6 +136,14 @@ const SingleProductHero = ({ product }) => {
     }
   };
 
+  const formatProductDetails = (text) => {
+    if (!text) return "";
+
+    return text
+      .replace(/([A-Z][a-z\s]+:)/g, "<br/><b>$1</b> ") // Improved to catch multi-word labels
+      .replace(/^<br\/>/, "");
+  };
+
   return (
     <section className="single-product-section">
       <div className="container">
@@ -201,6 +213,43 @@ const SingleProductHero = ({ product }) => {
                 <h4>Description</h4>
                 <p>{product.description}</p>
               </div>
+            </div>
+          </div>
+        </div>
+        <div className="product-info-grid">
+          {/* LEFT SIDE: PRODUCT DETAILS */}
+          <div className="product-details-wrapper">
+            <h1>Details</h1>
+            <p
+              dangerouslySetInnerHTML={{
+                __html: formatProductDetails(product.details),
+              }}
+            />
+          </div>
+
+          {/* RIGHT SIDE: WHY CHOOSE US */}
+          <div className="trust-signals-wrapper">
+            <h2>Why Choose Us?</h2>
+
+            <div className="signal-item">
+              <div className="icon-circle">
+                <TbTruckDelivery size={38} />
+              </div>
+              <p>Midnight Delivery Available</p>
+            </div>
+
+            <div className="signal-item">
+              <div className="icon-circle">
+                <GiCakeSlice size={38} />
+              </div>
+              <p>Customizable Flavours</p>
+            </div>
+
+            <div className="signal-item">
+              <div className="icon-circle">
+                <HiOutlineShieldCheck size={38} />
+              </div>
+              <p>Freshness Guarantee</p>
             </div>
           </div>
         </div>
