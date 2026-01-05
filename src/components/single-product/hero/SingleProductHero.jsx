@@ -1,11 +1,21 @@
 import React, { useEffect, useState } from "react";
 import "./SingleProductHero.scss";
-import { ShoppingBag, ShoppingCart, Truck, ShieldCheck } from "lucide-react";
+import {
+  ShoppingBag,
+  ShoppingCart,
+  Truck,
+  ShieldCheck,
+  Pencil,
+  Trash2,
+} from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../../../context/NavContext";
+import AddProduct from "../../profile/add-products/AddProduct";
 
 import { TbTruckDelivery } from "react-icons/tb";
 import { GiCakeSlice } from "react-icons/gi";
 import { HiOutlineShieldCheck } from "react-icons/hi";
+import { IoMdClose } from "react-icons/io";
 
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -14,8 +24,18 @@ import axios from "axios";
 import { Notyf } from "notyf";
 
 const SingleProductHero = ({ product }) => {
+  // === NOTFY SETUP ===
   const notfy = new Notyf();
+
+  // === ROUTER & AUTH CONTEXT ===
   const navigate = useNavigate();
+
+  // Get user info from auth context
+  const { user } = useAuth();
+
+  const [isEdit, setIsEdit] = useState(false);
+
+  // === 1. ANIMATION SETUP ===
   gsap.registerPlugin(useGSAP);
   gsap.registerPlugin(SplitText);
 
@@ -145,16 +165,34 @@ const SingleProductHero = ({ product }) => {
   };
 
   return (
-    <section className="single-product-section">
+    <section className={`single-product-section ${isEdit ? "blur-bg" : ""}`}>
       <div className="container">
         <div className="product-layout">
           {/* === LEFT COLUMN: IMAGE === */}
-          <div className="product-image-wrapper">
+          <div className={`product-image-wrapper ${isEdit && "hide"}`}>
             <img src={product.imageUrl} alt={product.name} />
           </div>
 
+          {user?.role === "admin" && isEdit && (
+            <>
+              <div className="edit-form">
+                <AddProduct />
+                <button className="close-icon" onClick={() => setIsEdit(false)}>
+                  <IoMdClose size={25} />
+                </button>
+              </div>
+            </>
+          )}
+
           {/* === RIGHT COLUMN: DETAILS === */}
           <div className="product-info-wrapper">
+            {user?.role === "admin" && (
+              <div className="admin-controls">
+                <button className={`edit-pill ${isEdit && "hide"}`} onClick={() => setIsEdit(true)}>
+                  <Pencil size={14} />
+                </button>
+              </div>
+            )}
             <h1 className="product-title">{product.name}</h1>
 
             <div className="price-row">

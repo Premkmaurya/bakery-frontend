@@ -27,7 +27,14 @@ const Nav = () => {
   const location = useLocation();
   const animateRef = useRef(null);
   const navItems = ["Home", "Products", "About", "Contacts"];
-  const sidebarNavItems = ["Home", "Products", "Cart", "About", "Contacts"];
+  const sidebarNavItems = [
+    "Home",
+    "Products",
+    "About",
+    "Contacts",
+    "profile",
+    "Cart",
+  ];
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 

@@ -13,36 +13,7 @@ import axios from "axios";
 
 const MyOrders = () => {
   // === MOCK DATA ===
-  const [orders, setOrders] = useState([
-    {
-      id: "#ORD-7782",
-      date: "Dec 12, 2025",
-      status: "Processing", // Processing, Delivered, Cancelled
-      total: 125.5,
-      items: [
-        {
-          name: "Red Velvet Cake",
-          img: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=150&auto=format&fit=crop",
-        },
-        {
-          name: "Macarons (Box of 6)",
-          img: "https://images.unsplash.com/photo-1569864358642-9d1684040f43?q=80&w=150&auto=format&fit=crop",
-        },
-      ],
-    },
-    {
-      id: "#ORD-7750",
-      date: "Nov 28, 2025",
-      status: "Delivered",
-      total: 45.0,
-      items: [
-        {
-          name: "French Baguette",
-          img: "https://images.unsplash.com/photo-1589367920969-ab8e050bbb04?q=80&w=150&auto=format&fit=crop",
-        },
-      ],
-    },
-  ]);
+  const [orders, setOrders] = useState([]);
 
   useEffect(() => {
     // Fetch orders from backend API when component mounts
