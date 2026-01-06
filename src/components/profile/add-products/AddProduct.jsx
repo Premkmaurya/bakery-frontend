@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
@@ -6,7 +6,7 @@ import {
   Upload,
   X,
   Plus,
-  DollarSign,
+  IndianRupee,
   Tag,
   FileText,
   Image as ImageIcon,
@@ -14,11 +14,13 @@ import {
 import "./AddProduct.scss";
 import axios from "axios";
 
-const AddProduct = () => {
+const AddProduct = ({ product,setIsEdit }) => {
   const notyf = new Notyf();
   const [imagePreview, setImagePreview] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [editingId, setEditingId] = useState(null);
 
   const {
     register,
@@ -71,23 +73,71 @@ const AddProduct = () => {
     for (const key in submitData) {
       formPayload.append(key, submitData[key]);
     }
-    const response = await axios.post(
-      "http://localhost:3000/products/create",
-      formPayload,
-      {
-        withCredentials: true,
+    if (editingId) {
+      // Update existing product
+      try {
+        const response = await axios.patch(
+          `http://localhost:3000/products/update/${editingId}`,
+          formPayload,
+          {
+            withCredentials: true,
+          }
+        );
+        notyf.success("Product updated successfully!");
+        setIsLoading(false);
+        setIsEdit(false);
+        reset();
+        removeImage();
+      } catch (error) {
+        notyf.error("Failed to update product.");
       }
-    );
-    setIsLoading(false);
-    reset();
-    removeImage();
-    notyf.success({
-      message: `${formData.name} added successfully!`,
-      duration: 2000,
-      background: "#17701fff",
-      position: { x: "left", y: "bottom" },
-    });
+    } else {
+      const response = await axios.post(
+        "http://localhost:3000/products/create",
+        formPayload,
+        {
+          withCredentials: true,
+        }
+      );
+      setIsLoading(false);
+      reset();
+      removeImage();
+      notyf.success({
+        message: `${formData.name} added successfully!`,
+        duration: 2000,
+        background: "#17701fff",
+        position: { x: "left", y: "bottom" },
+      });
+    }
   };
+
+  useEffect(() => {
+    if (product) {
+      setEditingId(product._id);
+      reset({
+        name: product.name || "",
+        price: product.price || "",
+        category: product.category || "",
+        description: product.description || "",
+        details: product.details || "",
+        isFeatured: product.isFeatured || false,
+      });
+      if (product.imageUrl) {
+        setImagePreview(product.imageUrl);
+        setImageFile(null); // Clear file input since we're using existing image
+      }
+    } else {
+      reset({
+        name: "",
+        price: "",
+        category: "",
+        description: "",
+        details: "",
+        isFeatured: false,
+      });
+      removeImage();
+    }
+  }, [product]);
 
   return (
     <div className="add-product-wrapper">
@@ -149,7 +199,8 @@ const AddProduct = () => {
             <div className="form-group">
               <label>Price (₹) *</label>
               <div className="input-with-icon">
-                <DollarSign size={18} className="input-icon" />
+                <IndianRupee size={18} className="input-icon" />
+
                 <input
                   type="number"
                   placeholder="0.00"
@@ -237,8 +288,8 @@ const AddProduct = () => {
               <span className="loading-spinner"></span>
             ) : (
               <Plus size={20} />
-            )}{" "}
-            Add Product
+            )}
+            {editingId ? "Update Product" : "Add Product"}
           </button>
         </div>
       </form>

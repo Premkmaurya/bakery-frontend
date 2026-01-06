@@ -6,7 +6,7 @@ import axios from "axios";
 import { useAuth } from "../../../context/NavContext"; // Import useAuth to access NavContext
 
 const ManageAddress = () => {
-  const { addresses, updateAddresses, deleteAddress,editAddress } = useAuth(); // Use addresses and updateAddresses from NavContext
+  const { addresses, updateAddresses, deleteAddress, editAddress } = useAuth(); // Use addresses and updateAddresses from NavContext
   const [selectedAddressId, setSelectedAddressId] = useState(null);
 
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -30,7 +30,7 @@ const ManageAddress = () => {
     },
   });
 
-  // Open Form for Adding
+  // Open Form for Adding New Address
   const handleAddNew = () => {
     reset({
       addressType: "Home",
@@ -66,7 +66,7 @@ const ManageAddress = () => {
   const onSubmit = async (formData) => {
     try {
       if (editingId) {
-        editAddress(editingId,formData);
+        editAddress(editingId, formData);
       } else {
         // === ADD NEW ADDRESS ===
         const response = await axios.post(

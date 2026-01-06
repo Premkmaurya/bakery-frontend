@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from "react";
 import "./SingleProductHero.scss";
+
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../../../context/NavContext";
+import AddProduct from "../../profile/add-products/AddProduct";
+
+// ICONS
+import { TbTruckDelivery } from "react-icons/tb";
+import { GiCakeSlice } from "react-icons/gi";
+import { HiOutlineShieldCheck } from "react-icons/hi";
+import { IoMdClose } from "react-icons/io";
 import {
   ShoppingBag,
   ShoppingCart,
@@ -8,18 +18,13 @@ import {
   Pencil,
   Trash2,
 } from "lucide-react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../../../context/NavContext";
-import AddProduct from "../../profile/add-products/AddProduct";
 
-import { TbTruckDelivery } from "react-icons/tb";
-import { GiCakeSlice } from "react-icons/gi";
-import { HiOutlineShieldCheck } from "react-icons/hi";
-import { IoMdClose } from "react-icons/io";
-
+// GSAP FOR ANIMATIONS
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/all";
+
+// HTTP CLIENT && NOTFY FOR TOASTS
 import axios from "axios";
 import { Notyf } from "notyf";
 
@@ -133,6 +138,27 @@ const SingleProductHero = ({ product }) => {
     });
   }, []);
 
+  useGSAP(() => {
+    const tl = gsap.timeline({
+      defaults: {
+        duration: 0.3,
+        ease: "power3.in",
+      },
+    });
+    if (isEdit) {
+      tl.from(".edit-form", {
+        delay: -0.2,
+        x: 40,
+        opacity: 0,
+      });
+    } else {
+      tl.to(".edit-form", {
+        x: 40,
+        opacity: 0,
+      });
+    }
+  }, [isEdit]);
+
   // === 2. STATE FOR TABS ===
   const [quantity, setQuantity] = useState(1);
 
@@ -164,135 +190,151 @@ const SingleProductHero = ({ product }) => {
       .replace(/^<br\/>/, "");
   };
 
+  useEffect(() => {
+    if (isEdit) {
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.overflow = "hidden";
+    } else {
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+    }
+  }, [isEdit]);
+
   return (
-    <section className={`single-product-section ${isEdit ? "blur-bg" : ""}`}>
-      <div className="container">
-        <div className="product-layout">
-          {/* === LEFT COLUMN: IMAGE === */}
-          <div className={`product-image-wrapper ${isEdit && "hide"}`}>
-            <img src={product.imageUrl} alt={product.name} />
-          </div>
-
-          {user?.role === "admin" && isEdit && (
-            <>
-              <div className="edit-form">
-                <AddProduct />
-                <button className="close-icon" onClick={() => setIsEdit(false)}>
-                  <IoMdClose size={25} />
-                </button>
-              </div>
-            </>
-          )}
-
-          {/* === RIGHT COLUMN: DETAILS === */}
-          <div className="product-info-wrapper">
-            {user?.role === "admin" && (
-              <div className="admin-controls">
-                <button className={`edit-pill ${isEdit && "hide"}`} onClick={() => setIsEdit(true)}>
-                  <Pencil size={14} />
-                </button>
-              </div>
-            )}
-            <h1 className="product-title">{product.name}</h1>
-
-            <div className="price-row">
-              <span className="current-price">₹ {product.price}</span>
+    <>
+      <section className={`single-product-section ${isEdit ? "blur-bg" : ""}`}>
+        <div className={`container ${isEdit ? "hide" : ""}`}>
+          <div className="product-layout">
+            {/* === LEFT COLUMN: IMAGE === */}
+            <div className="product-image-wrapper">
+              <img src={product.imageUrl} alt={product.name} />
             </div>
 
-            {/* Action Area */}
-            <div className="actions-row">
-              {/* Quantity Counter */}
-              <div className="quantity-selector">
-                <button onClick={() => setQuantity(Math.max(1, quantity - 1))}>
-                  -
-                </button>
-                <span>{quantity}</span>
-                <button onClick={() => setQuantity(quantity + 1)}>+</button>
+            {/* === RIGHT COLUMN: DETAILS === */}
+            <div className="product-info-wrapper">
+              {user?.role === "admin" && (
+                <div className="admin-controls">
+                  <button
+                    className={`edit-pill ${isEdit && "hide"}`}
+                    onClick={() => setIsEdit(true)}
+                  >
+                    <Pencil size={14} />
+                  </button>
+                </div>
+              )}
+              <h1 className="product-title">{product.name}</h1>
+
+              <div className="price-row">
+                <span className="current-price">₹ {product.price}</span>
               </div>
 
-              {/* Order Button */}
-              <div className="order-btn">
-                <button
-                  onClick={() =>
-                    navigate(`/products/checkout`, {
-                      state: { product, quantity },
-                    })
-                  }
-                  className="common order-btn-1"
-                >
-                  <span>ORDER ONLINE</span>
-                  <ShoppingBag size={18} />
-                </button>
-                <button
-                  onClick={() => addToCart(product._id)}
-                  className="common order-btn-2"
-                >
-                  <ShoppingCart size={18} />
-                  <span>ADD TO CART</span>
-                </button>
-              </div>
-            </div>
+              {/* Action Area */}
+              <div className="actions-row">
+                {/* Quantity Counter */}
+                <div className="quantity-selector">
+                  <button
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  >
+                    -
+                  </button>
+                  <span>{quantity}</span>
+                  <button onClick={() => setQuantity(quantity + 1)}>+</button>
+                </div>
 
-            {/* Trust Badges (Bonus UX) */}
-            <div className="trust-badges">
-              <div className="badge">
-                <Truck size={16} />
-                <span>Fast Delivery</span>
+                {/* Order Button */}
+                <div className="order-btn">
+                  <button
+                    onClick={() =>
+                      navigate(`/products/checkout`, {
+                        state: { product, quantity },
+                      })
+                    }
+                    className="common order-btn-1"
+                  >
+                    <span>ORDER ONLINE</span>
+                    <ShoppingBag size={18} />
+                  </button>
+                  <button
+                    onClick={() => addToCart(product._id)}
+                    className="common order-btn-2"
+                  >
+                    <ShoppingCart size={18} />
+                    <span>ADD TO CART</span>
+                  </button>
+                </div>
               </div>
-              <div className="badge">
-                <ShieldCheck size={16} />
-                <span>Freshness Guaranteed</span>
-              </div>
-            </div>
 
-            {/* === TAB SYSTEM === */}
-            <div className="product-tabs">
-              <div className="desc">
-                <h4>Description</h4>
-                <p>{product.description}</p>
+              {/* Trust Badges (Bonus UX) */}
+              <div className="trust-badges">
+                <div className="badge">
+                  <Truck size={16} />
+                  <span>Fast Delivery</span>
+                </div>
+                <div className="badge">
+                  <ShieldCheck size={16} />
+                  <span>Freshness Guaranteed</span>
+                </div>
+              </div>
+
+              {/* === TAB SYSTEM === */}
+              <div className="product-tabs">
+                <div className="desc">
+                  <h4>Description</h4>
+                  <p>{product.description}</p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="product-info-grid">
-          {/* LEFT SIDE: PRODUCT DETAILS */}
-          <div className="product-details-wrapper">
-            <h1>Details</h1>
-            <p
-              dangerouslySetInnerHTML={{
-                __html: formatProductDetails(product.details),
-              }}
-            />
-          </div>
-
-          {/* RIGHT SIDE: WHY CHOOSE US */}
-          <div className="trust-signals-wrapper">
-            <h2>Why Choose Us?</h2>
-
-            <div className="signal-item">
-              <div className="icon-circle">
-                <TbTruckDelivery size={38} />
-              </div>
-              <p>Midnight Delivery Available</p>
+          <div className="product-info-grid">
+            {/* LEFT SIDE: PRODUCT DETAILS */}
+            <div className="product-details-wrapper">
+              <h1>Details</h1>
+              <p
+                dangerouslySetInnerHTML={{
+                  __html: formatProductDetails(product.details),
+                }}
+              />
             </div>
 
-            <div className="signal-item">
-              <div className="icon-circle">
-                <GiCakeSlice size={38} />
-              </div>
-              <p>Customizable Flavours</p>
-            </div>
+            {/* RIGHT SIDE: WHY CHOOSE US */}
+            <div className="trust-signals-wrapper">
+              <h2>Why Choose Us?</h2>
 
-            <div className="signal-item">
-              <div className="icon-circle">
-                <HiOutlineShieldCheck size={38} />
+              <div className="signal-item">
+                <div className="icon-circle">
+                  <TbTruckDelivery size={38} />
+                </div>
+                <p>Midnight Delivery Available</p>
               </div>
-              <p>Freshness Guarantee</p>
+
+              <div className="signal-item">
+                <div className="icon-circle">
+                  <GiCakeSlice size={38} />
+                </div>
+                <p>Customizable Flavours</p>
+              </div>
+
+              <div className="signal-item">
+                <div className="icon-circle">
+                  <HiOutlineShieldCheck size={38} />
+                </div>
+                <p>Freshness Guarantee</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+      {user?.role === "admin" && isEdit && (
+        <>
+          <div className="edit-form">
+            <AddProduct product={product} setIsEdit={setIsEdit} />
+            <button className="close-icon" onClick={() => setIsEdit(false)}>
+              <IoMdClose size={25} />
+            </button>
+          </div>
+        </>
+      )}
+    </>
   );
 };
 
