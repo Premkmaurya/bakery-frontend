@@ -14,7 +14,7 @@ import {
 import "./AddProduct.scss";
 import axios from "axios";
 
-const AddProduct = ({ product,setIsEdit }) => {
+const AddProduct = ({ product,setIsEdit,setProductData }) => {
   const notyf = new Notyf();
   const [imagePreview, setImagePreview] = useState(null);
   const [imageFile, setImageFile] = useState(null);
@@ -84,6 +84,7 @@ const AddProduct = ({ product,setIsEdit }) => {
           }
         );
         notyf.success("Product updated successfully!");
+        setProductData((prev) => ({ ...prev, ...formData }));
         setIsLoading(false);
         setIsEdit(false);
         reset();

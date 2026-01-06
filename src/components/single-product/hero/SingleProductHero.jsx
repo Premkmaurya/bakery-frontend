@@ -32,6 +32,8 @@ const SingleProductHero = ({ product }) => {
   // === NOTFY SETUP ===
   const notfy = new Notyf();
 
+  const [productData, setProductData] = useState(product);
+
   // === ROUTER & AUTH CONTEXT ===
   const navigate = useNavigate();
 
@@ -207,7 +209,7 @@ const SingleProductHero = ({ product }) => {
           <div className="product-layout">
             {/* === LEFT COLUMN: IMAGE === */}
             <div className="product-image-wrapper">
-              <img src={product.imageUrl} alt={product.name} />
+              <img src={productData.imageUrl} alt={productData.name} />
             </div>
 
             {/* === RIGHT COLUMN: DETAILS === */}
@@ -222,10 +224,10 @@ const SingleProductHero = ({ product }) => {
                   </button>
                 </div>
               )}
-              <h1 className="product-title">{product.name}</h1>
+              <h1 className="product-title">{productData.name}</h1>
 
               <div className="price-row">
-                <span className="current-price">₹ {product.price}</span>
+                <span className="current-price">₹ {productData.price}</span>
               </div>
 
               {/* Action Area */}
@@ -255,7 +257,7 @@ const SingleProductHero = ({ product }) => {
                     <ShoppingBag size={18} />
                   </button>
                   <button
-                    onClick={() => addToCart(product._id)}
+                    onClick={() => addToCart(productData._id)}
                     className="common order-btn-2"
                   >
                     <ShoppingCart size={18} />
@@ -280,7 +282,7 @@ const SingleProductHero = ({ product }) => {
               <div className="product-tabs">
                 <div className="desc">
                   <h4>Description</h4>
-                  <p>{product.description}</p>
+                  <p>{productData.description}</p>
                 </div>
               </div>
             </div>
@@ -291,7 +293,7 @@ const SingleProductHero = ({ product }) => {
               <h1>Details</h1>
               <p
                 dangerouslySetInnerHTML={{
-                  __html: formatProductDetails(product.details),
+                  __html: formatProductDetails(productData.details),
                 }}
               />
             </div>
@@ -327,7 +329,11 @@ const SingleProductHero = ({ product }) => {
       {user?.role === "admin" && isEdit && (
         <>
           <div className="edit-form">
-            <AddProduct product={product} setIsEdit={setIsEdit} />
+            <AddProduct
+              product={productData}
+              setProductData={setProductData}
+              setIsEdit={setIsEdit}
+            />
             <button className="close-icon" onClick={() => setIsEdit(false)}>
               <IoMdClose size={25} />
             </button>
