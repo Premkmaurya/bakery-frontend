@@ -9,10 +9,12 @@ import {
 import "./PaymentPage.scss";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../../context/NavContext";
 
 const PaymentPage = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
+  const { setOrders } = useAuth();
   // === STATE ===
   const [paymentMethod, setPaymentMethod] = useState("upi"); // 'upi' or 'cod'
   const [upiId, setUpiId] = useState("");
@@ -56,12 +58,13 @@ const PaymentPage = () => {
             withCredentials: true,
           }
         );
+        setOrders((prevOrders) => [...prevOrders, response.data]);
       } catch (error) {
         console.error("Error placing order:", error);
         throw new Error("Order placement failed");
       }
     });
-    navigate("/profile")
+    navigate("/profile", { state: { tab: "orders" } });
   };
 
   return (

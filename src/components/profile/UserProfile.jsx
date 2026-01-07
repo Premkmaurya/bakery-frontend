@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { LogOut, User, Package, MapPin, Lock, Plus } from "lucide-react";
 import "./UserProfile.scss";
 import { useAuth } from "../../context/NavContext";
@@ -14,6 +14,13 @@ const UserProfile = () => {
   const navigate = useNavigate();
   const { logout, user } = useAuth();
   const [activeTab, setActiveTab] = useState("personal"); // Default to Password Manager as per image
+
+  const { state } = useLocation();
+  useEffect(() => {
+    if (state?.tab) {
+      setActiveTab(state.tab);
+    }
+  }, [state]);
 
   const logoutHandler = async () => {
     const result = await logout();

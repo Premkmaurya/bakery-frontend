@@ -10,7 +10,7 @@ export const NavProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [addresses, setAddresses] = useState([]); // Added addresses state
-
+  const [orders, setOrders] = useState([]); // Added orders state
   // Check if user has valid token on mount
   useEffect(() => {
     checkAuthStatus();
@@ -118,6 +118,8 @@ export const NavProvider = ({ children }) => {
     updateAddresses, // Expose updateAddresses function
     deleteAddress, // Expose deleteAddress function
     editAddress, // Expose editAddress function
+    orders,
+    setOrders,
   };
 
   return <NavContext.Provider value={value}>{children}</NavContext.Provider>;

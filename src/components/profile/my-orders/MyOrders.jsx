@@ -17,10 +17,11 @@ import {
 } from "lucide-react";
 import "./MyOrders.scss";
 import axios from "axios";
+import { useAuth } from "../../../context/NavContext";
 
 const MyOrders = () => {
   // === MOCK DATA ===
-  const [orders, setOrders] = useState([]);
+  const { orders, setOrders } = useAuth();
   const notyf = new Notyf();
 
   useEffect(() => {
@@ -61,7 +62,6 @@ const MyOrders = () => {
   const deleteHandler = (orderId) => {
     // Implement delete order functionality here
     const deleteOrder = async (orderId) => {
-
       try {
         const response = await axios.delete(
           `http://localhost:3000/orders/deleteOrder/${orderId}`,
@@ -132,9 +132,7 @@ const MyOrders = () => {
                 </div>
                 <div className="quantity-wrapper">
                   <span className="label">Quantity</span>
-                  <span className="quantity">
-                    {order.quantity}
-                  </span>
+                  <span className="quantity">{order.quantity}</span>
                 </div>
 
                 <div className="actions">
@@ -143,7 +141,10 @@ const MyOrders = () => {
                       <Truck size={16} /> Track
                     </button>
                   )}
-                  <button onClick={() => deleteHandler(order._id)} className="btn-details">
+                  <button
+                    onClick={() => deleteHandler(order._id)}
+                    className="btn-details"
+                  >
                     Delete Order <Trash2 size={16} />
                   </button>
                 </div>
