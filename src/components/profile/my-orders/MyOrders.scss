@@ -142,7 +142,7 @@
         justify-content: space-between;
         align-items: center;
 
-        .total-wrapper {
+        .total-wrapper,.quantity-wrapper {
           .label {
             display: block;
             font-size: 0.8rem;
@@ -150,7 +150,7 @@
             text-transform: uppercase;
             margin-bottom: 0.2rem;
           }
-          .amount {
+          .amount,.quantity {
             font-family: var(--font-serif);
             font-size: 1.4rem;
             font-weight: 700;

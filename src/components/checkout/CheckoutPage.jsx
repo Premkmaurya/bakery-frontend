@@ -13,6 +13,8 @@ import {
 import "./CheckoutPage.scss";
 import { useAuth } from "../../context/NavContext";
 
+import axios from "axios";
+
 const CheckoutPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -108,7 +110,7 @@ const CheckoutPage = () => {
     } else {
       const response = await axios.post(
         "http://localhost:3000/user/add-address",
-        formData,
+        data,
         {
           withCredentials: true,
         }
@@ -116,7 +118,7 @@ const CheckoutPage = () => {
 
       const newAddress = {
         _id: response.data._id || response.data.id,
-        ...formData,
+        ...data,
       };
       updateAddresses([...addresses, newAddress]);
       setSelectedAddressId(newAddress._id);
@@ -169,6 +171,7 @@ const CheckoutPage = () => {
         subTotal,
         deliveryFee,
         total,
+        orderItems,
       },
     });
   };

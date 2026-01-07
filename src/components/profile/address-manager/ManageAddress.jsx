@@ -45,7 +45,8 @@ const ManageAddress = () => {
   };
 
   // Open Form for Editing
-  const handleEdit = (address) => {
+  const handleEdit = (e,address) => {
+    e.stopPropagation(); // Prevent selecting the card when clicking edit
     reset({
       ...address,
       fullName: address.fullName,

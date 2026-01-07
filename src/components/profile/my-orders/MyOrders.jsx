@@ -1,4 +1,11 @@
 import React, { useEffect, useState } from "react";
+import dayjs from "dayjs";
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
+
 import {
   Package,
   ChevronRight,
@@ -14,6 +21,7 @@ import axios from "axios";
 const MyOrders = () => {
   // === MOCK DATA ===
   const [orders, setOrders] = useState([]);
+  const notyf = new Notyf();
 
   useEffect(() => {
     // Fetch orders from backend API when component mounts
@@ -26,7 +34,7 @@ const MyOrders = () => {
           }
         );
         // Make sure orders is an array, fallback to empty array if undefined
-        setOrders(response.data.orders || []);
+        setOrders(response.data || []);
       } catch (error) {
         console.error("Error fetching orders:", error);
         // Keep the default mock data on error, or set to empty array
@@ -50,19 +58,43 @@ const MyOrders = () => {
     }
   };
 
+  const deleteHandler = (orderId) => {
+    // Implement delete order functionality here
+    const deleteOrder = async (orderId) => {
+
+      try {
+        const response = await axios.delete(
+          `http://localhost:3000/orders/deleteOrder/${orderId}`,
+          {
+            withCredentials: true,
+          }
+        );
+        notyf.success("Order deleted successfully");
+        // After successful deletion, update the orders state
+        setOrders(orders.filter((order) => order._id !== orderId));
+      } catch (error) {
+        console.error("Error deleting order:", error);
+        notyf.error("Failed to delete order");
+      }
+    };
+    deleteOrder(orderId);
+  };
+
   return (
     <div className="my-orders-wrapper">
       <div className="orders-list">
-        {orders?.map((order) => {
+        {orders.map((order) => {
           const statusConfig = getStatusConfig(order.status);
 
           return (
-            <div key={order.id} className="order-card">
+            <div key={order._id} className="order-card">
               {/* === CARD HEADER (ID & STATUS) === */}
               <div className="card-header">
                 <div className="order-meta">
-                  <h3 className="order-id">{order.id}</h3>
-                  <span className="order-date">{order.date}</span>
+                  <h3 className="order-id">{order._id}</h3>
+                  <span className="order-date">
+                    {dayjs(order.createdAt).fromNow()}
+                  </span>
                 </div>
                 <div className={`status-badge ${statusConfig.color}`}>
                   {statusConfig.icon}
@@ -73,18 +105,19 @@ const MyOrders = () => {
               {/* === CARD BODY (IMAGES & PREVIEW) === */}
               <div className="card-body">
                 <div className="items-preview">
-                  {order.items.map((item, index) => (
-                    <div key={index} className="item-thumb" title={item.name}>
-                      <img src={item.img} alt={item.name} />
-                    </div>
-                  ))}
+                  <div className="item-thumb" title={order.productId.name}>
+                    <img
+                      src={order.productId.imageUrl}
+                      alt={order.productId.name}
+                    />
+                  </div>
                   {/* Optional: Logic to show "+2 more" if too many items */}
                 </div>
                 <div className="items-text">
                   <p>
-                    {order.items[0].name}{" "}
-                    {order.items.length > 1 &&
-                      `+ ${order.items.length - 1} more`}
+                    {order.productId.name}{" "}
+                    {order.productId.length > 1 &&
+                      `+ ${order.productId.length - 1} more`}
                   </p>
                 </div>
               </div>
@@ -93,7 +126,15 @@ const MyOrders = () => {
               <div className="card-footer">
                 <div className="total-wrapper">
                   <span className="label">Total Amount</span>
-                  <span className="amount">₹{order.total.toFixed(2)}</span>
+                  <span className="amount">
+                    ₹{order.productId.price.toFixed(2)}
+                  </span>
+                </div>
+                <div className="quantity-wrapper">
+                  <span className="label">Quantity</span>
+                  <span className="quantity">
+                    {order.quantity}
+                  </span>
                 </div>
 
                 <div className="actions">
@@ -102,7 +143,7 @@ const MyOrders = () => {
                       <Truck size={16} /> Track
                     </button>
                   )}
-                  <button className="btn-details">
+                  <button onClick={() => deleteHandler(order._id)} className="btn-details">
                     Delete Order <Trash2 size={16} />
                   </button>
                 </div>
