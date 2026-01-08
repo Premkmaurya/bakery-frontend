@@ -10,7 +10,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Products from "../pages/Products";
 import SingleProduct from "../pages/SingleProduct";
-import Checkout from "../pages/CheckOut";
+import Checkout from "../pages/Checkout";
 import Cart from "../pages/Cart";
 import PaymentMethod from "../pages/PaymentMethod";
 import Profile from "../pages/Profile";
