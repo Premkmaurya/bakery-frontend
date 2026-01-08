@@ -59,6 +59,11 @@ const UserProfile = () => {
             label: "Add Products",
             icon: <Plus size={20} />,
           },
+          {
+            id: "manage products",
+            label: "Manage Products",
+            icon: <Package size={20} />,
+          }
         ]
       : []),
     { id: "wishlist", label: "My Wishlist", icon: <Package size={20} /> },
