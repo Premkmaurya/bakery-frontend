@@ -48,36 +48,46 @@ const MyOrders = () => {
   // Helper to get status color and icon
   const getStatusConfig = (status) => {
     switch (status) {
-      case "Delivered":
+      case "delivered":
         return { color: "green", icon: <CheckCircle size={14} /> };
-      case "Processing":
+      case "processing":
         return { color: "blue", icon: <Clock size={14} /> };
-      case "Cancelled":
+      case "cancelled":
         return { color: "red", icon: <XCircle size={14} /> };
       default:
         return { color: "gray", icon: <Package size={14} /> };
     }
   };
 
-  const deleteHandler = (orderId) => {
-    // Implement delete order functionality here
-    const deleteOrder = async (orderId) => {
-      try {
-        const response = await axios.delete(
-          `http://localhost:3000/orders/deleteOrder/${orderId}`,
-          {
-            withCredentials: true,
-          }
-        );
-        notyf.success("Order deleted successfully");
-        // After successful deletion, update the orders state
-        setOrders(orders.filter((order) => order._id !== orderId));
-      } catch (error) {
-        console.error("Error deleting order:", error);
-        notyf.error("Failed to delete order");
-      }
-    };
-    deleteOrder(orderId);
+  const cancelHandler = (orderId) => {
+    try{
+      axios.patch(`http://localhost:3000/orders/updateOrderStatus/${orderId}`, {status:"cancelled"}, {
+        withCredentials: true,
+      });
+      setOrders(orders.map(order => order._id === orderId ? {...order, status: "Cancelled"} : order));
+      notyf.success("Order cancelled successfully")
+
+    }catch(error){
+      console.error("Error cancelling order:", error);
+      notyf.error("Failed to cancel order");
+    }
+  };
+
+  const deleteHandler = async (orderId) => {
+    try {
+      await axios.delete(
+        `http://localhost:3000/orders/deleteOrder/${orderId}`,
+        {
+          withCredentials: true,
+        }
+      );
+      notyf.success("Order deleted successfully");
+      // After successful deletion, update the orders state
+      setOrders(orders.filter((order) => order._id !== orderId));
+    } catch (error) {
+      console.error("Error deleting order:", error);
+      notyf.error("Failed to delete order");
+    }
   };
 
   return (
@@ -136,16 +146,26 @@ const MyOrders = () => {
                 </div>
 
                 <div className="actions">
-                  {order.status === "Processing" && (
+                  {order.status === "processing" && (
                     <button className="btn-track">
                       <Truck size={16} /> Track
                     </button>
                   )}
                   <button
-                    onClick={() => deleteHandler(order._id)}
-                    className="btn-details"
+                    onClick={() => cancelHandler(order._id)}
+                    className={`btn-details ${
+                      order.status === "cancelled" || order.status === "delivered"
+                        ? "disabled"
+                        : ""
+                    }`}
+                    disabled={order.status === "cancelled" || order.status === "delivered"}
                   >
-                    Delete Order <Trash2 size={16} />
+                    Cancel Order
+                  </button>
+                </div>
+                <div className="delete-order">
+                  <button onClick={() => deleteHandler(order._id)} className="btn-delete" title="Delete Order">
+                    <Trash2 size={16} />
                   </button>
                 </div>
               </div>

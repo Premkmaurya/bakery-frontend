@@ -142,7 +142,8 @@
         justify-content: space-between;
         align-items: center;
 
-        .total-wrapper,.quantity-wrapper {
+        .total-wrapper,
+        .quantity-wrapper {
           .label {
             display: block;
             font-size: 0.8rem;
@@ -150,7 +151,8 @@
             text-transform: uppercase;
             margin-bottom: 0.2rem;
           }
-          .amount,.quantity {
+          .amount,
+          .quantity {
             font-family: var(--font-serif);
             font-size: 1.4rem;
             font-weight: 700;
@@ -193,6 +195,30 @@
             &:hover {
               border-color: var(--color-accent);
               color: var(--color-accent);
+            }
+          }
+          .disabled {
+            background-color: #f5f5f5;
+            border-color: #ddd;
+            color: #aaa;
+            cursor: not-allowed;
+
+            &:hover {
+              background-color: #f5f5f5;
+              border-color: #ddd;
+              color: #aaa;
+            }
+          }
+        }
+        .delete-order {
+          .btn-delete {
+            background-color: #fff0f0;
+            border: none;
+            color: var(--color-text-main);
+
+            &:hover {
+              background-color: #f8d7da;
+              border-color: #f5c2c2;
             }
           }
         }
