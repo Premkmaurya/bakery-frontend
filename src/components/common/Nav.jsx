@@ -216,12 +216,14 @@ const Nav = () => {
               {sidebarNavItems.map((item, index) => {
                 // Safe handling for string generation
                 const itemText = typeof item === "string" ? item : String(item);
-                const urlSlug = itemText.toLowerCase().replace(/\s+/g, "-");
-                const toPath = urlSlug === "home" ? "/" : `/${urlSlug}`;
 
                 return (
                   <Link
-                    to={toPath}
+                    to={`/${
+                      item.toLowerCase().replace(/\s+/g, "-") === "home"
+                        ? ""
+                        : item.toLowerCase().replace(/\s+/g, "-")
+                    }`}
                     key={itemText || index}
                     className={`links ${
                       activeLink === itemText ? "active" : ""
