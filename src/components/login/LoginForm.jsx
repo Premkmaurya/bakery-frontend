@@ -8,9 +8,13 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/all";
 
+import { useAuth } from "../../context/NavContext";
+
 const Form = () => {
   const navigate = useNavigate();
   // Destructure the magic tools from the hook
+
+  const { setIsLoggedIn } = useAuth();
 
   gsap.registerPlugin(useGSAP);
   gsap.registerPlugin(SplitText);
@@ -83,6 +87,7 @@ const Form = () => {
           withCredentials: true,
         }
       );
+      setIsLoggedIn(true);
       console.log("Login successful:", response.data);
     } catch (error) {
       console.error("Login error:", error);

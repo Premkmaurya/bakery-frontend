@@ -8,6 +8,8 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/all";
 
+import { useAuth } from "../../context/NavContext";
+
 // Strong password regex: at least 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char
 const STRONG_PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
@@ -16,6 +18,8 @@ const ResiterForm = () => {
   // Destructure the magic tools from the hook
   gsap.registerPlugin(useGSAP);
   gsap.registerPlugin(SplitText);
+
+  const { setIsLoggedIn } = useAuth();
 
   useGSAP(() => {
     document.fonts.ready.then(() => {
@@ -110,6 +114,7 @@ const ResiterForm = () => {
           withCredentials: true,
         }
       );
+      setIsLoggedIn(true);
       console.log("Registration successful:", response.data);
     } catch (error) {
       console.error("Registration error:", error);
