@@ -57,7 +57,7 @@ const ReviewsPage = ({ product }) => {
   useEffect(() => {
     const fetchReviews = async () => {
       const response = await axios.get(
-        `http://localhost:3000/reviews/get/${product._id}`,
+        `https://bakery-backend-two.vercel.app/reviews/get/${product._id}`,
         {
           withCredentials: true,
         }
@@ -142,7 +142,7 @@ const ReviewsPage = ({ product }) => {
       return;
     }
     const addReview = await axios.post(
-      `http://localhost:3000/reviews/create/${product._id}`,
+      `https://bakery-backend-two.vercel.app/reviews/create/${product._id}`,
       data,
       {
         withCredentials: true,

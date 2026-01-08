@@ -63,7 +63,7 @@ const WishlistPage = () => {
   useEffect(() => {
     const fetchWishlistItems = async () => {
       const response = await axios.get(
-        "http://localhost:3000/wishlist/getWishlist",
+        "https://bakery-backend-two.vercel.app/wishlist/getWishlist",
         {
           withCredentials: true,
         }
@@ -78,14 +78,14 @@ const WishlistPage = () => {
     setWishlistItems((prev) =>
       prev.filter((item) => item.productId._id !== id)
     );
-    await axios.post(`http://localhost:3000/wishlist/toggleWishlist/${id}`, {
+    await axios.post(`https://bakery-backend-two.vercel.app/wishlist/toggleWishlist/${id}`, {
       withCredentials: true,
     });
   };
 
   const addToCart = async (item) => {
     const response = await axios.post(
-      `http://localhost:3000/cart/addToCart/${item.productId._id}`,
+      `https://bakery-backend-two.vercel.app/cart/addToCart/${item.productId._id}`,
       {
         quantity: 1,
       },

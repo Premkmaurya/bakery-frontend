@@ -77,7 +77,7 @@ const Form = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/auth/login",
+        "https://bakery-backend-two.vercel.app/auth/login",
         data,
         {
           withCredentials: true,
@@ -91,7 +91,7 @@ const Form = () => {
   };
 
   const googleLogin = () => {
-    window.location.href = "http://localhost:3000/auth/google";
+    window.location.href = "https://bakery-backend-two.vercel.app/auth/google";
   };
 
   const loginImage =

@@ -166,7 +166,7 @@ const SingleProductHero = ({ product }) => {
 
   const addToCart = async (item) => {
     const response = await axios.post(
-      `http://localhost:3000/cart/addToCart/${item}`,
+      `https://bakery-backend-two.vercel.app/cart/addToCart/${item}`,
       {
         quantity: 1,
       },

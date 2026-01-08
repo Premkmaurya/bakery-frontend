@@ -104,7 +104,7 @@ const ResiterForm = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/auth/register",
+        "https://bakery-backend-two.vercel.app/auth/register",
         data,
         {
           withCredentials: true,
@@ -118,7 +118,7 @@ const ResiterForm = () => {
   };
 
   const googleRegister = () => {
-    window.location.href = "http://localhost:3000/auth/google";
+    window.location.href = "https://bakery-backend-two.vercel.app/auth/google";
   };
 
 

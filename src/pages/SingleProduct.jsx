@@ -13,7 +13,7 @@ const SingleProduct = () => {
   useEffect(() => {
     const fetchRelatedProducts = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/products/${product._id}/related`);
+        const response = await axios.get(`https://bakery-backend-two.vercel.app/products/${product._id}/related`);
         setRelatedProducts(response.data);
       } catch (error) {
         console.error("Error fetching related products:", error);

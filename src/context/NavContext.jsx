@@ -19,7 +19,7 @@ export const NavProvider = ({ children }) => {
 
   const checkAuthStatus = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/auth/verify");
+      const response = await axios.get("https://bakery-backend-two.vercel.app/auth/verify");
       setUser(response.data.user);
       setIsLoggedIn(true);
     } catch (error) {
@@ -34,7 +34,7 @@ export const NavProvider = ({ children }) => {
   const getAddresses = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/user/get-addresses",
+        "https://bakery-backend-two.vercel.app/user/get-addresses",
         {
           withCredentials: true,
         }
@@ -48,7 +48,7 @@ export const NavProvider = ({ children }) => {
   const logout = async () => {
     try {
       await axios.post(
-        "http://localhost:3000/auth/logout",
+        "https://bakery-backend-two.vercel.app/auth/logout",
         {},
         {
           withCredentials: true,
@@ -76,7 +76,7 @@ export const NavProvider = ({ children }) => {
 
   const deleteAddress = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/user/delete-address/${id}`, {
+      await axios.delete(`https://bakery-backend-two.vercel.app/user/delete-address/${id}`, {
         withCredentials: true,
       });
       setAddresses((prev) => prev.filter((addr) => addr._id !== id));
@@ -90,7 +90,7 @@ export const NavProvider = ({ children }) => {
   const editAddress = async (id, updatedData) => {
     try {
       const response = await axios.patch(
-        `http://localhost:3000/user/update-address/${id}`,
+        `https://bakery-backend-two.vercel.app/user/update-address/${id}`,
         updatedData,
         {
           withCredentials: true,

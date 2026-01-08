@@ -52,7 +52,7 @@ const PaymentPage = () => {
 
       try {
         const response = await axios.post(
-          "http://localhost:3000/orders/createOrder",
+          "https://bakery-backend-two.vercel.app/orders/createOrder",
           orderData,
           {
             withCredentials: true,

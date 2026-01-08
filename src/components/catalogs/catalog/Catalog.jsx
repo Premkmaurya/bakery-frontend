@@ -22,7 +22,7 @@ const Catalog = () => {
     async function fetchWishedProducts() {
       try {
         const response = await axios.get(
-          "http://localhost:3000/wishlist/getWishlist",
+          "https://bakery-backend-two.vercel.app/wishlist/getWishlist",
           {
             withCredentials: true,
           }
@@ -59,7 +59,7 @@ const Catalog = () => {
             maxPrice,
           };
           const response = await axios.get(
-            "http://localhost:3000/products/search",
+            "https://bakery-backend-two.vercel.app/products/search",
             {
               params,
               withCredentials: true,
@@ -84,7 +84,7 @@ const Catalog = () => {
       [productId]: !prev[productId],
     }));
     const response = await axios.post(
-      `http://localhost:3000/wishlist/toggleWishlist/${productId}`,
+      `https://bakery-backend-two.vercel.app/wishlist/toggleWishlist/${productId}`,
       { productId },
       {
         withCredentials: true,
@@ -152,7 +152,7 @@ const Catalog = () => {
 
   const addToCart = async (id) => {
     const response = await axios.post(
-      `http://localhost:3000/cart/addToCart/${id}`,
+      `https://bakery-backend-two.vercel.app/cart/addToCart/${id}`,
       {
         quantity: 1,
       },

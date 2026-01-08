@@ -71,7 +71,7 @@ const ManageAddress = () => {
       } else {
         // === ADD NEW ADDRESS ===
         const response = await axios.post(
-          "http://localhost:3000/user/add-address",
+          "https://bakery-backend-two.vercel.app/user/add-address",
           formData,
           {
             withCredentials: true,

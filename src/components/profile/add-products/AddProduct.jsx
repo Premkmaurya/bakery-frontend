@@ -77,7 +77,7 @@ const AddProduct = ({ product,setIsEdit,setProductData }) => {
       // Update existing product
       try {
         const response = await axios.patch(
-          `http://localhost:3000/products/update/${editingId}`,
+          `https://bakery-backend-two.vercel.app/products/update/${editingId}`,
           formPayload,
           {
             withCredentials: true,
@@ -94,7 +94,7 @@ const AddProduct = ({ product,setIsEdit,setProductData }) => {
       }
     } else {
       const response = await axios.post(
-        "http://localhost:3000/products/create",
+        "https://bakery-backend-two.vercel.app/products/create",
         formPayload,
         {
           withCredentials: true,
