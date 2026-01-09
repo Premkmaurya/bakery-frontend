@@ -85,6 +85,7 @@ const Form = () => {
 
   // This function only runs if validation passes
   const onSubmit = async (data) => {
+    setIsLoading(true);
     try {
       const response = await axios.post(
         "https://bakery-backend-two.vercel.app/auth/login",
@@ -93,11 +94,13 @@ const Form = () => {
           withCredentials: true,
         }
       );
-      setIsLoading(true);
+      setIsLoading(false);
       setIsLoggedIn(true);
       navigate("/");
       notfy.success("Login Successful");
     } catch (error) {
+      setIsLoading(false);
+      notfy.error(error.response.data.message || "Login Failed");
       console.error("Login error:", error);
     }
   };

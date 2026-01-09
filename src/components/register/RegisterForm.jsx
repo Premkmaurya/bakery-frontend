@@ -115,6 +115,7 @@ const ResiterForm = () => {
 
   // This function only runs if validation passes
   const onSubmit = async (data) => {
+    setIsLoading(true);
     try {
       const response = await axios.post(
         "https://bakery-backend-two.vercel.app/auth/register",
@@ -123,11 +124,12 @@ const ResiterForm = () => {
           withCredentials: true,
         }
       );
-      setIsLoading(true);
+      setIsLoading(false);
       setIsLoggedIn(true);
       navigate("/");
       notfy.success("Registration Successful");
     } catch (error) {
+      setIsLoading(false);
       console.error("Registration error:", error);
     }
   };
