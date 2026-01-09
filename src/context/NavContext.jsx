@@ -110,6 +110,7 @@ export const NavProvider = ({ children }) => {
 
   const value = {
     isLoggedIn,
+    setIsLoggedIn,
     user,
     loading,
     logout,

@@ -124,7 +124,7 @@ const ResiterForm = () => {
       );
       setIsLoggedIn(true);
       console.log("Registration successful:", response.data);
-      window.location.href = "/";
+      navigate("/");
       notfy.success("Registration Successful");
     } catch (error) {
       console.error("Registration error:", error);

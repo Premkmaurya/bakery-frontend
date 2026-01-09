@@ -95,7 +95,7 @@ const Form = () => {
       );
       setIsLoggedIn(true);
       console.log("Login successful:", response.data);
-      window.location.href = "/";
+      navigate("/");
       notfy.success("Login Successful");
     } catch (error) {
       console.error("Login error:", error);
