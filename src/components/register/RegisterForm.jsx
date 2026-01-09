@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form"; // Import the hook
 import { Link, useNavigate } from "react-router-dom";
 import "./RegisterForm.scss";
@@ -8,14 +8,13 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/all";
 
-
 import { Notyf } from "notyf";
-
 
 import { useAuth } from "../../context/NavContext";
 
 // Strong password regex: at least 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char
-const STRONG_PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+const STRONG_PASSWORD_REGEX =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 const ResiterForm = () => {
   const navigate = useNavigate();
@@ -26,6 +25,8 @@ const ResiterForm = () => {
   const { setIsLoggedIn } = useAuth();
 
   const notfy = new Notyf();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   // === GSAP ANIMATIONS ===
 
@@ -122,8 +123,8 @@ const ResiterForm = () => {
           withCredentials: true,
         }
       );
+      setIsLoading(true);
       setIsLoggedIn(true);
-      console.log("Registration successful:", response.data);
       navigate("/");
       notfy.success("Registration Successful");
     } catch (error) {
@@ -134,7 +135,6 @@ const ResiterForm = () => {
   const googleRegister = () => {
     window.location.href = "https://bakery-backend-two.vercel.app/auth/google";
   };
-
 
   const loginImage =
     "https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=1000&auto=format&fit=crop";
@@ -222,7 +222,8 @@ const ResiterForm = () => {
                   required: "Password is required",
                   pattern: {
                     value: STRONG_PASSWORD_REGEX,
-                    message: "Password must be at least 8 characters with uppercase, lowercase, number & special char (@$!%*?&)",
+                    message:
+                      "Password must be at least 8 characters with uppercase, lowercase, number & special char (@$!%*?&)",
                   },
                 })}
                 className={errors.password ? "input-error" : ""}
@@ -230,22 +231,31 @@ const ResiterForm = () => {
               {errors.password && (
                 <span className="error-msg">{errors.password.message}</span>
               )}
-              
+
               {/* Password Strength Bar */}
               {password && (
                 <div className="password-strength">
                   <div className="strength-bar-bg">
-                    <div 
-                      className="strength-bar-fill" 
+                    <div
+                      className="strength-bar-fill"
                       style={{
                         width: `${passwordStrength}%`,
                         backgroundColor: getStrengthColor(),
-                        transition: "all 0.3s ease"
+                        transition: "all 0.3s ease",
                       }}
                     ></div>
                   </div>
-                  <span className="strength-label" style={{ color: getStrengthColor() }}>
-                    {passwordStrength < 25 ? "Weak" : passwordStrength < 50 ? "Fair" : passwordStrength < 75 ? "Good" : "Strong"}
+                  <span
+                    className="strength-label"
+                    style={{ color: getStrengthColor() }}
+                  >
+                    {passwordStrength < 25
+                      ? "Weak"
+                      : passwordStrength < 50
+                      ? "Fair"
+                      : passwordStrength < 75
+                      ? "Good"
+                      : "Strong"}
                   </span>
                 </div>
               )}
@@ -270,7 +280,6 @@ const ResiterForm = () => {
                   {errors.confirmPassword.message}
                 </span>
               )}
-
             </div>
 
             {/* Google Login Button */}
@@ -287,11 +296,12 @@ const ResiterForm = () => {
             </div>
 
             {/* Submit Button (Missing in previous wireframe but essential!) */}
-            <button
-              type="submit"
-              className="submit-btn"
-            >
-              Register
+            <button type="submit" className="submit-btn">
+              {isLoading ? (
+                <span className="loading-spinner"></span>
+              ) : (
+                "Register"
+              )}
             </button>
 
             {/* Login Link */}

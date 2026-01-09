@@ -80,7 +80,6 @@ export const NavProvider = ({ children }) => {
         withCredentials: true,
       });
       setAddresses((prev) => prev.filter((addr) => addr._id !== id));
-      console.log("Address deleted successfully");
     } catch (error) {
       console.error("Error deleting address:", error);
       throw new Error("Failed to delete address. Please try again.");
@@ -101,7 +100,6 @@ export const NavProvider = ({ children }) => {
           addr._id === id ? { ...updatedData, _id: id } : addr
         )
       );
-      console.log("Address updated successfully:", response.data);
     } catch (error) {
       console.error("Error updating address:", error);
       throw new Error("Failed to update address. Please try again.");

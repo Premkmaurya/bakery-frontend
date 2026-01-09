@@ -19,7 +19,6 @@ const ContactForm = () => {
   });
 
   const onSubmit = (data) => {
-    console.log("Form Submitted:", data);
     alert("Thanks for your message! We will get back to you shortly.");
     reset();
     // Here you would normally send 'data' to your backend API

@@ -84,7 +84,6 @@ const ManageAddress = () => {
           ...formData,
         };
         updateAddresses([...addresses, newAddress]);
-        console.log("Address added successfully:", response.data);
       }
 
       handleCancel();

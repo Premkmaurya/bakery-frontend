@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form"; // Import the hook
 import { Link, useNavigate } from "react-router-dom";
 import "./LoginForm.scss";
@@ -9,7 +9,6 @@ import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/all";
 import { Notyf } from "notyf";
 
-
 import { useAuth } from "../../context/NavContext";
 
 const Form = () => {
@@ -19,6 +18,7 @@ const Form = () => {
   const { setIsLoggedIn } = useAuth();
 
   const notfy = new Notyf();
+  const [isLoading, setIsLoading] = useState(false);
 
   // === GSAP ANIMATIONS ===
 
@@ -93,8 +93,8 @@ const Form = () => {
           withCredentials: true,
         }
       );
+      setIsLoading(true);
       setIsLoggedIn(true);
-      console.log("Login successful:", response.data);
       navigate("/");
       notfy.success("Login Successful");
     } catch (error) {
@@ -178,7 +178,7 @@ const Form = () => {
 
             {/* Submit Button (Missing in previous wireframe but essential!) */}
             <button type="submit" className="submit-btn">
-              Login
+              {isLoading ? <span className="loading-spinner"></span> : "Login"}
             </button>
 
             {/* Register Link */}
