@@ -181,7 +181,7 @@ const Form = () => {
 
             {/* Submit Button (Missing in previous wireframe but essential!) */}
             <button type="submit" className="submit-btn">
-              {isLoading ? <span className="loading-spinner"></span> : "Login"}
+              {isLoading ? "Logging in..." : "Login"}
             </button>
 
             {/* Register Link */}

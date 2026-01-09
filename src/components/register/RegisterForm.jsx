@@ -299,11 +299,7 @@ const ResiterForm = () => {
 
             {/* Submit Button (Missing in previous wireframe but essential!) */}
             <button type="submit" className="submit-btn">
-              {isLoading ? (
-                <span className="loading-spinner"></span>
-              ) : (
-                "Register"
-              )}
+              {isLoading ? "Registering..." : "Register"}
             </button>
 
             {/* Login Link */}
