@@ -8,6 +8,10 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/all";
 
+
+import { Notyf } from "notyf";
+
+
 import { useAuth } from "../../context/NavContext";
 
 // Strong password regex: at least 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char
@@ -20,6 +24,10 @@ const ResiterForm = () => {
   gsap.registerPlugin(SplitText);
 
   const { setIsLoggedIn } = useAuth();
+
+  const notfy = new Notyf();
+
+  // === GSAP ANIMATIONS ===
 
   useGSAP(() => {
     document.fonts.ready.then(() => {
@@ -116,10 +124,11 @@ const ResiterForm = () => {
       );
       setIsLoggedIn(true);
       console.log("Registration successful:", response.data);
+      window.location.href = "/";
+      notfy.success("Registration Successful");
     } catch (error) {
       console.error("Registration error:", error);
     }
-    navigate("/")
   };
 
   const googleRegister = () => {

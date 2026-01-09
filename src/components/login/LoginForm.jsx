@@ -7,6 +7,8 @@ import axios from "axios";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/all";
+import { Notyf } from "notyf";
+
 
 import { useAuth } from "../../context/NavContext";
 
@@ -15,6 +17,10 @@ const Form = () => {
   // Destructure the magic tools from the hook
 
   const { setIsLoggedIn } = useAuth();
+
+  const notfy = new Notyf();
+
+  // === GSAP ANIMATIONS ===
 
   gsap.registerPlugin(useGSAP);
   gsap.registerPlugin(SplitText);
@@ -89,10 +95,11 @@ const Form = () => {
       );
       setIsLoggedIn(true);
       console.log("Login successful:", response.data);
+      window.location.href = "/";
+      notfy.success("Login Successful");
     } catch (error) {
       console.error("Login error:", error);
     }
-    navigate("/");
   };
 
   const googleLogin = () => {
