@@ -96,8 +96,8 @@ const Form = () => {
       );
       setIsLoading(false);
       setIsLoggedIn(true);
-      navigate("/");
       notfy.success("Login Successful");
+      setTimeout(() => navigate("/profile"), 200);
     } catch (error) {
       setIsLoading(false);
       notfy.error(error.response.data.message || "Login Failed");
