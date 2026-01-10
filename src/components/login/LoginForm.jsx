@@ -87,7 +87,7 @@ const Form = () => {
   const onSubmit = async (data) => {
     setIsLoading(true);
     try {
-      const response = await axios.post(
+      await axios.post(
         "https://bakery-backend-two.vercel.app/auth/login",
         data,
         {
@@ -97,7 +97,7 @@ const Form = () => {
       setIsLoading(false);
       setIsLoggedIn(true);
       notfy.success("Login Successful");
-      setTimeout(() => navigate("/profile"), 200);
+      setTimeout(() => window.location.href = "/profile", 200);
     } catch (error) {
       setIsLoading(false);
       notfy.error(error.response.data.message || "Login Failed");
