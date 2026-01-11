@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { LogOut, User, Package, MapPin, Lock, Plus } from "lucide-react";
 import "./UserProfile.scss";

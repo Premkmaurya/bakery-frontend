@@ -323,43 +323,9 @@
         .item-price {
           font-weight: 700;
           color: var(--color-text-main);
-        }
-        .qty-adjuster {
           display: flex;
           align-items: center;
-          background-color: #f9f9f9;
-          border-radius: 6px;
-          padding: 2px;
-          border: 1px solid #eee;
-
-          .qty-btn {
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            background: white;
-            border-radius: 4px;
-            cursor: pointer;
-            color: var(--color-text-main);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            transition: all 0.2s;
-
-            &:hover {
-              background-color: var(--color-accent);
-              color: white;
-            }
-          }
-
-          .qty-value {
-            font-family: var(--font-sans);
-            font-weight: 700;
-            padding: 0 10px;
-            font-size: 0.9rem;
-            min-width: 30px;
-            text-align: center;
-          }
+          justify-content: center;
         }
       }
     }

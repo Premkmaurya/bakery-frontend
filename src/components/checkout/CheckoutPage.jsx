@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
-  MapPin,
+  IndianRupee,
   Plus,
   Edit2,
   Trash2,
@@ -387,26 +387,7 @@ const CheckoutPage = () => {
                           {expandedItemId !== id && <span> Read More</span>}
                         </p>
                       </div>
-                      <span className="item-price">${price}</span>
-                      <div className="qty-adjuster">
-                        <button
-                          className="qty-btn"
-                          onClick={() =>
-                            updateQuantity(item._id, item.quantity - 1)
-                          }
-                        >
-                          <Minus size={14} />
-                        </button>
-                        <span className="qty-value">{item.quantity}</span>
-                        <button
-                          className="qty-btn"
-                          onClick={() =>
-                            updateQuantity(item._id, item.quantity + 1)
-                          }
-                        >
-                          <Plus size={14} />
-                        </button>
-                      </div>
+                      <span className="item-price"><IndianRupee  size={14}/>{price}</span>
                     </div>
                   );
                 })}
