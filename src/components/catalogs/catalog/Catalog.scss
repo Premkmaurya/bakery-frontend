@@ -9,7 +9,7 @@
   background-color: #f9f9f9; // Slight off-white background to make cards pop
   min-height: 80vh;
   @include mobile {
-    padding: 2rem 0.8rem;
+    padding: 0;
   }
 
   .container {
@@ -145,7 +145,7 @@
 
     @include mobile {
       grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
+      gap: 0;
     }
 
     .product-card-wrapper {
@@ -170,7 +170,6 @@
 
       .product-card {
         background: white;
-        border-radius: 15px;
         overflow: hidden;
         cursor: pointer;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -210,6 +209,10 @@
             color: #2d3436;
             margin-bottom: 0.4rem;
             line-height: 1.3;
+            @include mobile {
+              font-size: 1rem;
+              line-height: 1.2;
+            }
           }
 
           .product-category {
@@ -218,12 +221,18 @@
             text-transform: uppercase;
             letter-spacing: 1.5px;
             margin-bottom: 0.8rem;
+            @include mobile {
+              font-size: 0.65rem;
+            }
           }
 
           .price {
             font-size: 1.2rem;
             font-weight: 700;
             color: #d4a373; // Premium gold color from reference
+            @include mobile {
+              font-size: 1rem;
+            }
           }
           .add-to-cart-btn {
             margin-top: 1.5rem;
@@ -247,6 +256,11 @@
             transition: all 0.3s ease;
             position: relative;
             z-index: 999;
+
+            @include mobile {
+              font-size: 0.7rem;
+              padding: 0.6rem;
+            }
 
             &:hover {
               background-color: var(--color-accent); // Pink/Red on hover
