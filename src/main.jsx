@@ -5,6 +5,9 @@ import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 import { NavProvider } from "./context/NavContext.jsx";
 import gsap from "gsap"
+import axios from "axios";
+
+axios.defaults.withCredentials = true;
 
 
 gsap.config({ nullTargetWarn: false });
