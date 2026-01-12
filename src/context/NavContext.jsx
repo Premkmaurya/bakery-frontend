@@ -19,7 +19,9 @@ export const NavProvider = ({ children }) => {
 
   const checkAuthStatus = async () => {
     try {
-      const response = await axios.get("https://bakery-backend-two.vercel.app/auth/verify");
+      const response = await axios.get("https://bakery-backend-two.vercel.app/auth/verify",{
+        withCredentials: true,
+      });
       setUser(response.data.user);
       setIsLoggedIn(true);
     } catch (error) {
