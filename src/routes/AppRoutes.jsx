@@ -17,6 +17,7 @@ import Profile from "../pages/Profile";
 import WishList from "../pages/WishList";
 
 import ProtectedRoute from "./ProtectedRoutes";
+import OAuthSuccess from "../pages/OAuthSuccess";
 
 const MainLayout = () => {
   return (
@@ -51,6 +52,7 @@ const AppRoutes = () => {
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/oauth-success" element={<OAuthSuccess />} />
     </Routes>
   );
 };
