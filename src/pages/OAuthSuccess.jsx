@@ -15,7 +15,7 @@ const OAuthSuccess = () => {
     }
 
     axios
-      .post("/auth/set-cookie", { token }, { withCredentials: true })
+      .post("https://bakery-frontend-two.vercel.app/auth/set-cookie", { token }, { withCredentials: true })
       .then(() => {
         navigate("/");
       })
