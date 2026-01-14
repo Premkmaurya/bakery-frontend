@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Lottie from "lottie-react";
+import spinner from "../assets/Loading.json"
 
 const OAuthSuccess = () => {
   const navigate = useNavigate();
@@ -38,14 +40,11 @@ const OAuthSuccess = () => {
           width: "100vw",
         }}
       >
-        <lottie-player
-          src="./Loading.json"
-          background="transparent"
-          speed="1"
-          loop
-          autoplay
-          style="width:120px; height:120px;"
-        ></lottie-player>
+        <Lottie
+          animationData={spinner}
+          loop={true}
+          style={{ height: 150, width: 150 }}
+        />
       </div>
     </>
   );
