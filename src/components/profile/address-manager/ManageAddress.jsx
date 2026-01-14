@@ -45,7 +45,7 @@ const ManageAddress = () => {
   };
 
   // Open Form for Editing
-  const handleEdit = (e,address) => {
+  const handleEdit = (e, address) => {
     e.stopPropagation(); // Prevent selecting the card when clicking edit
     reset({
       ...address,
@@ -133,7 +133,10 @@ const ManageAddress = () => {
               <p className="addr-details">
                 {addr.street}, {addr.city}, {addr.zip}
               </p>
-              <p className="addr-phone">Phone: {addr.phone}</p>
+              <p className="addr-phone">
+                <label>Phone:</label> <span className="phone-prefix">+91</span>{" "}
+                {addr.phone}
+              </p>
 
               <div className="card-actions">
                 <button
@@ -172,13 +175,20 @@ const ManageAddress = () => {
             </div>
             <div className="form-group">
               <label>Phone Number *</label>
+              <span className="phone-prefix">+91</span>
               <input
                 type="tel"
+                inputMode="numeric"
+                maxLength={10}
+                className="phone-input"
                 {...register("phone", {
                   required: "Phone is required",
                   pattern: {
-                    value: /^[\d\s\-\+\(\)]+$/,
-                    message: "Please enter a valid phone number",
+                    value: /^[6-9]\d{9}$/,
+                    message: "Enter a valid Indian mobile number",
+                  },
+                  onChange: (e) => {
+                    e.target.value = e.target.value.replace(/\D/g, "");
                   },
                 })}
               />

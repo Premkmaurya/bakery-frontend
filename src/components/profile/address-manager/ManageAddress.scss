@@ -204,6 +204,16 @@
         margin-bottom: 0.5rem;
         color: var(--color-text-main);
       }
+      .phone-prefix {
+        position: absolute;
+        margin-left: 1rem;
+        margin-top: 0.8rem;
+        font-family: var(--font-sans);
+        font-size: 1rem;
+      }
+      .phone-input {
+        padding-left: 3rem; // Space for the +91 prefix
+      }
 
       input,
       select {
@@ -211,6 +221,7 @@
         padding: 0.8rem 1rem;
         border: 1px solid #e0e0e0;
         border-radius: 8px;
+        font-size: 1rem;
         font-family: var(--font-sans);
         outline: none;
         transition: border 0.3s;

@@ -43,7 +43,7 @@ const OAuthSuccess = () => {
         <Lottie
           animationData={spinner}
           loop={true}
-          style={{ height: 150, width: 150 }}
+          style={{ height: 90, width: 90 }}
         />
       </div>
     </>

@@ -214,7 +214,7 @@
             margin-bottom: 0.3rem;
             font-weight: 600;
           }
-          .map-btn{
+          .map-btn {
             margin: 0.5rem 0;
             padding: 0.9rem 1.4rem;
             background-color: var(--color-accent);
@@ -228,6 +228,16 @@
               background-color: #b91c46;
             }
           }
+          .phone-prefix {
+            position: absolute;
+            margin-left: 1rem;
+            margin-top: 0.68rem;
+            font-family: var(--font-sans);
+            font-size: 1rem;
+          }
+          .phone-input {
+            padding-left: 3rem; // Space for the +91 prefix
+          }
 
           input,
           select {
@@ -236,13 +246,14 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             font-family: var(--font-sans);
+            font-size: 1rem;
             outline: none;
 
             &:focus {
               border-color: var(--color-accent);
             }
           }
-          .error-msg{
+          .error-msg {
             color: red;
             font-size: 0.75rem;
             margin-top: 0.3rem;
@@ -298,7 +309,7 @@
 
         .item-info {
           flex: 1;
-          
+
           h4 {
             font-size: 1rem;
             margin-bottom: 0.2rem;
@@ -311,7 +322,7 @@
             margin-top: 0.4rem;
             color: #555;
             width: 80%;
-            span{
+            span {
               color: var(--color-accent);
               cursor: pointer;
               text-decoration: underline;

@@ -223,13 +223,17 @@ const CheckoutPage = () => {
                       </div>
                       <div className="form-group">
                         <label>Phone</label>
+                        <span className="phone-prefix">+91</span>
                         <input
                           type="tel"
+                          inputMode="numeric"
+                          maxLength={10}
+                          className="phone-input"
                           {...register("phone", {
                             required: "Phone is required",
                             pattern: {
-                              value: /^[0-9]{10,15}$/,
-                              message: "Enter a valid phone number",
+                              value: /^[6-9]\d{9}$/,
+                              message: "Enter a valid Indian mobile number",
                             },
                           })}
                         />
@@ -330,7 +334,10 @@ const CheckoutPage = () => {
                       <p className="addr-details">
                         {addr.street}, {addr.city}, {addr.zip}
                       </p>
-                      <p className="addr-phone">Phone: {addr.phone}</p>
+                      <p className="addr-phone">
+                        <label>Phone: </label>{" "}
+                        <span className="phone-prefix">+91</span> {addr.phone}
+                      </p>
 
                       <div className="card-actions">
                         <button
@@ -387,7 +394,10 @@ const CheckoutPage = () => {
                           {expandedItemId !== id && <span> Read More</span>}
                         </p>
                       </div>
-                      <span className="item-price"><IndianRupee  size={14}/>{price}</span>
+                      <span className="item-price">
+                        <IndianRupee size={14} />
+                        {price}
+                      </span>
                     </div>
                   );
                 })}
