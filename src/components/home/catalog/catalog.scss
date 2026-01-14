@@ -97,7 +97,7 @@
 
     .cake-card {
       text-align: left;
-
+      cursor: pointer;
       // Small cards (Standard)
       .image-wrapper {
         width: 100%;
@@ -132,6 +132,10 @@
           font-weight: 700;
           font-size: 1rem;
           color: #333;
+          .rupee-icon {
+            vertical-align: middle;
+            margin-right: 4px;
+          }
         }
       }
 
@@ -170,7 +174,7 @@
     margin: 0;
     padding: 0;
 
-    @include mobile(){
+    @include mobile() {
       display: block;
     }
   }

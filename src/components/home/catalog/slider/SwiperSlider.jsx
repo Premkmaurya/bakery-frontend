@@ -27,7 +27,7 @@ export default function SwiperSlider({ activeCategory, catalogData }) {
         modules={[Autoplay, Navigation]}
         className="mySwiper"
       >
-        {catalogData[activeCategory].map((cake) => (
+        {catalogData.map((cake) => (
           <SwiperSlide>
             <div
               key={cake.id}
