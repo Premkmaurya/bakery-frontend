@@ -8,14 +8,17 @@ const OAuthSuccess = () => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const token = params.get("token");
-    console.log("OAuth token:", token);
     if (!token) {
       navigate("/login");
       return;
     }
 
     axios
-      .post("https://bakery-backend-two.vercel.app/auth/set-cookie", { token }, { withCredentials: true })
+      .post(
+        "https://bakery-backend-two.vercel.app/auth/set-cookie",
+        { token },
+        { withCredentials: true }
+      )
       .then(() => {
         navigate("/");
       })
@@ -24,7 +27,28 @@ const OAuthSuccess = () => {
       });
   }, [navigate]);
 
-  return <p>Signing you in…</p>;
+  return (
+    <>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          width: "100vw",
+        }}
+      >
+        <lottie-player
+          src="./Loading.json"
+          background="transparent"
+          speed="1"
+          loop
+          autoplay
+          style="width:120px; height:120px;"
+        ></lottie-player>
+      </div>
+    </>
+  );
 };
 
 export default OAuthSuccess;

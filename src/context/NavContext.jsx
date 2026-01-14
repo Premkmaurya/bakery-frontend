@@ -24,7 +24,6 @@ export const NavProvider = ({ children }) => {
         );
         setAddresses(response.data.addresses);
       } catch (error) {
-        console.error("Failed to fetch addresses:", error);
       }
     };
     const checkAuthStatus = async () => {

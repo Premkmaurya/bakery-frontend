@@ -58,7 +58,6 @@ const VideoSection = () => {
           // Video is in view: Play it
           videoRef.current.play().catch(error => {
             // Autoplay policies might block this if not muted
-            console.log("Autoplay prevented:", error);
           });
           setIsPlaying(true);
         } else {
