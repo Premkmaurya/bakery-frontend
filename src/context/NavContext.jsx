@@ -12,12 +12,21 @@ export const NavProvider = ({ children }) => {
   const [addresses, setAddresses] = useState([]); // Added addresses state
   const [orders, setOrders] = useState([]); // Added orders state
   // Check if user has valid token on mount
-  useEffect(() => {
-    checkAuthStatus();
-    getAddresses();
-  }, []);
 
   useEffect(() => {
+    const getAddresses = async () => {
+      try {
+        const response = await axios.get(
+          "https://bakery-backend-two.vercel.app/user/get-addresses",
+          {
+            withCredentials: true,
+          }
+        );
+        setAddresses(response.data.addresses);
+      } catch (error) {
+        console.error("Failed to fetch addresses:", error);
+      }
+    };
     const checkAuthStatus = async () => {
       try {
         const response = await axios.get(
@@ -36,24 +45,13 @@ export const NavProvider = ({ children }) => {
         setLoading(false);
       }
     };
-    const timer = setInterval(checkAuthStatus, 300);
+    const timer = setInterval(function () {
+      checkAuthStatus();
+      getAddresses();
+    }, 300);
 
     return () => clearInterval(timer, 2000);
   }, []);
-
-  const getAddresses = async () => {
-    try {
-      const response = await axios.get(
-        "https://bakery-backend-two.vercel.app/user/get-addresses",
-        {
-          withCredentials: true,
-        }
-      );
-      setAddresses(response.data.addresses);
-    } catch (error) {
-      console.error("Failed to fetch addresses:", error);
-    }
-  };
 
   const logout = async () => {
     try {
