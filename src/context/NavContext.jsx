@@ -17,21 +17,29 @@ export const NavProvider = ({ children }) => {
     getAddresses();
   }, []);
 
-  const checkAuthStatus = async () => {
-    try {
-      const response = await axios.get("https://bakery-backend-two.vercel.app/auth/verify",{
-        withCredentials: true,
-      });
-      setUser(response.data.user);
-      setIsLoggedIn(true);
-    } catch (error) {
-      console.error("Not authenticated:", error);
-      setIsLoggedIn(false);
-      setUser(null);
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        const response = await axios.get(
+          "https://bakery-backend-two.vercel.app/auth/verify",
+          {
+            withCredentials: true,
+          }
+        );
+        setUser(response.data.user);
+        setIsLoggedIn(true);
+      } catch (error) {
+        console.error("Not authenticated:", error);
+        setIsLoggedIn(false);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+    const timer = setInterval(checkAuthStatus, 300);
+
+    return () => clearInterval(timer, 2000);
+  }, []);
 
   const getAddresses = async () => {
     try {
@@ -78,9 +86,12 @@ export const NavProvider = ({ children }) => {
 
   const deleteAddress = async (id) => {
     try {
-      await axios.delete(`https://bakery-backend-two.vercel.app/user/delete-address/${id}`, {
-        withCredentials: true,
-      });
+      await axios.delete(
+        `https://bakery-backend-two.vercel.app/user/delete-address/${id}`,
+        {
+          withCredentials: true,
+        }
+      );
       setAddresses((prev) => prev.filter((addr) => addr._id !== id));
     } catch (error) {
       console.error("Error deleting address:", error);
