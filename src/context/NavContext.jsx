@@ -23,8 +23,7 @@ export const NavProvider = ({ children }) => {
           }
         );
         setAddresses(response.data.addresses);
-      } catch (error) {
-      }
+      } catch (error) {}
     };
     const checkAuthStatus = async () => {
       try {
@@ -44,12 +43,8 @@ export const NavProvider = ({ children }) => {
         setLoading(false);
       }
     };
-    const timer = setInterval(function () {
-      checkAuthStatus();
-      getAddresses();
-    }, 300);
-
-    return () => clearInterval(timer, 2000);
+    checkAuthStatus();
+    getAddresses();
   }, []);
 
   const logout = async () => {

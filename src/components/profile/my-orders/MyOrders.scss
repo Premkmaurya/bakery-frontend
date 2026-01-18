@@ -1,3 +1,9 @@
+@mixin mobile {
+  @media (max-width: 768px) {
+    @content;
+  }
+}
+
 .my-orders-wrapper {
   .section-title {
     font-family: var(--font-serif);
@@ -124,16 +130,6 @@
           font-weight: 500;
         }
 
-        // Mobile Adjustment for Body
-        @media (max-width: 600px) {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 1rem;
-
-          .items-preview {
-            margin-bottom: 0.5rem;
-          }
-        }
       }
 
       // === FOOTER ===
@@ -141,6 +137,9 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        @include mobile {
+          gap: 1rem;
+        }
 
         .total-wrapper,
         .quantity-wrapper {
@@ -207,33 +206,6 @@
               background-color: #f5f5f5;
               border-color: #ddd;
               color: #aaa;
-            }
-          }
-        }
-        .delete-order {
-          .btn-delete {
-            background-color: #fff0f0;
-            border: none;
-            color: var(--color-text-main);
-
-            &:hover {
-              background-color: #f8d7da;
-              border-color: #f5c2c2;
-            }
-          }
-        }
-
-        // Mobile Adjustment for Footer
-        @media (max-width: 600px) {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 1.5rem;
-
-          .actions {
-            width: 100%;
-            button {
-              flex: 1;
-              justify-content: center;
             }
           }
         }

@@ -11,8 +11,12 @@ import "./SwiperSlider.scss";
 
 // import required modules
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
+import { IndianRupee } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function SwiperSlider({ activeCategory, catalogData }) {
+  const navigate = useNavigate();
+
   return (
     <>
       <Swiper
@@ -27,18 +31,24 @@ export default function SwiperSlider({ activeCategory, catalogData }) {
         modules={[Autoplay, Navigation]}
         className="mySwiper"
       >
-        {catalogData.map((cake) => (
+        {catalogData.map((product) => (
           <SwiperSlide>
             <div
-              key={cake.id}
-              className={`cake-card ${cake.featured ? "featured" : ""}`}
+              key={product._id}
+              className={`product-card ${product.featured ? "featured" : ""}`}
+              onClick={() =>
+                navigate(`/products/${product._id}`, { state: { product } })
+              }
             >
               <div className="image-wrapper">
-                <img src={cake.img} alt={cake.name} />
+                <img src={product.imageUrl} alt={product.name} />
               </div>
-              <div className="cake-info">
-                <h3>{cake.name}</h3>
-                <span className="price">{cake.price}</span>
+              <div className="product-info">
+                <h3 className="product-name">{product.name}</h3>
+                <span className="price">
+                  <IndianRupee className="rupee-icon" size={18} />
+                  {product.price}
+                </span>
               </div>
             </div>
           </SwiperSlide>

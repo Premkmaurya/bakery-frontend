@@ -89,20 +89,20 @@ const Catalog = ({ products, setCategory }) => {
 
       {/* The Cake Grid */}
       <div className="cake-grid">
-        {products?.map((cake) => (
+        {products?.map((product) => (
           <div
-            key={cake._id}
-            className={`cake-card ${cake.featured ? "featured" : ""}`}
-            onClick={()=>navigate(`/products/${cake._id}`)}
+            key={product._id}
+            className={`cake-card ${product.featured ? "featured" : ""}`}
+            onClick={()=>navigate(`/products/${product._id}`, {state: {product}})}
           >
             <div className="image-wrapper">
-              <img src={cake.imageUrl} alt={cake.name} />
+              <img src={product.imageUrl} alt={product.name} />
             </div>
             <div className="cake-info">
-              <h3>{cake.name}</h3>
+              <h3>{product.name}</h3>
               <span className="price">
                 <IndianRupee className="rupee-icon" size={14} />
-                {cake.price}
+                {product.price}
               </span>
             </div>
           </div>

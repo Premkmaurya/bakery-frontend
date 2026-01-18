@@ -9,6 +9,7 @@ import ManageAddress from "./address-manager/ManageAddress";
 import MyOrders from "./my-orders/MyOrders";
 import AddProduct from "./add-products/AddProduct";
 import WishlistPage from "../wishlist/WishlistPage";
+import AdminAllOrders from "./admin-orders/AdminAllOrders";
 
 const UserProfile = () => {
   const navigate = useNavigate();
@@ -44,31 +45,49 @@ const UserProfile = () => {
         return <AddProduct />;
       case "address":
         return <ManageAddress />;
+      case "all orders":
+        return <AdminAllOrders />;
       default:
         return <PersonalInformation />;
     }
   };
 
-  const menuItems = [
-    { id: "personal", label: "Personal Information", icon: <User size={20} /> },
-    { id: "orders", label: "My Orders", icon: <Package size={20} /> },
-    ...(user?.role === "admin"
-      ? [
+  let menuItems = [];
+
+  {
+    user.role === "customer"
+      ? (menuItems = [
+          {
+            id: "personal",
+            label: "Personal Information",
+            icon: <User size={20} />,
+          },
+          { id: "orders", label: "My Orders", icon: <Package size={20} /> },
+          { id: "wishlist", label: "My Wishlist", icon: <Package size={20} /> },
+          {
+            id: "address",
+            label: "Manage Address",
+            icon: <MapPin size={20} />,
+          },
+        ])
+      : (menuItems = [
+          {
+            id: "personal",
+            label: "Personal Information",
+            icon: <User size={20} />,
+          },
           {
             id: "add products",
             label: "Add Products",
             icon: <Plus size={20} />,
           },
           {
-            id: "manage products",
-            label: "Manage Products",
+            id: "all orders",
+            label: "All Orders",
             icon: <Package size={20} />,
-          }
-        ]
-      : []),
-    { id: "wishlist", label: "My Wishlist", icon: <Package size={20} /> },
-    { id: "address", label: "Manage Address", icon: <MapPin size={20} /> },
-  ];
+          },
+        ]);
+  }
 
   return (
     <div className="user-profile-page">

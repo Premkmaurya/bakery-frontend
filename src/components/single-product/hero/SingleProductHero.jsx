@@ -148,13 +148,13 @@ const SingleProductHero = ({ product }) => {
       },
     });
     if (isEdit) {
-      tl.from(".edit-form", {
+      tl.from(".edit-form-wrapper", {
         delay: -0.2,
         x: 40,
         opacity: 0,
       });
     } else {
-      tl.to(".edit-form", {
+      tl.to(".edit-form-wrapper", {
         x: 40,
         opacity: 0,
       });
@@ -328,16 +328,18 @@ const SingleProductHero = ({ product }) => {
       </section>
       {user?.role === "admin" && isEdit && (
         <>
-          <div className="edit-form">
-            <AddProduct
-              product={productData}
-              setProductData={setProductData}
-              setIsEdit={setIsEdit}
-            />
-            <button className="close-icon" onClick={() => setIsEdit(false)}>
-              <IoMdClose size={25} />
-            </button>
+          <div className="edit-form-wrapper">
+            <div className="edit-form">
+              <AddProduct
+                product={productData}
+                setProductData={setProductData}
+                setIsEdit={setIsEdit}
+              />
+            </div>
           </div>
+          <button className="close-icon" onClick={() => setIsEdit(false)}>
+            <IoMdClose size={25} />
+          </button>
         </>
       )}
     </>

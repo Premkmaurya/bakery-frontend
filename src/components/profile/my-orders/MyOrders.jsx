@@ -50,7 +50,7 @@ const MyOrders = () => {
     switch (status) {
       case "delivered":
         return { color: "green", icon: <CheckCircle size={14} /> };
-      case "processing":
+      case "shipped":
         return { color: "blue", icon: <Clock size={14} /> };
       case "cancelled":
         return { color: "red", icon: <XCircle size={14} /> };
@@ -59,9 +59,9 @@ const MyOrders = () => {
     }
   };
 
-  const cancelHandler = (orderId) => {
+  const cancelHandler = async (orderId) => {
     try{
-      axios.patch(`https://bakery-backend-two.vercel.app/orders/updateOrderStatus/${orderId}`, {status:"cancelled"}, {
+      await axios.patch(`https://bakery-backend-two.vercel.app/orders/updateOrderStatus/${orderId}`, {status:"cancelled"}, {
         withCredentials: true,
       });
       setOrders(orders.map(order => order._id === orderId ? {...order, status: "Cancelled"} : order));
@@ -146,26 +146,16 @@ const MyOrders = () => {
                 </div>
 
                 <div className="actions">
-                  {order.status === "processing" && (
-                    <button className="btn-track">
-                      <Truck size={16} /> Track
-                    </button>
-                  )}
                   <button
                     onClick={() => cancelHandler(order._id)}
                     className={`btn-details ${
-                      order.status === "cancelled" || order.status === "delivered"
+                      order.status === "cancelled" || order.status === "delivered" || order.status === "shipped"
                         ? "disabled"
                         : ""
                     }`}
-                    disabled={order.status === "cancelled" || order.status === "delivered"}
+                    disabled={order.status === "cancelled" || order.status === "delivered" || order.status === "shipped"}
                   >
                     Cancel Order
-                  </button>
-                </div>
-                <div className="delete-order">
-                  <button onClick={() => deleteHandler(order._id)} className="btn-delete" title="Delete Order">
-                    <Trash2 size={16} />
                   </button>
                 </div>
               </div>
