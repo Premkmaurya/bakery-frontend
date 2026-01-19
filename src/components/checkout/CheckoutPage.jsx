@@ -67,15 +67,6 @@ const CheckoutPage = () => {
     },
   });
 
-  // === 3. HANDLERS ===
-  const updateQuantity = (id, newQty) => {
-    if (newQty < 1) return; // Prevent going below 1 (or handle remove logic)
-    setOrderItems((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, quantity: newQty } : item
-      )
-    );
-  };
 
   // Open "Add New" Form
   const handleAddNew = () => {
@@ -172,6 +163,7 @@ const CheckoutPage = () => {
         deliveryFee,
         total,
         orderItems,
+        selectedAddressId,
       },
     });
   };

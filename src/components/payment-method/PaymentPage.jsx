@@ -48,6 +48,8 @@ const PaymentPage = () => {
       const orderData = {
         productId,
         quantity: item.quantity,
+        address: state.selectedAddressId,
+        total: state.total,
       };
 
       try {
@@ -64,7 +66,7 @@ const PaymentPage = () => {
         throw new Error("Order placement failed");
       }
     });
-    navigate("/profile", { state: { tab: "orders" } });
+    navigate("/order-confirmation", { state: { status: "success" } });
   };
 
   return (

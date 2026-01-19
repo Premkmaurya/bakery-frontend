@@ -64,29 +64,13 @@ const MyOrders = () => {
       await axios.patch(`https://bakery-backend-two.vercel.app/orders/updateOrderStatus/${orderId}`, {status:"cancelled"}, {
         withCredentials: true,
       });
+      getStatusConfig("cancelled");
       setOrders(orders.map(order => order._id === orderId ? {...order, status: "Cancelled"} : order));
       notyf.success("Order cancelled successfully")
 
     }catch(error){
       console.error("Error cancelling order:", error);
       notyf.error("Failed to cancel order");
-    }
-  };
-
-  const deleteHandler = async (orderId) => {
-    try {
-      await axios.delete(
-        `https://bakery-backend-two.vercel.app/orders/deleteOrder/${orderId}`,
-        {
-          withCredentials: true,
-        }
-      );
-      notyf.success("Order deleted successfully");
-      // After successful deletion, update the orders state
-      setOrders(orders.filter((order) => order._id !== orderId));
-    } catch (error) {
-      console.error("Error deleting order:", error);
-      notyf.error("Failed to delete order");
     }
   };
 

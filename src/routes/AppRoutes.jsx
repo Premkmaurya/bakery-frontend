@@ -18,6 +18,7 @@ import WishList from "../pages/WishList";
 
 import ProtectedRoute from "./ProtectedRoutes";
 import OAuthSuccess from "../pages/OAuthSuccess";
+import OrderConfirmation from "../pages/OrderConfirmation";
 
 const MainLayout = () => {
   return (
@@ -50,6 +51,7 @@ const AppRoutes = () => {
           <Route path="/payment-method" element={<PaymentMethod />} />
         </Route>
       </Route>
+      <Route path="/order-confirmation" element={<OrderConfirmation />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/oauth-success" element={<OAuthSuccess />} />

@@ -1,0 +1,131 @@
+@use "sass:color";
+
+.confirmation-page-wrapper {
+  min-height: 100vh;
+  background-color: #f4f4f4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+
+  &.success {
+    background-color: #1da857;
+  }
+  &.failed {
+    background-color: #d1220ee5;
+  }
+
+  // Dev Toggle Styling (Ignore this part for production)
+  .dev-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: white;
+    padding: 5px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+
+    button {
+      padding: 5px 10px;
+      margin: 0 2px;
+      cursor: pointer;
+      &.active {
+        background: #b91c46;
+        color: white;
+      }
+    }
+  }
+
+  .container {
+    width: 100%;
+    max-width: 480px; // Standard "Mobile/Receipt" width
+
+    
+  }
+
+  .confirmation-card {
+    border-radius: 24px;
+    padding: 3rem 2rem;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    color: whitesmoke;
+
+    // === 1. VISUAL HEADER ===
+    .status-icon-wrapper {
+      position: relative;
+      margin-bottom: 2rem;
+      height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .icon-circle {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+        animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .status-illustration {
+        position: absolute;
+        bottom: 0;
+        height: 120px;
+        width: auto;
+        z-index: 2;
+        animation: slideUp 0.6s ease-out 0.2s forwards;
+        opacity: 0; // Start invisible for animation
+        transform: translateY(20px);
+      }
+    }
+
+    // === 2. TEXT CONTENT ===
+    .text-content {
+      margin-bottom: 2.5rem;
+
+      .title {
+        font-family: var(--font-serif);
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .subtitle {
+        font-family: var(--font-sans);
+        font-size: 1rem;
+        line-height: 1.5;
+      }
+    }
+  }
+}
+
+// === ANIMATIONS ===
+@keyframes popIn {
+  from {
+    transform: translateX(-50%) scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
