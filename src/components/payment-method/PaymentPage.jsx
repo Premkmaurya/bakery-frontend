@@ -10,15 +10,20 @@ import "./PaymentPage.scss";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../../context/NavContext";
+import { Notyf } from "notyf";
 
 const PaymentPage = () => {
   const { state } = useLocation();
+  console.log(state)
   const navigate = useNavigate();
   const { setOrders } = useAuth();
   // === STATE ===
   const [paymentMethod, setPaymentMethod] = useState("upi"); // 'upi' or 'cod'
   const [upiId, setUpiId] = useState("");
   const [isVerified, setIsVerified] = useState(false);
+
+  
+    const notfy = new Notyf();
 
   // === HANDLERS ===
   const handleVerify = () => {
@@ -58,15 +63,16 @@ const PaymentPage = () => {
           orderData,
           {
             withCredentials: true,
-          }
+          },
         );
         setOrders((prevOrders) => [...prevOrders, response.data]);
+        navigate("/order-confirmation", { state: { status: "success" } });
       } catch (error) {
+        notfy.error("Failed to place order for some items.");
         console.error("Error placing order:", error);
         throw new Error("Order placement failed");
       }
     });
-    navigate("/order-confirmation", { state: { status: "success" } });
   };
 
   return (
