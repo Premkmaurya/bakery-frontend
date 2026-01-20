@@ -4,12 +4,16 @@ import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 import relativeTime from "dayjs/plugin/relativeTime";
 
-import { Link } from "react-router-dom";
-import { Home, MapPin, Calendar } from "lucide-react";
-
 dayjs.extend(relativeTime);
 
-import { Package, Clock, CheckCircle, XCircle, Trash2 } from "lucide-react";
+import {
+  Package,
+  Clock,
+  CheckCircle,
+  XCircle,
+  Trash2,
+  IndianRupee,
+} from "lucide-react";
 import "./AdminAllOrders.scss";
 import axios from "axios";
 import { useAuth } from "../../../context/NavContext";
@@ -20,6 +24,8 @@ const AdminAllOrders = () => {
   const notyf = new Notyf();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [selectedOrderAddress, setSelectedOrderAddress] = useState(null);
 
   useEffect(() => {
     // Fetch orders from backend API when component mounts
@@ -40,6 +46,15 @@ const AdminAllOrders = () => {
     };
     fetchOrders();
   }, []);
+
+  useEffect(() => {
+    if (selectedOrder) {
+      const findAddress = selectedOrder.userId.address.find(
+        (addr) => addr._id === selectedOrder.address,
+      );
+      setSelectedOrderAddress(findAddress);
+    }
+  }, [selectedOrder]);
 
   const orderDetails = {
     id: "153468790876",
@@ -117,7 +132,10 @@ const AdminAllOrders = () => {
 
             return (
               <div
-                onClick={() => setIsOpen(true)}
+                onClick={() => {
+                  setSelectedOrder(order);
+                  setIsOpen(true);
+                }}
                 key={order._id}
                 className={`order-card ${isOpen ? "hide" : ""}`}
               >
@@ -211,6 +229,7 @@ const AdminAllOrders = () => {
         </div>
       </div>
 
+      
       {isOpen && (
         <div className="order-status-wrapper">
           <div className="container">
@@ -228,17 +247,17 @@ const AdminAllOrders = () => {
               <div className="product-highlight-card">
                 <div className="product-img">
                   <img
-                    src={orderDetails.mainItem.image}
-                    alt={orderDetails.mainItem.name}
+                    src={selectedOrder.productId.imageUrl}
+                    alt={selectedOrder.productId.name}
                   />
                 </div>
                 <div className="product-info">
                   <span className="label">Cake</span>
-                  <h3 className="name">{orderDetails.mainItem.name}</h3>
-                  <p className="variant">{orderDetails.mainItem.variant}</p>
+                  <h3 className="name">{selectedOrder.productId.name}</h3>
                 </div>
                 <div className="product-price">
-                  ${orderDetails.mainItem.price.toFixed(2)}
+                  <IndianRupee size={16} />
+                  {selectedOrder.productId.price.toFixed(2)}
                 </div>
               </div>
             </div>
@@ -250,17 +269,19 @@ const AdminAllOrders = () => {
 
                 <div className="summary-row">
                   <span className="label">Order ID</span>
-                  <span className="value">{orderDetails.id}</span>
+                  <span className="value">{selectedOrder._id}</span>
                 </div>
 
                 <div className="summary-row">
                   <span className="label">Shipping Address</span>
-                  <span className="value">{orderDetails.address}</span>
+                  <span className="value">
+                    {selectedOrderAddress?.street}, {selectedOrderAddress?.city}
+                  </span>
                 </div>
 
                 <div className="summary-row">
-                  <span className="label">Estimated Delivery Date</span>
-                  <span className="value">{orderDetails.date}</span>
+                  <span className="label">Estimated Delivery Time</span>
+                  <span className="value">1-2 days</span>
                 </div>
               </div>
               {/* === CLOSE BUTTON === */}
