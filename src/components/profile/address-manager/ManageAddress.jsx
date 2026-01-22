@@ -37,8 +37,8 @@ const ManageAddress = () => {
       fullName: "",
       phone: "",
       street: "",
-      city: "",
-      zip: "",
+      city: "hardoi",
+      zip: "241001",
     });
     setEditingId(null);
     setIsFormOpen(true);
@@ -75,7 +75,7 @@ const ManageAddress = () => {
           formData,
           {
             withCredentials: true,
-          }
+          },
         );
 
         // Add new address to NavContext addresses state
@@ -157,104 +157,115 @@ const ManageAddress = () => {
         </div>
       ) : (
         // === 3. ADDRESS FORM (ADD OR EDIT) ===
-        <form className="address-form" onSubmit={handleSubmit(onSubmit)}>
-          <h3 className="form-title">
-            {editingId ? "Edit Address" : "Add New Delivery Address"}
-          </h3>
+        <>
+          <form className="address-form" onSubmit={handleSubmit(onSubmit)}>
+            <h3 className="form-title">
+              {editingId ? "Edit Address" : "Add New Delivery Address"}
+            </h3>
 
-          <div className="form-row">
+            <div className="form-row">
+              <div className="form-group">
+                <label>Full Name *</label>
+                <input
+                  type="text"
+                  {...register("fullName", { required: "Name is required" })}
+                />
+                {errors.fullName && (
+                  <span className="error">{errors.fullName.message}</span>
+                )}
+              </div>
+              <div className="form-group">
+                <label>Phone Number *</label>
+                <span className="phone-prefix">+91</span>
+                <input
+                  type="tel"
+                  inputMode="numeric"
+                  maxLength={10}
+                  className="phone-input"
+                  {...register("phone", {
+                    required: "Phone is required",
+                    pattern: {
+                      value: /^[6-9]\d{9}$/,
+                      message: "Enter a valid Indian mobile number",
+                    },
+                    onChange: (e) => {
+                      e.target.value = e.target.value.replace(/\D/g, "");
+                    },
+                  })}
+                />
+                {errors.phone && (
+                  <span className="error">{errors.phone.message}</span>
+                )}
+              </div>
+            </div>
+
             <div className="form-group">
-              <label>Full Name *</label>
+              <label>Street Address *</label>
               <input
                 type="text"
-                {...register("fullName", { required: "Name is required" })}
-              />
-              {errors.fullName && (
-                <span className="error">{errors.fullName.message}</span>
-              )}
-            </div>
-            <div className="form-group">
-              <label>Phone Number *</label>
-              <span className="phone-prefix">+91</span>
-              <input
-                type="tel"
-                inputMode="numeric"
-                maxLength={10}
-                className="phone-input"
-                {...register("phone", {
-                  required: "Phone is required",
-                  pattern: {
-                    value: /^[6-9]\d{9}$/,
-                    message: "Enter a valid Indian mobile number",
-                  },
-                  onChange: (e) => {
-                    e.target.value = e.target.value.replace(/\D/g, "");
-                  },
+                {...register("street", {
+                  required: "Street address is required",
                 })}
               />
-              {errors.phone && (
-                <span className="error">{errors.phone.message}</span>
+              {errors.street && (
+                <span className="error">{errors.street.message}</span>
               )}
             </div>
-          </div>
 
-          <div className="form-group">
-            <label>Street Address *</label>
-            <input
-              type="text"
-              {...register("street", {
-                required: "Street address is required",
-              })}
-            />
-            {errors.street && (
-              <span className="error">{errors.street.message}</span>
-            )}
-          </div>
+            <div className="form-row">
+              <div className="form-group">
+                <label>City *</label>
+                <input
+                  type="text"
+                  value="hardoi"
+                  disabled={true}
+                  {...register("city", { required: "City is required" })}
+                />
+                {errors.city && (
+                  <span className="error">{errors.city.message}</span>
+                )}
+              </div>
+            </div>
 
-          <div className="form-row">
+            <div className="form-row">
+              <div className="form-group">
+                <label>Zip Code *</label>
+                <input
+                  type="text"
+                  value="241001"
+                  disabled={true}
+                  {...register("zip", { required: "Zip code is required" })}
+                />
+                {errors.zip && (
+                  <span className="error">{errors.zip.message}</span>
+                )}
+              </div>
+            </div>
+
             <div className="form-group">
-              <label>City *</label>
-              <input
-                type="text"
-                {...register("city", { required: "City is required" })}
-              />
-              {errors.city && (
-                <span className="error">{errors.city.message}</span>
-              )}
+              <label>Address Type</label>
+              <select {...register("addressType")}>
+                <option value="Home">Home</option>
+                <option value="Office">Office</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
-          </div>
 
-          <div className="form-row">
-            <div className="form-group">
-              <label>Zip Code *</label>
-              <input
-                type="text"
-                {...register("zip", { required: "Zip code is required" })}
-              />
-              {errors.zip && (
-                <span className="error">{errors.zip.message}</span>
-              )}
+            <div className="form-actions">
+              <button
+                type="button"
+                className="cancel-btn"
+                onClick={handleCancel}
+              >
+                Cancel
+              </button>
+              <button type="submit" className="save-btn">
+                {editingId ? "Update Address" : "Save Address"}
+              </button>
             </div>
-          </div>
-
-          <div className="form-group">
-            <label>Address Type</label>
-            <select {...register("addressType")}>
-              <option value="Home">Home</option>
-              <option value="Office">Office</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-
-          <div className="form-actions">
-            <button type="button" className="cancel-btn" onClick={handleCancel}>
-              Cancel
-            </button>
-            <button type="submit" className="save-btn">
-              {editingId ? "Update Address" : "Save Address"}
-            </button>
-          </div>
-        </form>
+          </form>
+          <p className="notice">Note *: We only deliver to hardoi, UP.</p>
+        </>
       )}
     </div>
   );

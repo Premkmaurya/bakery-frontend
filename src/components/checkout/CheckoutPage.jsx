@@ -67,7 +67,6 @@ const CheckoutPage = () => {
     },
   });
 
-
   // Open "Add New" Form
   const handleAddNew = () => {
     reset({
@@ -75,8 +74,8 @@ const CheckoutPage = () => {
       fullName: "",
       phone: "",
       street: "",
-      city: "",
-      zip: "",
+      city: "hardoi",
+      zip: "241001",
     });
     setEditingId(null);
     setIsFormOpen(true);
@@ -104,7 +103,7 @@ const CheckoutPage = () => {
         data,
         {
           withCredentials: true,
-        }
+        },
       );
 
       const newAddress = {
@@ -152,20 +151,41 @@ const CheckoutPage = () => {
   const total = subTotal + deliveryFee;
 
   // Navigate to Payment Method
-  const navigateHandler = () => {
-    if (addresses.length === 0) {
-      alert("Please add a shipping address before proceeding to payment.");
+  const handlePayment = async () => {
+    if (!selectedAddressId) {
+      alert("Please select address");
       return;
     }
-    navigate(`/payment-method`, {
-      state: {
-        subTotal,
-        deliveryFee,
-        total,
-        orderItems,
-        selectedAddressId,
+
+    // 1️⃣ Backend se Razorpay order banao
+    const { data } = await axios.post(
+      "https://bakery-backend-two.vercel.app/payment/create/orderId",
+      { amount: total },
+      { withCredentials: true },
+    );
+
+    // 2️⃣ Razorpay checkout open karo
+    const options = {
+      key: "RAZORPAY_KEY_ID",
+      amount: data.amount,
+      currency: "INR",
+      order_id: data.id,
+
+      handler: function (response) {
+        console.log("Payment Success", response);
+        navigate("/payment-success");
       },
-    });
+
+      prefill: {
+        name: addresses.find((a) => a._id === selectedAddressId)?.fullName,
+        contact: addresses.find((a) => a._id === selectedAddressId)?.phone,
+      },
+
+      theme: { color: "#c2173e" },
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
   };
 
   return (
@@ -189,118 +209,127 @@ const CheckoutPage = () => {
 
               {isFormOpen ? (
                 // === ADDRESS FORM ===
-                <form
-                  className="address-form"
-                  onSubmit={handleSubmit(handleSave)}
-                >
-                  <div className="form-content">
-                    <h3 className="form-title">
-                      {editingId ? "Edit Address" : "Add New Address"}
-                    </h3>
+                <>
+                  <form
+                    className="address-form"
+                    onSubmit={handleSubmit(handleSave)}
+                  >
+                    <div className="form-content">
+                      <h3 className="form-title">
+                        {editingId ? "Edit Address" : "Add New Address"}
+                      </h3>
 
-                    <div className="form-grid">
-                      <div className="form-group">
-                        <label>Full Name</label>
-                        <input
-                          type="text"
-                          {...register("fullName", {
-                            required: "Full Name is required",
-                          })}
-                        />
-                        {errors.fullName && (
-                          <span className="error-msg">
-                            {errors.fullName.message}
-                          </span>
-                        )}
-                      </div>
-                      <div className="form-group">
-                        <label>Phone</label>
-                        <span className="phone-prefix">+91</span>
-                        <input
-                          type="tel"
-                          inputMode="numeric"
-                          maxLength={10}
-                          className="phone-input"
-                          {...register("phone", {
-                            required: "Phone is required",
-                            pattern: {
-                              value: /^[6-9]\d{9}$/,
-                              message: "Enter a valid Indian mobile number",
-                            },
-                          })}
-                        />
-                        {errors.phone && (
-                          <span className="error-msg">
-                            {errors.phone.message}
-                          </span>
-                        )}
-                      </div>
-                      <div className="form-group full-width">
-                        <label>Street Address</label>
-                        <input
-                          type="text"
-                          {...register("street", {
-                            required: "Street is required",
-                          })}
-                        />
-                        {errors.street && (
-                          <span className="error-msg">
-                            {errors.street.message}
-                          </span>
-                        )}
-                      </div>
-                      <div className="form-group">
-                        <label>City</label>
-                        <input
-                          type="text"
-                          {...register("city", {
-                            required: "City is required",
-                          })}
-                        />
-                        {errors.city && (
-                          <span className="error-msg">
-                            {errors.city.message}
-                          </span>
-                        )}
-                      </div>
-                      <div className="form-group">
-                        <label>Zip Code</label>
-                        <input
-                          type="text"
-                          {...register("zip", {
-                            required: "Zip code is required",
-                          })}
-                        />
-                        {errors.zip && (
-                          <span className="error-msg">
-                            {errors.zip.message}
-                          </span>
-                        )}
-                      </div>
-                      <div className="form-group">
-                        <label>Address Type</label>
-                        <select {...register("addressType")}>
-                          <option value="Home">Home</option>
-                          <option value="Office">Office</option>
-                          <option value="Other">Other</option>
-                        </select>
+                      <div className="form-grid">
+                        <div className="form-group">
+                          <label>Full Name</label>
+                          <input
+                            type="text"
+                            {...register("fullName", {
+                              required: "Full Name is required",
+                            })}
+                          />
+                          {errors.fullName && (
+                            <span className="error-msg">
+                              {errors.fullName.message}
+                            </span>
+                          )}
+                        </div>
+                        <div className="form-group">
+                          <label>Phone</label>
+                          <span className="phone-prefix">+91</span>
+                          <input
+                            type="tel"
+                            inputMode="numeric"
+                            maxLength={10}
+                            className="phone-input"
+                            {...register("phone", {
+                              required: "Phone is required",
+                              pattern: {
+                                value: /^[6-9]\d{9}$/,
+                                message: "Enter a valid Indian mobile number",
+                              },
+                            })}
+                          />
+                          {errors.phone && (
+                            <span className="error-msg">
+                              {errors.phone.message}
+                            </span>
+                          )}
+                        </div>
+                        <div className="form-group full-width">
+                          <label>Street Address</label>
+                          <input
+                            type="text"
+                            {...register("street", {
+                              required: "Street is required",
+                            })}
+                          />
+                          {errors.street && (
+                            <span className="error-msg">
+                              {errors.street.message}
+                            </span>
+                          )}
+                        </div>
+                        <div className="form-group">
+                          <label>City</label>
+                          <input
+                            type="text"
+                            value={"hardoi"}
+                            disabled={true}
+                            {...register("city", {
+                              required: "City is required",
+                            })}
+                          />
+                          {errors.city && (
+                            <span className="error-msg">
+                              {errors.city.message}
+                            </span>
+                          )}
+                        </div>
+                        <div className="form-group">
+                          <label>Zip Code</label>
+                          <input
+                            type="text"
+                            value="241001"
+                            disabled={true}
+                            {...register("zip", {
+                              required: "Zip code is required",
+                            })}
+                          />
+                          {errors.zip && (
+                            <span className="error-msg">
+                              {errors.zip.message}
+                            </span>
+                          )}
+                        </div>
+                        <div className="form-group">
+                          <label>Address Type</label>
+                          <select {...register("addressType")}>
+                            <option value="Home">Home</option>
+                            <option value="Office">Office</option>
+                            <option value="Other">Other</option>
+                          </select>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="form-actions">
-                    <button
-                      type="button"
-                      className="cancel-btn"
-                      onClick={() => setIsFormOpen(false)}
-                    >
-                      Cancel
-                    </button>
-                    <button type="submit" className="save-btn">
-                      Save Address
-                    </button>
-                  </div>
-                </form>
+                    <div className="form-actions">
+                      <button
+                        type="button"
+                        className="cancel-btn"
+                        onClick={() => setIsFormOpen(false)}
+                      >
+                        Cancel
+                      </button>
+                      <button type="submit" className="save-btn">
+                        Save Address
+                      </button>
+                    </div>
+                  </form>
+                  <p className="notice">
+                    Note *: We only deliver to hardoi, UP.
+                  </p>
+                </>
               ) : (
                 // === ADDRESS LIST ===
                 <div className="address-list">
@@ -423,7 +452,7 @@ const CheckoutPage = () => {
                 <p>Safe and Secure Payments. 100% Authentic products.</p>
               </div>
 
-              <button onClick={navigateHandler} className="place-order-btn">
+              <button onClick={handlePayment} className="place-order-btn">
                 Place Order
               </button>
             </div>

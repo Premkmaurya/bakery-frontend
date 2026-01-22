@@ -285,4 +285,24 @@
       }
     }
   }
+  .notice {
+    margin-top: 0.8rem;
+    font-size: 0.9rem;
+    text-align: center;
+    color: #df2424;
+    font-style: italic;                                             
+    animation: blink 2s infinite linear;
+  }
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
 }
