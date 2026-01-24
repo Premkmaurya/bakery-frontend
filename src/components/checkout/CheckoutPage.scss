@@ -389,6 +389,46 @@
         margin: 1rem 0;
       }
 
+      .payment-method {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+
+        .payment-option {
+          display: flex;
+          align-items: center;
+          gap: 0.8rem;
+          cursor: pointer;
+          padding: 0.5rem;
+          border: 2px solid #e2e2e2;
+          border-radius: 6px;
+          transition: all 0.3s;
+
+          &:hover {
+            border-color: var(--color-accent);
+          }
+
+          &.selected {
+            border-color: var(--color-accent);
+            background-color: #fff5f7; // Very light pink tint
+          }
+
+          input {
+            accent-color: var(--color-accent);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+          }
+
+          label {
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            cursor: pointer;
+          }
+        }
+      }
+
       .security-note {
         display: flex;
         align-items: center;

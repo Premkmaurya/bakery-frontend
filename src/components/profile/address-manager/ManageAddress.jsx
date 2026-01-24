@@ -71,7 +71,7 @@ const ManageAddress = () => {
       } else {
         // === ADD NEW ADDRESS ===
         const response = await axios.post(
-          "https://bakery-backend-two.vercel.app/user/add-address",
+          "https://bakeverse-bk.vercel.app/user/add-address",
           formData,
           {
             withCredentials: true,

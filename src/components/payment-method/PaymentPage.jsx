@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import {
-  CreditCard,
-  DollarSign,
   Wallet,
-  CheckCircle,
   ShieldCheck,
+  IndianRupee,
 } from "lucide-react";
 import "./PaymentPage.scss";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -14,65 +12,72 @@ import { Notyf } from "notyf";
 
 const PaymentPage = () => {
   const { state } = useLocation();
-  console.log(state)
   const navigate = useNavigate();
-  const { setOrders } = useAuth();
+
   // === STATE ===
-  const [paymentMethod, setPaymentMethod] = useState("upi"); // 'upi' or 'cod'
-  const [upiId, setUpiId] = useState("");
-  const [isVerified, setIsVerified] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("ONLINE"); // 'ONLINE' or 'COD'
 
-  
-    const notfy = new Notyf();
+  const notfy = new Notyf();
 
-  // === HANDLERS ===
-  const handleVerify = () => {
-    if (upiId.includes("@")) {
-      setIsVerified(true);
-      alert("UPI ID Verified!");
-    } else {
-      alert("Please enter a valid UPI ID (e.g., user@bank)");
-    }
-  };
-
-  const handlePayment = () => {
-    if (paymentMethod === "upi" && !isVerified) {
-      alert("Please verify your UPI ID first.");
-      return;
-    }
-
-    // create order API call
-    state.orderItems.map(async (item) => {
-      const productId = item.productId?._id || item.product?._id;
-      if (!productId) {
-        console.error("Invalid product data:", item);
-        alert("Some items in your cart have invalid product data.");
-        return;
-      }
-
-      const orderData = {
-        productId,
-        quantity: item.quantity,
-        address: state.selectedAddressId,
-        total: state.total,
-      };
-
+  const handlePayment = async () => {
+    if (paymentMethod === "COD") {
       try {
-        const response = await axios.post(
-          "https://bakery-backend-two.vercel.app/orders/createOrder",
-          orderData,
-          {
-            withCredentials: true,
-          },
-        );
-        setOrders((prevOrders) => [...prevOrders, response.data]);
-        navigate("/order-confirmation", { state: { status: "success" } });
+        state.orderItems.map(async (item) => {
+          const productId = item?.product?._id
+            ? item.product._id
+            : item?.productId?._id;
+
+          const response = await axios.post(
+            "https://bakeverse-bk.vercel.app/orders/createOrder",
+            {
+              productId: productId,
+              quantity: item.quantity,
+              address: state.selectedAddressId,
+              total: state.total,
+            },
+            { withCredentials: true },
+          );
+        });
+        navigate("/order-success");
+        notfy.success("Order placed successfully!");
       } catch (error) {
-        notfy.error("Failed to place order for some items.");
-        console.error("Error placing order:", error);
-        throw new Error("Order placement failed");
+        notfy.error("Order placement failed. Please try again.");
       }
-    });
+      return;
+    } else {
+      try {
+        const { data } = await axios.post(
+          "https://bakeverse-bk.vercel.app/payment/create/orderId",
+          { amount: state.total },
+          { withCredentials: true },
+        );
+
+        // 2️⃣ Razorpay checkout open karo
+        const options = {
+          key: "RAZORPAY_KEY_ID",
+          amount: data.amount,
+          currency: "INR",
+          order_id: data.id,
+
+          handler: function (response) {
+            notfy.success("Payment successful!");
+            navigate("/order-success");
+          },
+
+          prefill: {
+            name: addresses.find((a) => a._id === selectedAddressId)?.fullName,
+            contact: addresses.find((a) => a._id === selectedAddressId)?.phone,
+          },
+
+          theme: { color: "#c2173e" },
+        };
+
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+      } catch (error) {
+        notfy.error("Payment failed. Please try again.");
+      }
+    }
   };
 
   return (
@@ -83,22 +88,22 @@ const PaymentPage = () => {
         <div className="payment-layout">
           {/* === LEFT: PAYMENT OPTIONS === */}
           <div className="payment-options">
-            {/* Option 1: UPI */}
+            {/* Option 1: ONLINE */}
             <div
               className={`payment-card ${
-                paymentMethod === "upi" ? "selected" : ""
+                paymentMethod === "ONLINE" ? "selected" : ""
               }`}
-              onClick={() => setPaymentMethod("upi")}
+              onClick={() => setPaymentMethod("ONLINE")}
             >
               <div className="card-header">
                 <div className="radio-circle">
-                  {paymentMethod === "upi" && (
+                  {paymentMethod === "ONLINE" && (
                     <div className="inner-circle"></div>
                   )}
                 </div>
                 <div className="header-text">
-                  <h3>UPI</h3>
-                  <p>Pay instantly using any UPI App</p>
+                  <h3>ONLINE</h3>
+                  <p>Pay instantly using any ONLINE App</p>
                 </div>
                 <Wallet size={24} className="method-icon" />
               </div>
@@ -107,13 +112,13 @@ const PaymentPage = () => {
             {/* Option 2: Cash on Delivery */}
             <div
               className={`payment-card ${
-                paymentMethod === "cod" ? "selected" : ""
+                paymentMethod === "COD" ? "selected" : ""
               }`}
-              onClick={() => setPaymentMethod("cod")}
+              onClick={() => setPaymentMethod("COD")}
             >
               <div className="card-header">
                 <div className="radio-circle">
-                  {paymentMethod === "cod" && (
+                  {paymentMethod === "COD" && (
                     <div className="inner-circle"></div>
                   )}
                 </div>
@@ -121,7 +126,7 @@ const PaymentPage = () => {
                   <h3>Cash on Delivery</h3>
                   <p>Pay with cash upon delivery</p>
                 </div>
-                <DollarSign size={24} className="method-icon" />
+                <IndianRupee size={14} />
               </div>
             </div>
           </div>

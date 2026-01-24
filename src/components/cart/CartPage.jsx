@@ -14,7 +14,7 @@ const CartPage = () => {
 
   useEffect(() => {
     async function fetchCartItems() {
-      const response = await axios.get("https://bakery-backend-two.vercel.app/cart/getCart", {
+      const response = await axios.get("https://bakeverse-bk.vercel.app/cart/getCart", {
         withCredentials: true,
       });
       setInitialCartItems(response.data.items);
@@ -32,7 +32,7 @@ const CartPage = () => {
     );
 
     const response = await axios.patch(
-      `https://bakery-backend-two.vercel.app/cart/updateCart/${id}`,
+      `https://bakeverse-bk.vercel.app/cart/updateCart/${id}`,
       { quantity: newQuantity },
       {
         withCredentials: true,
@@ -46,7 +46,7 @@ const CartPage = () => {
       prevItems.filter((item) => item._id !== id)
     );
     const response = await axios.delete(
-      `https://bakery-backend-two.vercel.app/cart/removeFromCart/${id}`,
+      `https://bakeverse-bk.vercel.app/cart/removeFromCart/${id}`,
       {
         withCredentials: true,
       }

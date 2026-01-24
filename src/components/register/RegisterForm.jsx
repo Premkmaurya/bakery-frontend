@@ -118,7 +118,7 @@ const ResiterForm = () => {
     setIsLoading(true);
     try {
       const response = await axios.post(
-        "https://bakery-backend-two.vercel.app/auth/register",
+        "https://bakeverse-bk.vercel.app/auth/register",
         data,
         {
           withCredentials: true,
@@ -135,7 +135,7 @@ const ResiterForm = () => {
   };
 
   const googleRegister = () => {
-    window.location.href = "https://bakery-backend-two.vercel.app/auth/google";
+    window.location.href = "https://bakeverse-bk.vercel.app/auth/google";
   };
 
   const loginImage =

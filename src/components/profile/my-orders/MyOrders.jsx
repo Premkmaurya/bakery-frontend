@@ -29,7 +29,7 @@ const MyOrders = () => {
     const fetchOrders = async () => {
       try {
         const response = await axios.get(
-          "https://bakery-backend-two.vercel.app/orders/get-orders",
+          "https://bakeverse-bk.vercel.app/orders/get-orders",
           {
             withCredentials: true,
           }
@@ -61,7 +61,7 @@ const MyOrders = () => {
 
   const cancelHandler = async (orderId) => {
     try{
-      await axios.patch(`https://bakery-backend-two.vercel.app/orders/updateOrderStatus/${orderId}`, {status:"cancelled"}, {
+      await axios.patch(`https://bakeverse-bk.vercel.app/orders/updateOrderStatus/${orderId}`, {status:"cancelled"}, {
         withCredentials: true,
       });
       getStatusConfig("cancelled");

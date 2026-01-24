@@ -88,7 +88,7 @@ const Form = () => {
     setIsLoading(true);
     try {
       await axios.post(
-        "https://bakery-backend-two.vercel.app/auth/login",
+        "https://bakeverse-bk.vercel.app/auth/login",
         data,
         {
           withCredentials: true,
@@ -106,7 +106,7 @@ const Form = () => {
   };
 
   const googleLogin = () => {
-    window.location.href = "https://bakery-backend-two.vercel.app/auth/google";
+    window.location.href = "https://bakeverse-bk.vercel.app/auth/google";
   };
 
   const loginImage =

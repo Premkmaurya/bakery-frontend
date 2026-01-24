@@ -22,6 +22,8 @@ const CheckoutPage = () => {
   const { addresses, updateAddresses, deleteAddress, editAddress } = useAuth(); // Use addresses and updateAddresses from NavContext
 
   const [selectedAddressId, setSelectedAddressId] = useState(null);
+  
+
 
   useEffect(() => {
     if (addresses.length > 0) {
@@ -99,7 +101,7 @@ const CheckoutPage = () => {
       editAddress(editingId, data);
     } else {
       const response = await axios.post(
-        "https://bakery-backend-two.vercel.app/user/add-address",
+        "https://bakeverse-bk.vercel.app/user/add-address",
         data,
         {
           withCredentials: true,
@@ -151,41 +153,21 @@ const CheckoutPage = () => {
   const total = subTotal + deliveryFee;
 
   // Navigate to Payment Method
-  const handlePayment = async () => {
+  const navigateHandler = async () => {
     if (!selectedAddressId) {
       alert("Please select address");
       return;
     }
 
-    // 1️⃣ Backend se Razorpay order banao
-    const { data } = await axios.post(
-      "https://bakery-backend-two.vercel.app/payment/create/orderId",
-      { amount: total },
-      { withCredentials: true },
-    );
-
-    // 2️⃣ Razorpay checkout open karo
-    const options = {
-      key: "RAZORPAY_KEY_ID",
-      amount: data.amount,
-      currency: "INR",
-      order_id: data.id,
-
-      handler: function (response) {
-        console.log("Payment Success", response);
-        navigate("/payment-success");
+    navigate("/payment-method", {
+      state: {
+        selectedAddressId,
+        orderItems,
+        subTotal,
+        deliveryFee,
+        total,
       },
-
-      prefill: {
-        name: addresses.find((a) => a._id === selectedAddressId)?.fullName,
-        contact: addresses.find((a) => a._id === selectedAddressId)?.phone,
-      },
-
-      theme: { color: "#c2173e" },
-    };
-
-    const rzp = new window.Razorpay(options);
-    rzp.open();
+    });
   };
 
   return (
@@ -446,13 +428,12 @@ const CheckoutPage = () => {
                 <span>Total Amount</span>
                 <span>₹{subTotal > 0 ? total : 0}</span>
               </div>
-
               <div className="security-note">
                 <ShieldCheck size={16} />
                 <p>Safe and Secure Payments. 100% Authentic products.</p>
               </div>
 
-              <button onClick={handlePayment} className="place-order-btn">
+              <button onClick={navigateHandler} className="place-order-btn">
                 Place Order
               </button>
             </div>

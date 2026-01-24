@@ -32,7 +32,7 @@ const AdminAllOrders = () => {
     const fetchOrders = async () => {
       try {
         const response = await axios.get(
-          "https://bakery-backend-two.vercel.app/orders/admin/getAllOrders",
+          "https://bakeverse-bk.vercel.app/orders/admin/getAllOrders",
           {
             withCredentials: true,
           },
@@ -89,7 +89,7 @@ const AdminAllOrders = () => {
   const updateHandler = async (orderId, newStatus) => {
     try {
       const response = await axios.patch(
-        `https://bakery-backend-two.vercel.app/orders/updateOrderStatus/${orderId}`,
+        `https://bakeverse-bk.vercel.app/orders/updateOrderStatus/${orderId}`,
         { status: newStatus },
         { withCredentials: true },
       );
@@ -109,7 +109,7 @@ const AdminAllOrders = () => {
   const deleteHandler = async (orderId) => {
     try {
       await axios.delete(
-        `https://bakery-backend-two.vercel.app/orders/deleteOrder/${orderId}`,
+        `https://bakeverse-bk.vercel.app/orders/deleteOrder/${orderId}`,
         {
           withCredentials: true,
         },

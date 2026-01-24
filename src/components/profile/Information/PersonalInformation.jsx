@@ -62,7 +62,7 @@ const PersonalInformation = () => {
     }
     
     try {
-      const response = await axios.post('https://bakery-backend-two.vercel.app/user/update-profile', form, {
+      const response = await axios.post('https://bakeverse-bk.vercel.app/user/update-profile', form, {
         withCredentials: true,
       });
       updateUser(response.data.user);

@@ -17,7 +17,7 @@ export const NavProvider = ({ children }) => {
     const getAddresses = async () => {
       try {
         const response = await axios.get(
-          "https://bakery-backend-two.vercel.app/user/get-addresses",
+          "https://bakeverse-bk.vercel.app/user/get-addresses",
           {
             withCredentials: true,
           }
@@ -28,7 +28,7 @@ export const NavProvider = ({ children }) => {
     const checkAuthStatus = async () => {
       try {
         const response = await axios.get(
-          "https://bakery-backend-two.vercel.app/auth/verify",
+          "https://bakeverse-bk.vercel.app/auth/verify",
           {
             withCredentials: true,
           }
@@ -50,7 +50,7 @@ export const NavProvider = ({ children }) => {
   const logout = async () => {
     try {
       await axios.post(
-        "https://bakery-backend-two.vercel.app/auth/logout",
+        "https://bakeverse-bk.vercel.app/auth/logout",
         {},
         {
           withCredentials: true,
@@ -79,7 +79,7 @@ export const NavProvider = ({ children }) => {
   const deleteAddress = async (id) => {
     try {
       await axios.delete(
-        `https://bakery-backend-two.vercel.app/user/delete-address/${id}`,
+        `https://bakeverse-bk.vercel.app/user/delete-address/${id}`,
         {
           withCredentials: true,
         }
@@ -94,7 +94,7 @@ export const NavProvider = ({ children }) => {
   const editAddress = async (id, updatedData) => {
     try {
       const response = await axios.patch(
-        `https://bakery-backend-two.vercel.app/user/update-address/${id}`,
+        `https://bakeverse-bk.vercel.app/user/update-address/${id}`,
         updatedData,
         {
           withCredentials: true,

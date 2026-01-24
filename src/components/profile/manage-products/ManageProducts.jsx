@@ -29,7 +29,7 @@ const ManageProducts = () => {
     const fetchOrders = async () => {
       try {
         const response = await axios.get(
-          "https://bakery-backend-two.vercel.app/orders/get-orders",
+          "https://bakeverse-bk.vercel.app/orders/get-orders",
           {
             withCredentials: true,
           }
@@ -61,7 +61,7 @@ const ManageProducts = () => {
 
   const cancelHandler = (orderId) => {
     try{
-      axios.patch(`https://bakery-backend-two.vercel.app/orders/updateOrderStatus/${orderId}`, {status:"cancelled"}, {
+      axios.patch(`https://bakeverse-bk.vercel.app/orders/updateOrderStatus/${orderId}`, {status:"cancelled"}, {
         withCredentials: true,
       });
       setOrders(orders.map(order => order._id === orderId ? {...order, status: "Cancelled"} : order));
@@ -76,7 +76,7 @@ const ManageProducts = () => {
   const deleteHandler = async (orderId) => {
     try {
       await axios.delete(
-        `https://bakery-backend-two.vercel.app/orders/deleteOrder/${orderId}`,
+        `https://bakeverse-bk.vercel.app/orders/deleteOrder/${orderId}`,
         {
           withCredentials: true,
         }

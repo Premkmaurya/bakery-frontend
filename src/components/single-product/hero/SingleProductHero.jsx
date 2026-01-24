@@ -3,7 +3,7 @@ import "./SingleProductHero.scss";
 
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/NavContext";
-import AddProduct from "../../profile/add-products/AddProduct";
+import AddProduct from "../../profile/admin-panel/add-products/AddProduct";
 
 // ICONS
 import { TbTruckDelivery } from "react-icons/tb";
@@ -166,7 +166,7 @@ const SingleProductHero = ({ product }) => {
 
   const addToCart = async (item) => {
     const response = await axios.post(
-      `https://bakery-backend-two.vercel.app/cart/addToCart/${item}`,
+      `https://bakeverse-bk.vercel.app/cart/addToCart/${item}`,
       {
         quantity: 1,
       },

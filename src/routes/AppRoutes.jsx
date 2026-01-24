@@ -51,7 +51,7 @@ const AppRoutes = () => {
           <Route path="/payment-method" element={<PaymentMethod />} />
         </Route>
       </Route>
-      <Route path="/order-confirmation" element={<OrderConfirmation />} />
+      <Route path="/order-success" element={<OrderConfirmation />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/oauth-success" element={<OAuthSuccess />} />

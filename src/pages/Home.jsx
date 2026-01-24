@@ -21,7 +21,7 @@ const Home = () => {
       }
 
       const response = await axios.get(
-        "https://bakery-backend-two.vercel.app/products/get",
+        "https://bakeverse-bk.vercel.app/products/get",
         { params }
       );
 
