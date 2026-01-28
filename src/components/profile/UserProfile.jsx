@@ -8,7 +8,7 @@ import PersonalInformation from "./Information/PersonalInformation";
 import ManageAddress from "./address-manager/ManageAddress";
 import MyOrders from "./my-orders/MyOrders";
 import AddProduct from "./admin-panel/add-products/AddProduct";
-import WishlistPage from "../wishlist/WishlistPage";
+import WishlistPage from "./wishlist/WishlistPage";
 import AdminAllOrders from "./admin-panel/AdminAllOrders";
 
 const UserProfile = () => {

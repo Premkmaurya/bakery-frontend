@@ -364,7 +364,7 @@ const CheckoutPage = () => {
 
             {/* 2. Order Items Section (Visual only) */}
             <section className="checkout-section">
-              <h2 className="section-title">Order Details</h2>
+              <h2 className="order-section-title">Order Details</h2>
               <div className="order-items">
                 {orderItems.map((item, idx) => {
                   // Defensive checks for product and productId

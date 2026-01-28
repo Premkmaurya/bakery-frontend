@@ -44,6 +44,13 @@
     border-radius: 12px;
     border: 1px solid #e0e0e0;
     margin-bottom: 2rem;
+    .order-section-title{
+      font-family: var(--font-serif);
+      font-size: 1.9rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: var(--color-text-main);
+    }
 
     @include mobile {
       padding: 0.7rem;
@@ -69,7 +76,7 @@
         margin: 0;
         color: var(--color-text-main);
         @include mobile {
-          font-size: 1.3rem;
+          font-size: 1.2rem;
         }
       }
 

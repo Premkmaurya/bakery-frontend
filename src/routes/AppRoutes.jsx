@@ -14,7 +14,6 @@ import Checkout from "../pages/Checkout";
 import Cart from "../pages/Cart";
 import PaymentMethod from "../pages/PaymentMethod";
 import Profile from "../pages/Profile";
-import WishList from "../pages/WishList";
 
 import ProtectedRoute from "./ProtectedRoutes";
 import OAuthSuccess from "../pages/OAuthSuccess";
@@ -47,7 +46,6 @@ const AppRoutes = () => {
           <Route path="/cart" element={<Cart />} />
           <Route path="/products/checkout" element={<Checkout />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/wishlist" element={<WishList />} />
           <Route path="/payment-method" element={<PaymentMethod />} />
         </Route>
       </Route>

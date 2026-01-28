@@ -21,7 +21,6 @@
 
     .order-card {
       background: white;
-      border: 1px solid #e0e0e0;
       border-radius: 12px;
       padding: 1.5rem;
       transition: all 0.3s ease;
@@ -129,7 +128,6 @@
           color: var(--color-text-main);
           font-weight: 500;
         }
-
       }
 
       // === FOOTER ===
@@ -150,12 +148,22 @@
             text-transform: uppercase;
             margin-bottom: 0.2rem;
           }
+          .amount{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.2rem;
+          }
           .amount,
           .quantity {
+            font-weight: 500;
             font-family: var(--font-serif);
             font-size: 1.4rem;
-            font-weight: 700;
             color: var(--color-text-main);
+
+            @include mobile {
+              font-size: 1.1rem;
+            }
           }
         }
 
@@ -174,6 +182,13 @@
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
+
+            @include mobile {
+              flex: 1;
+              justify-content: center;
+              font-size: 0.7rem;
+              text-wrap: nowrap;
+            }
           }
 
           .btn-track {

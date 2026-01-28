@@ -85,7 +85,6 @@ const Catalog = () => {
     }));
     const response = await axios.post(
       `https://bakeverse-bk.vercel.app/wishlist/toggleWishlist/${productId}`,
-      { productId },
       {
         withCredentials: true,
       }

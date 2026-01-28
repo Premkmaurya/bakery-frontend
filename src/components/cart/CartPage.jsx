@@ -150,16 +150,6 @@ const CartPage = () => {
               </span>
             </div>
 
-            <p className="warranty-note">
-              <Info size={16} />
-              <span>
-                90 Day Limited Warranty against manufacturer's defects
-                <a href="#" className="details-link">
-                  Details
-                </a>
-              </span>
-            </p>
-
             <button
               onClick={() =>
                 navigate(

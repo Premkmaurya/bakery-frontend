@@ -8,6 +8,9 @@
   padding: 5rem 2rem;
   background-color: #ffffff;
   min-height: 80vh;
+  @include mobile {
+    padding: 3rem 1rem;
+  }
 
   .container {
     max-width: 1100px;
@@ -239,7 +242,6 @@
     }
 
     .product-details-wrapper {
-      border: 1px solid #eee;
       border-radius: 12px;
       padding: 2rem;
       @include mobile {
@@ -262,7 +264,6 @@
     }
 
     .trust-signals-wrapper {
-      border: 1px solid #eee;
       border-radius: 12px;
       padding: 1.3rem;
       @include mobile {

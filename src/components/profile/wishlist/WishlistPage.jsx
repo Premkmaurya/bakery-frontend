@@ -74,13 +74,14 @@ const WishlistPage = () => {
   }, []);
 
   // === HANDLERS ===
-  const removeFromWishlist = async (id) => {
+  const removeFromWishlist = async (id, productId) => {
     setWishlistItems((prev) =>
-      prev.filter((item) => item.productId._id !== id)
+      prev.filter((item) => item._id !== id)
     );
-    await axios.post(`https://bakeverse-bk.vercel.app/wishlist/toggleWishlist/${id}`, {
+    const response = await axios.post(`https://bakeverse-bk.vercel.app/wishlist/toggleWishlist/${productId}`, {
       withCredentials: true,
     });
+    console.log(response.data);
   };
 
   const addToCart = async (item) => {
@@ -109,7 +110,7 @@ const WishlistPage = () => {
         {wishlistItems.length > 0 ? (
           <div className="wishlist-grid">
             {wishlistItems.map((item) => (
-              <div key={item.productId._id} className="wishlist-card">
+              <div key={item._id} className="wishlist-card">
                 {/* Image & Remove Button */}
                 <div className="image-container">
                   <img
@@ -118,7 +119,7 @@ const WishlistPage = () => {
                   />
                   <button
                     className="remove-btn"
-                    onClick={() => removeFromWishlist(item._id)}
+                    onClick={() => removeFromWishlist(item._id,item.productId._id)}
                     title="Remove from Wishlist"
                   >
                     <Trash2 size={18} />

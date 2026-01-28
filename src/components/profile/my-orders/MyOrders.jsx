@@ -14,6 +14,7 @@ import {
   XCircle,
   Truck,
   Trash2,
+  IndianRupee,
 } from "lucide-react";
 import "./MyOrders.scss";
 import axios from "axios";
@@ -65,7 +66,7 @@ const MyOrders = () => {
         withCredentials: true,
       });
       getStatusConfig("cancelled");
-      setOrders(orders.map(order => order._id === orderId ? {...order, status: "Cancelled"} : order));
+      setOrders(orders.map(order => order._id === orderId ? {...order, status: "cancelled"} : order));
       notyf.success("Order cancelled successfully")
 
     }catch(error){
@@ -121,7 +122,7 @@ const MyOrders = () => {
                 <div className="total-wrapper">
                   <span className="label">Total Amount</span>
                   <span className="amount">
-                    ₹{order.productId.price.toFixed(2)}
+                    <IndianRupee size={14} />{order.productId.price.toFixed(2)}
                   </span>
                 </div>
                 <div className="quantity-wrapper">
