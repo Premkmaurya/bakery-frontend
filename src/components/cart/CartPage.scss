@@ -53,18 +53,20 @@
     }
 
     .cart-item {
-      position: relative;
       display: grid;
+      // Desktop: 4 columns (Product Info gets the most space)
       grid-template-columns: 3fr 1fr 1fr 0.5fr;
       align-items: center;
       padding-bottom: 2rem;
       margin-bottom: 2rem;
       border-bottom: 1px solid #e0e0e0;
+      position: relative; // Needed for mobile positioning
 
-      @include mobile {
-        grid-template-columns: 0.5fr 0.5fr 0.5fr 0.5fr;
-        gap: 0.5rem;
-        text-align: center;
+      @media (max-width: 768px) {
+        // Mobile: 2 Columns (Image | Details)
+        grid-template-columns: 80px 1fr;
+        gap: 1rem;
+        align-items: start;
       }
 
       .product-details {
@@ -72,94 +74,130 @@
         align-items: center;
         gap: 1.5rem;
 
-        @include mobile {
-          gap: 0.8rem;
+        @media (max-width: 768px) {
+          // On mobile, this wrapper spans the first column (just image)
+          // but we actually need to break the flexbox to fit the grid.
+          // So we hide the text part here and show it in the main grid flow?
+          // BETTER APPROACH: Keep Flex, but adjustments below.
+          grid-column: 1 / -1; // Span full width initially, but we adjust children
+          display: grid;
+          grid-template-columns: 80px 1fr;
+          gap: 1rem;
+          width: 100%;
         }
+
         .product-image {
           width: 100px;
           height: 100px;
           object-fit: cover;
           border-radius: 12px;
           background-color: var(--color-gray-light);
-          @include mobile {
-            width: 70px;
-            height: 70px;
+
+          @media (max-width: 768px) {
+            width: 80px;
+            height: 80px;
           }
         }
 
         .product-info {
+          @media (max-width: 768px) {
+            // Give space for the delete button on the right
+            padding-right: 30px;
+          }
+
           .product-name {
             font-family: var(--font-serif);
             font-size: 1.2rem;
             margin-bottom: 0.5rem;
-          }
-          .product-variant {
-            font-size: 0.9rem;
-            color: var(--color-text-sub);
+
+            @media (max-width: 768px) {
+              font-size: 1rem;
+              margin-bottom: 0.2rem;
+            }
           }
         }
       }
 
-      .quantity-control {
-        @include mobile {
-          justify-self: center;
+      // Quantity Control
+      .item-controls {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 3rem;
+        width: 85vw;
+
+        .left-section {
+          .quantity-control {
+            @media (max-width: 768px) {
+              // Move to the 2nd column, below the name
+              grid-column: 2;
+              justify-self: start;
+              margin-top: 0.5rem;
+            }
+
+            .quantity-btn-group {
+              display: flex;
+              align-items: center;
+              border: 1px solid #e0e0e0;
+              border-radius: 50px;
+              padding: 0.3rem 0.8rem;
+
+              button {
+                background: none;
+                border: none;
+                font-size: 1.1rem;
+                cursor: pointer;
+                color: var(--color-text-main);
+                padding: 0 0.6rem;
+                &:hover {
+                  color: var(--color-accent);
+                }
+              }
+
+              span {
+                font-weight: 600;
+                min-width: 20px;
+                text-align: center;
+                font-size: 0.9rem;
+              }
+            }
+          }
         }
-        .quantity-btn-group {
+
+        // Total Price
+        .right-section {
           display: flex;
           align-items: center;
-          border: 1px solid #e0e0e0;
-          border-radius: 50px;
-          padding: 0.5rem 1rem;
+          justify-content: center;
+          gap: 3rem;
+          .item-total {
+            font-weight: 700;
+            font-size: 1.1rem;
 
-          button {
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            cursor: pointer;
-            color: var(--color-text-main);
-            padding: 0 0.8rem;
-            &:hover {
+            @media (max-width: 768px) {
+              // Position it below the quantity or next to it
+              grid-column: 2;
+              justify-self: start;
+              margin-top: 0.5rem;
               color: var(--color-accent);
             }
           }
 
-          span {
-            font-weight: 600;
-            min-width: 20px;
-            text-align: center;
-          }
-        }
-      }
+          // Delete Button
+          .item-action {
+            text-align: right;
 
-      .item-total {
-        font-weight: 700;
-        font-size: 1.1rem;
-        @include mobile {
-          justify-self: center;
-          margin-bottom: 1rem;
-        }
-      }
+            .delete-btn {
+              background: none;
+              border: none;
+              cursor: pointer;
+              color: #999; // Lighter gray so it's not distracting
+              transition: color 0.3s;
 
-      .item-action {
-        text-align: right;
-        @include mobile {
-          position: absolute;
-          top: 0;
-          justify-self: flex-end;
-          text-align: center;
-        }
-        .delete-btn {
-          background: none;
-          border: none;
-          cursor: pointer;
-          color: var(--color-text-sub);
-          transition: color 0.3s;
-
-          @include mobile {
-            font-size: 0.8rem;
-          }
-          &:hover {
-            color: var(--color-accent);
+              &:hover {
+                color: var(--color-accent);
+              }
+            }
           }
         }
       }
@@ -233,8 +271,7 @@
         border-top: 1px solid #e0e0e0;
 
         .total-price {
-          font-family: var(--font-serif);
-          font-size: 1.8rem;
+          font-size: 1.2rem;
         }
       }
     }

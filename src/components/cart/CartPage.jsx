@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Trash2, Info } from "lucide-react"; // Using lucide-react for icons
+import { Trash2, Info, IndianRupee } from "lucide-react"; // Using lucide-react for icons
 import "./CartPage.scss";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -14,9 +14,12 @@ const CartPage = () => {
 
   useEffect(() => {
     async function fetchCartItems() {
-      const response = await axios.get("https://bakeverse-bk.vercel.app/cart/getCart", {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        "https://bakeverse-bk.vercel.app/cart/getCart",
+        {
+          withCredentials: true,
+        },
+      );
       setInitialCartItems(response.data.items);
     }
     fetchCartItems();
@@ -27,8 +30,8 @@ const CartPage = () => {
     if (newQuantity < 1) return;
     setInitialCartItems((prevItems) =>
       prevItems.map((item) =>
-        item._id === id ? { ...item, quantity: newQuantity } : item
-      )
+        item._id === id ? { ...item, quantity: newQuantity } : item,
+      ),
     );
 
     const response = await axios.patch(
@@ -36,38 +39,37 @@ const CartPage = () => {
       { quantity: newQuantity },
       {
         withCredentials: true,
-      }
+      },
     );
   };
 
   // Function to remove an item from the cart
   const removeItem = async (id) => {
     setInitialCartItems((prevItems) =>
-      prevItems.filter((item) => item._id !== id)
+      prevItems.filter((item) => item._id !== id),
     );
     const response = await axios.delete(
       `https://bakeverse-bk.vercel.app/cart/removeFromCart/${id}`,
       {
         withCredentials: true,
-      }
+      },
     );
   };
 
   // Calculate cart summary totals
   const subTotal = initialCartItems.reduce(
     (acc, item) => acc + item.productId.price * item.quantity,
-    0
+    0,
   );
   const discountPercentage = 10; // 10% discount as per image
   const discountAmount = (subTotal * discountPercentage) / 100;
   let deliveryFee = 0;
-  if(subTotal - discountAmount >=299){
+  if (subTotal - discountAmount >= 299) {
     deliveryFee = 0;
-  } else{
+  } else {
     deliveryFee = 40;
   }
   const total = subTotal - discountAmount + deliveryFee;
-
 
   return (
     <div className="shopping-cart-page">
@@ -85,7 +87,7 @@ const CartPage = () => {
             {initialCartItems.map((item) => (
               <CartItem
                 key={item._id}
-                item={item} 
+                item={item}
                 updateQuantity={updateQuantity}
                 removeItem={removeItem}
               />
@@ -110,60 +112,54 @@ const CartPage = () => {
             <div className="summary-row">
               <span>Sub Total</span>
               <span>
-                {subTotal
+                <IndianRupee size={12} /> {subTotal
                   .toLocaleString("en-IN", {
                     style: "currency",
                     currency: "INR",
                   })
                   .replace("₹", "")}{" "}
-                INR
               </span>
             </div>
             <div className="summary-row discount">
               <span>Discount ({discountPercentage}%)</span>
               <span>
                 -
-                {discountAmount
+                <IndianRupee size={12} />{discountAmount
                   .toLocaleString("en-IN", {
                     style: "currency",
                     currency: "INR",
                   })
                   .replace("₹", "")}{" "}
-                INR
               </span>
             </div>
             <div className="summary-row">
               <span>Delivery fee</span>
-              <span>{deliveryFee.toFixed(2)} INR</span>
+              <span><IndianRupee size={12} />{deliveryFee.toFixed(2)}</span>
             </div>
 
             <div className="summary-row total">
               <span>Total</span>
               <span className="total-price">
-                {total
+                <IndianRupee size={16} />{total
                   .toLocaleString("en-IN", {
                     style: "currency",
                     currency: "INR",
                   })
                   .replace("₹", "")}{" "}
-                INR
               </span>
             </div>
 
             <button
               onClick={() =>
-                navigate(
-                  `/products/checkout`,
-                  {
-                    state: {
-                      initialCartItems: initialCartItems,
-                      total: total,
-                      discountAmount: discountAmount,
-                      deliveryFee: deliveryFee,
-                      subTotal: subTotal,
-                    },
-                  }
-                )
+                navigate(`/products/checkout`, {
+                  state: {
+                    initialCartItems: initialCartItems,
+                    total: total,
+                    discountAmount: discountAmount,
+                    deliveryFee: deliveryFee,
+                    subTotal: subTotal,
+                  },
+                })
               }
               className="checkout-btn"
             >
@@ -190,22 +186,36 @@ const CartItem = ({ item, updateQuantity, removeItem }) => {
           <h3 className="product-name">{item.productId.name}</h3>
         </div>
       </div>
-      <div className="quantity-control">
-        <div className="quantity-btn-group">
-          <button onClick={() => updateQuantity(item._id, item.quantity - 1)}>
-            -
-          </button>
-          <span>{item.quantity}</span>
-          <button onClick={() => updateQuantity(item._id, item.quantity + 1)}>
-            +
-          </button>
+
+      {/* 2. Quantity */}
+      <div className="item-controls">
+        <div className="left-section">
+          <div className="quantity-control">
+          <div className="quantity-btn-group">
+            <button onClick={() => updateQuantity(item._id, item.quantity - 1)}>
+              -
+            </button>
+            <span>{item.quantity}</span>
+            <button onClick={() => updateQuantity(item._id, item.quantity + 1)}>
+              +
+            </button>
+          </div>
         </div>
-      </div>
-      <div className="item-total">₹{item.productId.price * item.quantity}</div>
-      <div className="item-action">
-        <button onClick={() => removeItem(item._id)} className="delete-btn">
-          <Trash2 size={20} />
-        </button>
+        </div>
+
+        {/* 3. Total Price */}
+        <div className="right-section">
+          <div className="item-total">
+            ₹{(item.productId.price * item.quantity).toFixed(2)}
+          </div>
+
+          {/* 4. Delete Action */}
+          <div className="item-action">
+            <button onClick={() => removeItem(item._id)} className="delete-btn">
+              <Trash2 size={20} />
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
